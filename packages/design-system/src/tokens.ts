@@ -1,33 +1,54 @@
 export const commandCenterTokens = {
+  brand: {
+    midnight: "#140126",
+    royal: "#7A36D9",
+    violet: "#8C37E0",
+    ink: "#21112F",
+    porcelain: "#FBF8FF"
+  },
   radius: {
-    card: "8px",
-    control: "6px",
+    card: "18px",
+    control: "14px",
     full: "999px"
   },
+  shadow: {
+    card: "0 20px 70px rgba(20, 1, 38, 0.22)",
+    glow: "0 0 0 1px rgba(140, 55, 224, 0.18), 0 18px 60px rgba(122, 54, 217, 0.22)"
+  },
   dark: {
-    background: "#080B0F",
-    foreground: "#EEF4F8",
-    surface: "#101721",
-    surfaceRaised: "#151E2B",
-    border: "#263241",
-    muted: "#8EA0AE",
-    cyan: "#54D2E8",
-    green: "#7AE08C",
+    theme: "dark",
+    background: "#0B0612",
+    foreground: "#FBF7FF",
+    surface: "#150A21",
+    surfaceRaised: "#21112F",
+    surfaceSoft: "#2B1740",
+    border: "#3A2851",
+    muted: "#B7A9C8",
+    primary: "#8C37E0",
+    primaryForeground: "#FFFFFF",
+    secondary: "#7A36D9",
+    cyan: "#55D6EA",
+    green: "#7CE38B",
     amber: "#F7C767",
     coral: "#FF8B78",
-    blue: "#7CA8FF"
+    blue: "#9BAEFF"
   },
   light: {
-    background: "#F5F7FA",
-    foreground: "#111821",
+    theme: "light",
+    background: "#FAF7FF",
+    foreground: "#140126",
     surface: "#FFFFFF",
-    surfaceRaised: "#EEF2F6",
-    border: "#D7DEE7",
-    muted: "#607080",
-    cyan: "#007D91",
-    green: "#137D3B",
-    amber: "#9A6500",
-    coral: "#B34332",
-    blue: "#285FC8"
+    surfaceRaised: "#F3ECFB",
+    surfaceSoft: "#EDE2F8",
+    border: "#DCCBEF",
+    muted: "#675875",
+    primary: "#7A36D9",
+    primaryForeground: "#FFFFFF",
+    secondary: "#8C37E0",
+    cyan: "#0B7285",
+    green: "#247A39",
+    amber: "#986A10",
+    coral: "#B94A3A",
+    blue: "#365BC5"
   }
 } as const;

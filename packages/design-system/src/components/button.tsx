@@ -5,19 +5,19 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../utils";
 
 export const buttonVariants = cva(
-  "inline-flex h-10 items-center justify-center gap-2 rounded-[var(--pa-radius-control)] px-4 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex h-10 items-center justify-center gap-2 rounded-[var(--pa-radius-control)] px-4 text-sm font-semibold tracking-[-0.01em] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
         primary:
-          "bg-[var(--pa-cyan)] text-[#071014] hover:bg-[color-mix(in_srgb,var(--pa-cyan)_84%,white)] focus-visible:outline-[var(--pa-cyan)]",
+          "bg-[var(--pa-primary)] text-[var(--pa-primary-foreground)] shadow-[var(--pa-shadow-glow)] hover:bg-[color-mix(in_srgb,var(--pa-primary)_88%,white)] focus-visible:outline-[var(--pa-primary)]",
         secondary:
-          "border border-[var(--pa-border)] bg-[var(--pa-surface-raised)] text-[var(--pa-foreground)] hover:border-[var(--pa-cyan)]",
+          "border border-[color-mix(in_srgb,var(--pa-primary)_38%,var(--pa-border))] bg-[color-mix(in_srgb,var(--pa-surface-raised)_86%,transparent)] text-[var(--pa-foreground)] hover:border-[var(--pa-primary)] hover:bg-[var(--pa-surface-soft)] focus-visible:outline-[var(--pa-primary)]",
         ghost:
-          "text-[var(--pa-muted)] hover:bg-[var(--pa-surface-raised)] hover:text-[var(--pa-foreground)]"
+          "text-[var(--pa-muted)] hover:bg-[var(--pa-surface-raised)] hover:text-[var(--pa-foreground)] focus-visible:outline-[var(--pa-primary)]"
       },
       size: {
-        sm: "h-8 px-3 text-xs",
+        sm: "h-9 px-3 text-xs",
         md: "h-10 px-4",
         icon: "size-10 px-0"
       }

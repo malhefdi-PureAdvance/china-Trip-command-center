@@ -34,7 +34,7 @@ export function TodayView() {
         summary={activeTrip.summary ?? "Demo command rhythm for trip planning and review."}
         badge={activeTrip.region}
       />
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="grid gap-3 md:grid-cols-3">
         {getRouteSummaries().map((summary) => (
           <Card key={summary.href}>
             <CardHeader>
@@ -42,8 +42,10 @@ export function TodayView() {
             </CardHeader>
             <CardContent className="flex items-end justify-between gap-4">
               <div>
-                <p className="text-3xl font-semibold tracking-normal">{summary.count}</p>
-                <p className="text-sm text-[var(--pa-muted)]">{summary.label}</p>
+                <p className="text-2xl font-semibold tracking-[-0.04em] sm:text-3xl">
+                  {summary.count}
+                </p>
+                <p className="text-sm font-medium text-[var(--pa-muted)]">{summary.label}</p>
               </div>
               <Button asChild variant="ghost" size="icon" aria-label={`Open ${summary.title}`}>
                 <Link href={summary.href}>
@@ -54,7 +56,7 @@ export function TodayView() {
           </Card>
         ))}
       </section>
-      <section className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+      <section className="mt-5 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
         <Card>
           <CardHeader>
             <CardTitle>Operating Schedule</CardTitle>
@@ -70,18 +72,18 @@ export function TodayView() {
                 >
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <h2 className="text-base font-semibold tracking-normal">{item.title}</h2>
+                      <h2 className="text-base font-semibold tracking-[-0.02em]">{item.title}</h2>
                       <StatusPill status={item.status} />
                     </div>
-                    <p className="mt-2 text-sm text-[var(--pa-muted)]">{item.notes}</p>
+                    <p className="mt-2 text-sm leading-6 text-[var(--pa-muted)]">{item.notes}</p>
                     {location ? (
-                      <p className="mt-3 inline-flex items-center gap-2 text-sm text-[var(--pa-muted)]">
+                      <p className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-[var(--pa-muted)]">
                         <MapPin className="size-4 text-[var(--pa-cyan)]" aria-hidden="true" />
                         {location.name}, {location.city}
                       </p>
                     ) : null}
                   </div>
-                  <div className="flex min-w-40 items-center gap-2 text-sm text-[var(--pa-muted)]">
+                  <div className="flex min-w-32 items-center gap-2 text-sm font-medium text-[var(--pa-muted)]">
                     <Clock3 className="size-4 text-[var(--pa-amber)]" aria-hidden="true" />
                     <span>
                       {new Date(item.startsAt).toLocaleDateString("en-US", {
@@ -101,10 +103,10 @@ export function TodayView() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap items-center gap-2">
-              <h2 className="text-lg font-semibold tracking-normal">{topTarget.name}</h2>
+              <h2 className="text-lg font-semibold tracking-[-0.02em]">{topTarget.name}</h2>
               <StatusPill status={topTarget.status} />
             </div>
-            <p className="mt-2 text-sm text-[var(--pa-muted)]">
+            <p className="mt-2 text-sm font-medium text-[var(--pa-muted)]">
               {topTarget.city} / {topTarget.sector}
             </p>
             {topProfile ? (
