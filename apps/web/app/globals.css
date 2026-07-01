@@ -11,28 +11,26 @@
 
 html {
   min-height: 100%;
-  background: var(--pa-background);
+  max-width: 100%;
+  overflow-x: hidden;
+  background: var(--cc-page);
 }
 
 body {
   min-height: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
   margin: 0;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--pa-surface) 52%, transparent),
-      transparent 360px
-    ),
-    var(--pa-background);
-  color: var(--pa-foreground);
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+  background: var(--cc-bg);
+  color: var(--cc-text);
+  font-family: var(--cc-font-sans);
+  text-rendering: geometricprecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--cc-cyan-tint);
+  color: var(--cc-text);
 }
 
 a {
@@ -40,48 +38,30 @@ a {
   text-decoration: none;
 }
 
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
 .command-grid {
-  background-image:
-    linear-gradient(color-mix(in srgb, var(--pa-border) 36%, transparent) 1px, transparent 1px),
-    linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--pa-border) 36%, transparent) 1px,
-      transparent 1px
-    );
-  background-size: 32px 32px;
+  background-image: none;
 }
 
 .route-visual {
   position: relative;
   min-height: 280px;
   overflow: hidden;
-  border: 1px solid var(--pa-border);
-  border-radius: var(--pa-radius-card);
-  background:
-    linear-gradient(
-      116deg,
-      transparent 0 48%,
-      color-mix(in srgb, var(--pa-cyan) 16%, transparent) 48% 50%,
-      transparent 50%
-    ),
-    linear-gradient(
-      28deg,
-      transparent 0 55%,
-      color-mix(in srgb, var(--pa-green) 14%, transparent) 55% 57%,
-      transparent 57%
-    ),
-    linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--pa-surface-raised) 88%, black),
-      var(--pa-surface)
-    );
+  border: 1px solid var(--cc-border);
+  border-radius: var(--cc-r-card);
+  background: var(--cc-surface-inset);
+  box-shadow: var(--cc-elev-1);
 }
 
 .route-visual::before {
   position: absolute;
   inset: 32% 18% auto 18%;
-  height: 3px;
-  background: linear-gradient(90deg, var(--pa-cyan), var(--pa-green));
+  height: 2px;
+  background: var(--cc-cyan);
   content: "";
   transform: rotate(8deg);
   transform-origin: left center;
@@ -92,13 +72,13 @@ a {
   display: grid;
   width: 12px;
   height: 12px;
-  border: 2px solid var(--pa-background);
+  border: 2px solid var(--cc-bg);
   border-radius: 999px;
-  background: var(--pa-cyan);
-  box-shadow: 0 0 0 6px color-mix(in srgb, var(--pa-cyan) 20%, transparent);
+  background: var(--cc-cyan);
+  box-shadow: 0 0 0 4px var(--cc-cyan-ring);
 }
 
 .route-point-end {
-  background: var(--pa-green);
-  box-shadow: 0 0 0 6px color-mix(in srgb, var(--pa-green) 20%, transparent);
+  background: var(--cc-green);
+  box-shadow: 0 0 0 4px var(--cc-green-tint);
 }

@@ -1,48 +1,305 @@
 @theme inline {
-  --color-background: var(--pa-background);
-  --color-foreground: var(--pa-foreground);
-  --color-surface: var(--pa-surface);
-  --color-surface-raised: var(--pa-surface-raised);
-  --color-border: var(--pa-border);
-  --color-muted: var(--pa-muted);
-  --color-command-cyan: var(--pa-cyan);
-  --color-command-green: var(--pa-green);
-  --color-command-amber: var(--pa-amber);
-  --color-command-coral: var(--pa-coral);
-  --color-command-blue: var(--pa-blue);
-  --radius-card: var(--pa-radius-card);
-  --radius-control: var(--pa-radius-control);
+  --color-background: var(--cc-bg);
+  --color-foreground: var(--cc-text);
+  --color-surface: var(--cc-surface);
+  --color-surface-raised: var(--cc-surface-raised);
+  --color-surface-soft: var(--cc-surface-inset);
+  --color-border: var(--cc-border);
+  --color-muted: var(--cc-text-3);
+  --color-primary: var(--cc-cyan);
+  --color-secondary: var(--cc-purple);
+  --color-command-cyan: var(--cc-cyan);
+  --color-command-green: var(--cc-green);
+  --color-command-amber: var(--cc-amber);
+  --color-command-coral: var(--cc-amber-text);
+  --color-command-blue: var(--cc-purple-soft);
+  --radius-card: var(--cc-r-card);
+  --radius-control: var(--cc-r-icon);
 }
+
+/* ============================================================
+   PURE ADVANCE · COMMAND-CENTER — Design-system token port
+   Source: /home/malhefdi/repos/Product requirements document/
+     design_handoff_china_2026_companion/_ds/.../tokens/*.css
+
+   Runtime note: the handoff's fonts.css imports Google Fonts for the
+   prototype. This app deliberately does not import runtime CDN fonts;
+   it keeps Montserrat/Geist Mono names with local/system fallbacks until
+   font files are self-hosted in a later offline/PWA pass.
+   ============================================================ */
 
 :root,
+[data-theme="dark"],
 .dark {
   color-scheme: dark;
-  --pa-background: #080b0f;
-  --pa-foreground: #eef4f8;
-  --pa-surface: #101721;
-  --pa-surface-raised: #151e2b;
-  --pa-border: #263241;
-  --pa-muted: #8ea0ae;
-  --pa-cyan: #54d2e8;
-  --pa-green: #7ae08c;
-  --pa-amber: #f7c767;
-  --pa-coral: #ff8b78;
-  --pa-blue: #7ca8ff;
-  --pa-radius-card: 8px;
-  --pa-radius-control: 6px;
+  --cc-theme: dark;
+
+  --cc-page: #05070a;
+  --cc-bezel: #06080b;
+  --cc-bg: #0d1016;
+  --cc-surface: #161b23;
+  --cc-surface-inset: #0e1219;
+  --cc-surface-raised: #1b212d;
+  --cc-tabbar: #080a0f;
+
+  --cc-border: rgba(255, 255, 255, 0.07);
+  --cc-border-strong: rgba(255, 255, 255, 0.12);
+  --cc-border-faint: rgba(255, 255, 255, 0.06);
+  --cc-hairline-top: rgba(255, 255, 255, 0.05);
+  --cc-rail: #243042;
+  --cc-rail-fade: rgba(36, 48, 66, 0.12);
+
+  --cc-text: #eef2f7;
+  --cc-text-2: #c4ccd6;
+  --cc-text-3: #9aa6b4;
+  --cc-text-mute: #7c8a99;
+  --cc-text-faint: #79899a;
+  --cc-text-dim: #707d8e;
+  --cc-text-disabled: #586474;
+
+  --cc-cyan: #2dd4e8;
+  --cc-cyan-ink: #04222a;
+  --cc-cyan-tint: rgba(45, 212, 232, 0.12);
+  --cc-cyan-tint-2: rgba(45, 212, 232, 0.08);
+  --cc-cyan-line: rgba(45, 212, 232, 0.4);
+  --cc-cyan-line-soft: rgba(45, 212, 232, 0.22);
+  --cc-cyan-ring: rgba(45, 212, 232, 0.2);
+
+  --cc-brand: #7a36d9;
+  --cc-purple: #9a5cff;
+  --cc-purple-soft: #c2a3ff;
+  --cc-purple-tint: rgba(154, 92, 255, 0.1);
+  --cc-purple-line: rgba(154, 92, 255, 0.32);
+
+  --cc-green: #22c98f;
+  --cc-green-ink: #053122;
+  --cc-green-tint: rgba(34, 201, 143, 0.12);
+  --cc-amber: #e8a13a;
+  --cc-amber-ink: #2e1c00;
+  --cc-amber-text: #f0a93b;
+  --cc-amber-tint: rgba(232, 161, 58, 0.13);
+  --cc-amber-line: rgba(232, 161, 58, 0.42);
+
+  --cc-person-a-bg: var(--cc-green);
+  --cc-person-a-ink: var(--cc-green-ink);
+  --cc-person-b-bg: var(--cc-amber);
+  --cc-person-b-ink: var(--cc-amber-ink);
+  --cc-person-ab-bg: #8341e8;
+  --cc-person-ab-ink: #ffffff;
+
+  --cc-elev-1:
+    0 1px 2px rgba(0, 0, 0, 0.45), 0 1px 1px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 var(--cc-hairline-top);
+  --cc-elev-2:
+    0 4px 14px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 var(--cc-hairline-top);
+  --cc-elev-3:
+    0 18px 44px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 var(--cc-hairline-top);
+  --cc-shadow-bar: 0 -6px 22px rgba(0, 0, 0, 0.34);
+  --cc-shadow-device: 0 50px 110px rgba(0, 0, 0, 0.65);
+  --cc-glow-cyan: 0 0 0 1px rgba(45, 212, 232, 0.12), 0 10px 28px rgba(45, 212, 232, 0.16);
+  --cc-glow-cyan-dot: 0 0 8px rgba(45, 212, 232, 0.75);
+  --cc-glow-purple-dot: 0 0 8px rgba(154, 92, 255, 0.6);
+  --cc-shadow-cta: 0 8px 22px rgba(45, 212, 232, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+
+  --cc-finale-bg: linear-gradient(155deg, #1d1136, #161b23);
+  --cc-finale-border: rgba(154, 92, 255, 0.5);
+  --cc-finale-shadow: 0 10px 28px rgba(122, 54, 217, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --cc-finale-rule: #9a5cff;
+  --cc-finale-title: #ffffff;
+  --cc-finale-text: #e2d6f7;
+  --cc-finale-date: #c2a3ff;
 }
 
+[data-theme="light"],
 .light {
   color-scheme: light;
-  --pa-background: #f5f7fa;
-  --pa-foreground: #111821;
-  --pa-surface: #ffffff;
-  --pa-surface-raised: #eef2f6;
-  --pa-border: #d7dee7;
-  --pa-muted: #607080;
-  --pa-cyan: #007d91;
-  --pa-green: #137d3b;
-  --pa-amber: #9a6500;
-  --pa-coral: #b34332;
-  --pa-blue: #285fc8;
+  --cc-theme: light;
+
+  --cc-page: #e7e2d8;
+  --cc-bezel: #d6cfc2;
+  --cc-bg: #f4efe4;
+  --cc-surface: #ffffff;
+  --cc-surface-inset: #efeae0;
+  --cc-surface-raised: #ffffff;
+  --cc-tabbar: #fffdf9;
+
+  --cc-border: rgba(43, 36, 22, 0.12);
+  --cc-border-strong: rgba(43, 36, 22, 0.22);
+  --cc-border-faint: rgba(43, 36, 22, 0.07);
+  --cc-hairline-top: rgba(255, 255, 255, 0.65);
+  --cc-rail: #d8d0c2;
+  --cc-rail-fade: rgba(216, 208, 194, 0.25);
+
+  --cc-text: #231f17;
+  --cc-text-2: #4b443a;
+  --cc-text-3: #675f51;
+  --cc-text-mute: #7c7264;
+  --cc-text-faint: #787061;
+  --cc-text-dim: #7c7365;
+  --cc-text-disabled: #a39988;
+
+  --cc-cyan: #0b6e80;
+  --cc-cyan-ink: #ffffff;
+  --cc-cyan-tint: rgba(11, 110, 128, 0.1);
+  --cc-cyan-tint-2: rgba(11, 110, 128, 0.06);
+  --cc-cyan-line: rgba(11, 110, 128, 0.32);
+  --cc-cyan-line-soft: rgba(11, 110, 128, 0.2);
+  --cc-cyan-ring: rgba(11, 110, 128, 0.16);
+
+  --cc-brand: #7a36d9;
+  --cc-purple: #7a36d9;
+  --cc-purple-soft: #6d28d9;
+  --cc-purple-tint: rgba(122, 54, 217, 0.08);
+  --cc-purple-line: rgba(122, 54, 217, 0.3);
+
+  --cc-green: #0a7d4f;
+  --cc-green-ink: #ffffff;
+  --cc-green-tint: rgba(10, 125, 79, 0.1);
+  --cc-amber: #d98a14;
+  --cc-amber-ink: #3a2400;
+  --cc-amber-text: #a85f0c;
+  --cc-amber-tint: rgba(217, 138, 20, 0.12);
+  --cc-amber-line: rgba(217, 138, 20, 0.36);
+
+  --cc-person-a-bg: var(--cc-green);
+  --cc-person-a-ink: #ffffff;
+  --cc-person-b-bg: var(--cc-amber);
+  --cc-person-b-ink: #3a2400;
+  --cc-person-ab-bg: var(--cc-purple);
+  --cc-person-ab-ink: #ffffff;
+
+  --cc-elev-1:
+    0 1px 2px rgba(45, 38, 22, 0.07), 0 3px 8px rgba(45, 38, 22, 0.07),
+    inset 0 1px 0 var(--cc-hairline-top);
+  --cc-elev-2:
+    0 2px 5px rgba(45, 38, 22, 0.05), 0 10px 24px rgba(45, 38, 22, 0.09),
+    inset 0 1px 0 var(--cc-hairline-top);
+  --cc-elev-3:
+    0 6px 12px rgba(45, 38, 22, 0.07), 0 22px 50px rgba(45, 38, 22, 0.14),
+    inset 0 1px 0 var(--cc-hairline-top);
+  --cc-shadow-bar: 0 -6px 22px rgba(60, 50, 35, 0.07);
+  --cc-shadow-device: 0 44px 96px rgba(60, 50, 35, 0.22), 0 14px 34px rgba(60, 50, 35, 0.12);
+  --cc-glow-cyan: 0 0 0 1px rgba(11, 110, 128, 0.16), 0 10px 26px rgba(11, 110, 128, 0.16);
+  --cc-glow-cyan-dot: 0 0 6px rgba(11, 110, 128, 0.45);
+  --cc-glow-purple-dot: 0 0 6px rgba(122, 54, 217, 0.4);
+  --cc-shadow-cta:
+    0 8px 20px rgba(11, 110, 128, 0.26), 0 1px 2px rgba(11, 110, 128, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  --cc-finale-bg: linear-gradient(155deg, #f4ecff, #ffffff);
+  --cc-finale-border: rgba(122, 54, 217, 0.3);
+  --cc-finale-shadow: 0 12px 30px rgba(122, 54, 217, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --cc-finale-rule: #7a36d9;
+  --cc-finale-title: #2a1a4a;
+  --cc-finale-text: #5a4a76;
+  --cc-finale-date: #6d28d9;
+}
+
+:root {
+  --cc-font-sans: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --cc-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: var(--cc-font-sans);
+  --font-mono: var(--cc-font-mono);
+
+  --cc-fs-label: 9px;
+  --cc-ls-label: 0.16em;
+  --cc-fs-eyebrow: 9.5px;
+  --cc-ls-eyebrow: 0.14em;
+  --cc-fs-caption: 11px;
+  --cc-fs-sm: 12px;
+  --cc-fs-body: 13px;
+  --cc-fs-title-sm: 15px;
+  --cc-fs-title: 21px;
+  --cc-ls-title: -0.015em;
+  --cc-fs-display: 26px;
+  --cc-ls-display: -0.02em;
+  --cc-fw-reg: 400;
+  --cc-fw-med: 500;
+  --cc-fw-semi: 600;
+  --cc-fw-bold: 700;
+  --cc-fw-x: 800;
+
+  --cc-space-1: 4px;
+  --cc-space-2: 8px;
+  --cc-space-3: 12px;
+  --cc-space-4: 16px;
+  --cc-space-5: 18px;
+  --cc-space-6: 24px;
+  --cc-space-7: 32px;
+  --cc-gap: 11px;
+  --cc-pad-screen: 18px;
+
+  --cc-r-chip: 7px;
+  --cc-r-pill: 999px;
+  --cc-r-tile: 12px;
+  --cc-r-card: 14px;
+  --cc-r-row: 13px;
+  --cc-r-icon: 10px;
+  --cc-r-screen: 36px;
+  --cc-r-bezel: 46px;
+
+  --cc-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --cc-dur: 200ms;
+  --cc-dur-fast: 120ms;
+
+  --surface-page: var(--cc-page);
+  --surface-screen: var(--cc-bg);
+  --surface-card: var(--cc-surface);
+  --surface-inset: var(--cc-surface-inset);
+  --surface-raised: var(--cc-surface-raised);
+  --surface-tabbar: var(--cc-tabbar);
+  --border-default: var(--cc-border);
+  --border-strong: var(--cc-border-strong);
+  --border-faint: var(--cc-border-faint);
+  --text-primary: var(--cc-text);
+  --text-body: var(--cc-text-2);
+  --text-muted: var(--cc-text-3);
+  --text-faint: var(--cc-text-faint);
+  --text-disabled: var(--cc-text-disabled);
+  --accent-primary: var(--cc-cyan);
+  --accent-primary-ink: var(--cc-cyan-ink);
+  --accent-secondary: var(--cc-purple);
+  --brand: var(--cc-brand);
+  --status-go: var(--cc-green);
+  --status-caution: var(--cc-amber);
+  --status-live: var(--cc-cyan);
+  --elevation-1: var(--cc-elev-1);
+  --elevation-2: var(--cc-elev-2);
+  --elevation-3: var(--cc-elev-3);
+  --shadow-glow: var(--cc-glow-cyan);
+  --shadow-cta: var(--cc-shadow-cta);
+  --radius-chip: var(--cc-r-chip);
+  --radius-tile: var(--cc-r-tile);
+  --radius-card: var(--cc-r-card);
+  --radius-pill: var(--cc-r-pill);
+  --ease-standard: var(--cc-ease);
+  --duration: var(--cc-dur);
+  --duration-fast: var(--cc-dur-fast);
+
+  /* Compatibility layer for app code still migrating from --pa-* aliases. */
+  --pa-theme: var(--cc-theme);
+  --pa-brand-midnight: #140126;
+  --pa-brand-royal: var(--cc-brand);
+  --pa-brand-violet: var(--cc-purple);
+  --pa-background: var(--cc-bg);
+  --pa-foreground: var(--cc-text);
+  --pa-surface: var(--cc-surface);
+  --pa-surface-raised: var(--cc-surface-raised);
+  --pa-surface-soft: var(--cc-surface-inset);
+  --pa-border: var(--cc-border);
+  --pa-muted: var(--cc-text-3);
+  --pa-primary: var(--cc-cyan);
+  --pa-primary-foreground: var(--cc-cyan-ink);
+  --pa-secondary: var(--cc-purple);
+  --pa-cyan: var(--cc-cyan);
+  --pa-green: var(--cc-green);
+  --pa-amber: var(--cc-amber-text);
+  --pa-coral: var(--cc-amber-text);
+  --pa-blue: var(--cc-purple-soft);
+  --pa-radius-card: var(--cc-r-card);
+  --pa-radius-control: var(--cc-r-icon);
+  --pa-shadow-card: var(--cc-elev-1);
+  --pa-shadow-glow: var(--cc-glow-cyan);
 }
