@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js
+.next/
+out/
+
+# Build and coverage
+dist/
+coverage/
+*.tsbuildinfo
+
+# Runtime and logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Supabase local artifacts
+.supabase/
+supabase/.branches/
+supabase/.temp/
+supabase/.env
+
+# Playwright
+playwright-report/
+test-results/
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/

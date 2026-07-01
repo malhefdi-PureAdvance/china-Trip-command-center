@@ -1,0 +1,45 @@
+# Data Model
+
+## Core Entities
+
+- `persons`: travelers, operators, business contacts, and external placeholders.
+- `users`: application users mapped to persons.
+- `teams`, `memberships`: workspace ownership and membership roles.
+- `trips`, `trip_members`: mission-level planning and assigned people.
+- `locations`, `saved_locations`: route and venue placeholders.
+- `itinerary_items`, `itinerary_attendees`, `itinerary_proposals`: schedule records and proposed changes.
+- `notes`: team notes with visibility and tags.
+- `business_targets`: candidate organizations for business visits.
+- `business_target_profiles`: visit objectives, talking points, questions, and risks.
+- `business_target_sources`: source labels, URLs, confidence, and extracted notes.
+- `business_target_scores`: fit, access, timing, and priority scores.
+- `visit_requests`: draft visit outreach windows and message drafts.
+- `leads`: follow-up ownership and pipeline stage.
+- `shares`: entity-level sharing placeholders.
+- `activity_log`: audit-style activity summaries.
+
+## Business Target Workflow
+
+Business target statuses are:
+
+`candidate`, `source_needed`, `researched`, `profiled`, `reviewed`, `submission_ready`, `submitted`, `scheduled`, `visited`, `follow_up`, `archived`.
+
+Source confidence values are:
+
+`unknown`, `low`, `medium`, `high`, `verified`.
+
+## Business Visit Data Standard
+
+The standard ID is `china-2026-business-visit-v0.1`. It is represented in:
+
+- `BusinessVisitDataStandardSchema` in `packages/domain/src/schemas.ts`.
+- `business_visit_data_standards` in `packages/database/migrations/0001_core_schema.sql`.
+- Demo seed metadata in `packages/database/seeds/china_2026_demo.sql`.
+
+Required fields are `name`, `city`, `country`, `sector`, `status`, `source_confidence`, `source_label`, `last_checked_at`, `action_summary`, and `visit_objective`.
+
+Blocked sensitive fields include identity, payment, credential, private contact, and home address fields.
+
+## Demo Scope
+
+Current demo records are synthetic and limited to Hong Kong and Shenzhen in the Greater Bay Area corridor.
