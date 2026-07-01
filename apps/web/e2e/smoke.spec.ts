@@ -20,6 +20,12 @@ test.describe("command center smoke", () => {
       await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
       await expect(page.getByText("Hong Kong").first()).toBeVisible();
       await expect(page.getByText("Shenzhen").first()).toBeVisible();
+
+      if (route.path === "/admin/data-review") {
+        await expect(page.getByText("Supabase config")).toBeVisible();
+        await expect(page.getByText("Not configured", { exact: true })).toBeVisible();
+        await expect(page.getByText("RLS policy mode")).toBeVisible();
+      }
     });
   }
 });

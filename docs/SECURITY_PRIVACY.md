@@ -27,3 +27,5 @@ Production policies still need team membership checks, role checks, trip scoping
 ## Environment Files
 
 `.env.example` contains placeholders only. Local `.env` files are ignored. Never commit live Supabase credentials or provider tokens.
+
+`SUPABASE_SERVICE_ROLE_KEY` is server-only. It must be set only in Vercel/server secrets or local ignored env files. It must never be referenced from client components, browser bundles, public JSON, screenshots, or docs examples with live values.

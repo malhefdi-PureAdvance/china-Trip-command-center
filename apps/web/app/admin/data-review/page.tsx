@@ -1,9 +1,13 @@
-import { AlertTriangle, CheckCircle2, DatabaseZap } from "lucide-react";
+import { AlertTriangle, CheckCircle2, DatabaseZap, ShieldCheck } from "lucide-react";
 
 import { Badge, Card, CardContent, CardHeader, CardTitle } from "@pure-advance/design-system";
+import { checkSupabaseHealth } from "@pure-advance/database";
 
 import { PageHeader } from "@/components/page-header";
 import { demoData } from "@/lib/demo-data";
+import { buildSupabaseHealthRows } from "@/lib/supabase-health-view";
+
+export const dynamic = "force-dynamic";
 
 const reviewRows = [
   {
@@ -31,16 +35,37 @@ function isVerifiedSource(sourceConfidence: string) {
   return sourceConfidence === "verified";
 }
 
-export default function DataReviewPage() {
+export default async function DataReviewPage() {
+  const supabaseHealth = await checkSupabaseHealth();
+  const supabaseRows = buildSupabaseHealthRows(supabaseHealth);
+
   return (
     <>
       <PageHeader
         eyebrow="Admin"
         title="Data Review"
-        summary="Review queue scaffold for future source-backed ingestion and approval workflows."
-        badge="Placeholder controls"
+        summary="Review queue scaffold for future source-backed ingestion, Supabase health, and approval workflows."
+        badge="Backend-ready"
       />
-      <section className="grid gap-4 lg:grid-cols-3">
+      <section className="grid gap-4 lg:grid-cols-4">
+        {supabaseRows.map((row) => (
+          <Card key={row.label}>
+            <CardHeader>
+              <CardTitle>{row.label}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-3">
+                <div className="flex items-end justify-between gap-4">
+                  <p className="text-xl font-semibold tracking-normal">{row.value}</p>
+                  <Badge tone={row.tone}>{row.tone === "coral" ? "action" : row.tone}</Badge>
+                </div>
+                <p className="text-xs leading-5 text-[var(--pa-muted)]">{row.note}</p>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </section>
+      <section className="mt-4 grid gap-4 lg:grid-cols-3">
         {reviewRows.map((row) => (
           <Card key={row.label}>
             <CardHeader>
@@ -71,7 +96,12 @@ export default function DataReviewPage() {
             </p>
             <p className="flex items-center gap-2">
               <DatabaseZap className="size-4 text-[var(--pa-cyan)]" aria-hidden="true" />
-              Writes remain deferred until the ingestion source contract is approved.
+              Supabase writes remain deferred until the ingestion source contract is approved.
+            </p>
+            <p className="flex items-center gap-2">
+              <ShieldCheck className="size-4 text-[var(--pa-green)]" aria-hidden="true" />
+              RLS starts as authenticated read-only; anonymous and mutation policies are not
+              granted.
             </p>
           </CardContent>
         </Card>

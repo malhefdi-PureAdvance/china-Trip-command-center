@@ -33,6 +33,12 @@ Production is deployed on Vercel:
 - Build command: `pnpm --filter @pure-advance/web build`
 - Install command: `corepack enable && corepack prepare pnpm@11.9.0 --activate && pnpm install --frozen-lockfile`
 
+## Supabase
+
+The app is backend-ready but remains safe without live credentials. See `docs/SUPABASE.md` for required env vars, migration/seed commands, and RLS posture.
+
+`/admin/data-review` reports Supabase health at runtime and falls back to demo mode when credentials are absent.
+
 ## Validation
 
 ```bash
