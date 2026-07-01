@@ -11,12 +11,13 @@ async function setTheme(page: Page, theme: "light" | "dark" | "system") {
   await page.evaluate((nextTheme) => window.__setTheme?.(nextTheme), theme);
 }
 
-test.describe("Pure Advance theme foundation", () => {
-  test("resolves dark and light Pure Advance tokens", async ({ page }) => {
+test.describe("Pure Advance command-center design-system port", () => {
+  test("resolves source handoff dark and light tokens", async ({ page }) => {
     await page.goto("/");
 
     await setTheme(page, "light");
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await expect(page.locator("body")).toHaveAttribute("data-theme", "light");
     await expect(page.locator("html")).toHaveAttribute("data-theme-preference", "light");
     await expect(page.getByRole("button", { name: "Light theme" })).toHaveAttribute(
       "aria-pressed",
@@ -26,43 +27,56 @@ test.describe("Pure Advance theme foundation", () => {
     const lightTokens = await page.evaluate(() => {
       const styles = getComputedStyle(document.documentElement);
       return {
-        theme: styles.getPropertyValue("--pa-theme").trim(),
-        background: styles.getPropertyValue("--pa-background").trim(),
-        foreground: styles.getPropertyValue("--pa-foreground").trim(),
-        primary: styles.getPropertyValue("--pa-primary").trim(),
-        surface: styles.getPropertyValue("--pa-surface").trim()
+        theme: styles.getPropertyValue("--cc-theme").trim(),
+        bg: styles.getPropertyValue("--cc-bg").trim(),
+        text: styles.getPropertyValue("--cc-text").trim(),
+        body: styles.getPropertyValue("--cc-text-2").trim(),
+        primary: styles.getPropertyValue("--cc-cyan").trim(),
+        purple: styles.getPropertyValue("--cc-purple").trim(),
+        surface: styles.getPropertyValue("--cc-surface").trim(),
+        radiusCard: styles.getPropertyValue("--cc-r-card").trim()
       };
     });
 
     expect(lightTokens).toMatchObject({
       theme: "light",
-      background: "#faf7ff",
-      foreground: "#140126",
-      primary: "#7a36d9",
-      surface: "#fff"
+      bg: "#f4efe4",
+      text: "#231f17",
+      body: "#4b443a",
+      primary: "#0b6e80",
+      purple: "#7a36d9",
+      surface: "#fff",
+      radiusCard: "14px"
     });
 
     await setTheme(page, "dark");
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await expect(page.locator("body")).toHaveAttribute("data-theme", "dark");
     await expect(page.locator("html")).toHaveAttribute("data-theme-preference", "dark");
 
     const darkTokens = await page.evaluate(() => {
       const styles = getComputedStyle(document.documentElement);
       return {
-        theme: styles.getPropertyValue("--pa-theme").trim(),
-        background: styles.getPropertyValue("--pa-background").trim(),
-        foreground: styles.getPropertyValue("--pa-foreground").trim(),
-        primary: styles.getPropertyValue("--pa-primary").trim(),
-        surface: styles.getPropertyValue("--pa-surface").trim()
+        theme: styles.getPropertyValue("--cc-theme").trim(),
+        bg: styles.getPropertyValue("--cc-bg").trim(),
+        text: styles.getPropertyValue("--cc-text").trim(),
+        body: styles.getPropertyValue("--cc-text-2").trim(),
+        primary: styles.getPropertyValue("--cc-cyan").trim(),
+        purple: styles.getPropertyValue("--cc-purple").trim(),
+        surface: styles.getPropertyValue("--cc-surface").trim(),
+        radiusCard: styles.getPropertyValue("--cc-r-card").trim()
       };
     });
 
     expect(darkTokens).toMatchObject({
       theme: "dark",
-      background: "#0b0612",
-      foreground: "#fbf7ff",
-      primary: "#8c37e0",
-      surface: "#150a21"
+      bg: "#0d1016",
+      text: "#eef2f7",
+      body: "#c4ccd6",
+      primary: "#2dd4e8",
+      purple: "#9a5cff",
+      surface: "#161b23",
+      radiusCard: "14px"
     });
   });
 
@@ -71,6 +85,7 @@ test.describe("Pure Advance theme foundation", () => {
     await setTheme(page, "system");
 
     await expect(page.locator("html")).toHaveAttribute("data-theme-preference", "system");
+    await expect(page.locator("body")).toHaveAttribute("data-theme-preference", "system");
     await expect(page.locator("html")).toHaveAttribute("data-theme", /^(dark|light)$/);
     await expect(page.getByRole("button", { name: "System theme" })).toHaveAttribute(
       "aria-pressed",

@@ -5,21 +5,21 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../utils";
 
 export const buttonVariants = cva(
-  "inline-flex h-10 items-center justify-center gap-2 rounded-[var(--pa-radius-control)] px-4 text-sm font-semibold tracking-[-0.01em] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex h-11 items-center justify-center gap-2 rounded-[12px] border border-transparent px-4 text-sm font-bold transition-[transform,box-shadow,filter,color,background,border-color] duration-[var(--cc-dur-fast)] ease-[var(--cc-ease)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--cc-cyan)] disabled:pointer-events-none disabled:opacity-50 active:translate-y-px",
   {
     variants: {
       variant: {
         primary:
-          "bg-[var(--pa-primary)] text-[var(--pa-primary-foreground)] shadow-[var(--pa-shadow-glow)] hover:bg-[color-mix(in_srgb,var(--pa-primary)_88%,white)] focus-visible:outline-[var(--pa-primary)]",
+          "bg-[var(--cc-cyan)] text-[var(--cc-cyan-ink)] shadow-[var(--cc-shadow-cta)] hover:brightness-[1.06]",
         secondary:
-          "border border-[color-mix(in_srgb,var(--pa-primary)_38%,var(--pa-border))] bg-[color-mix(in_srgb,var(--pa-surface-raised)_86%,transparent)] text-[var(--pa-foreground)] hover:border-[var(--pa-primary)] hover:bg-[var(--pa-surface-soft)] focus-visible:outline-[var(--pa-primary)]",
+          "border-[var(--cc-cyan-line)] bg-transparent text-[var(--cc-cyan)] hover:bg-[var(--cc-cyan-tint-2)]",
         ghost:
-          "text-[var(--pa-muted)] hover:bg-[var(--pa-surface-raised)] hover:text-[var(--pa-foreground)] focus-visible:outline-[var(--pa-primary)]"
+          "border-[var(--cc-border-strong)] bg-transparent text-[var(--cc-text-3)] hover:bg-[var(--cc-surface-inset)] hover:text-[var(--cc-text)]"
       },
       size: {
-        sm: "h-9 px-3 text-xs",
-        md: "h-10 px-4",
-        icon: "size-10 px-0"
+        sm: "h-9 rounded-[10px] px-3 text-[11px] font-semibold",
+        md: "h-11 px-4",
+        icon: "size-11 rounded-[10px] px-0"
       }
     },
     defaultVariants: {

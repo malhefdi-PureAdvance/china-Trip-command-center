@@ -23,6 +23,10 @@ const themeBootScript = `
     root.dataset.themePreference = preference;
     root.classList.remove("light", "dark");
     root.classList.add(resolved);
+    if (document.body) {
+      document.body.dataset.theme = resolved;
+      document.body.dataset.themePreference = preference;
+    }
   } catch (_) {}
 })();
 `;
@@ -36,12 +40,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       className="dark"
       suppressHydrationWarning
     >
-      <body>
+      <body data-theme="dark" data-theme-preference="system" suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
         <div className="min-h-screen">
-          <div className="border-b border-[var(--pa-border)] bg-[color-mix(in_srgb,var(--pa-surface)_88%,transparent)] backdrop-blur">
-            <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2.5 text-xs font-medium text-[var(--pa-muted)] sm:px-6 lg:px-8">
-              <ShieldCheck className="size-4 shrink-0 text-[var(--pa-green)]" aria-hidden="true" />
+          <div className="border-b border-[var(--cc-border-faint)] bg-[var(--cc-surface-inset)]">
+            <div className="mx-auto flex max-w-5xl items-center gap-3 px-[var(--cc-pad-screen)] py-2 font-mono text-[var(--cc-fs-caption)] text-[var(--cc-text-faint)]">
+              <ShieldCheck className="size-4 shrink-0 text-[var(--cc-green)]" aria-hidden="true" />
               <span>Demo-safe scaffold: Hong Kong / Shenzhen Greater Bay Area content only.</span>
             </div>
           </div>

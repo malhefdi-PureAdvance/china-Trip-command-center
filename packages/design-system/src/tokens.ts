@@ -1,54 +1,88 @@
 export const commandCenterTokens = {
+  source: {
+    path: "/home/malhefdi/repos/Product requirements document/design_handoff_china_2026_companion/_ds/pure-advance-design-system-788e773b-e340-4afc-9adb-499f73f5eb2f/tokens",
+    version: "pure-advance-command-center-788e773b"
+  },
   brand: {
     midnight: "#140126",
-    royal: "#7A36D9",
-    violet: "#8C37E0",
-    ink: "#21112F",
-    porcelain: "#FBF8FF"
+    canonicalPurple: "#7A36D9",
+    screenPurple: "#9A5CFF"
   },
   radius: {
-    card: "18px",
-    control: "14px",
-    full: "999px"
+    chip: "7px",
+    icon: "10px",
+    tile: "12px",
+    row: "13px",
+    card: "14px",
+    screen: "36px",
+    bezel: "46px",
+    pill: "999px"
   },
-  shadow: {
-    card: "0 20px 70px rgba(20, 1, 38, 0.22)",
-    glow: "0 0 0 1px rgba(140, 55, 224, 0.18), 0 18px 60px rgba(122, 54, 217, 0.22)"
+  spacing: {
+    1: "4px",
+    2: "8px",
+    3: "12px",
+    4: "16px",
+    5: "18px",
+    6: "24px",
+    7: "32px",
+    gap: "11px",
+    screenPadding: "18px"
   },
   dark: {
     theme: "dark",
-    background: "#0B0612",
-    foreground: "#FBF7FF",
-    surface: "#150A21",
-    surfaceRaised: "#21112F",
-    surfaceSoft: "#2B1740",
-    border: "#3A2851",
-    muted: "#B7A9C8",
-    primary: "#8C37E0",
-    primaryForeground: "#FFFFFF",
-    secondary: "#7A36D9",
-    cyan: "#55D6EA",
-    green: "#7CE38B",
-    amber: "#F7C767",
-    coral: "#FF8B78",
-    blue: "#9BAEFF"
+    page: "#05070a",
+    background: "#0d1016",
+    foreground: "#eef2f7",
+    textBody: "#c4ccd6",
+    textMuted: "#9aa6b4",
+    surface: "#161b23",
+    surfaceInset: "#0e1219",
+    surfaceRaised: "#1b212d",
+    border: "rgba(255,255,255,.07)",
+    borderStrong: "rgba(255,255,255,.12)",
+    cyan: "#2dd4e8",
+    cyanInk: "#04222a",
+    purple: "#9a5cff",
+    brand: "#7A36D9",
+    green: "#22c98f",
+    amber: "#e8a13a",
+    amberText: "#f0a93b"
   },
   light: {
     theme: "light",
-    background: "#FAF7FF",
-    foreground: "#140126",
-    surface: "#FFFFFF",
-    surfaceRaised: "#F3ECFB",
-    surfaceSoft: "#EDE2F8",
-    border: "#DCCBEF",
-    muted: "#675875",
-    primary: "#7A36D9",
-    primaryForeground: "#FFFFFF",
-    secondary: "#8C37E0",
-    cyan: "#0B7285",
-    green: "#247A39",
-    amber: "#986A10",
-    coral: "#B94A3A",
-    blue: "#365BC5"
+    page: "#e7e2d8",
+    background: "#f4efe4",
+    foreground: "#231f17",
+    textBody: "#4b443a",
+    textMuted: "#675f51",
+    surface: "#ffffff",
+    surfaceInset: "#efeae0",
+    surfaceRaised: "#ffffff",
+    border: "rgba(43,36,22,.12)",
+    borderStrong: "rgba(43,36,22,.22)",
+    cyan: "#0b6e80",
+    cyanInk: "#ffffff",
+    purple: "#7A36D9",
+    brand: "#7A36D9",
+    green: "#0a7d4f",
+    amber: "#d98a14",
+    amberText: "#a85f0c"
+  },
+  typography: {
+    sans: "Montserrat",
+    mono: "Geist Mono",
+    label: "9px",
+    eyebrow: "9.5px",
+    caption: "11px",
+    body: "13px",
+    titleSmall: "15px",
+    title: "21px",
+    display: "26px"
+  },
+  motion: {
+    ease: "cubic-bezier(.4,0,.2,1)",
+    duration: "200ms",
+    durationFast: "120ms"
   }
 } as const;

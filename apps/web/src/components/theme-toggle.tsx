@@ -44,6 +44,10 @@ function persistTheme(preference: ThemePreference) {
   root.dataset.themePreference = preference;
   root.classList.remove("light", "dark");
   root.classList.add(resolved);
+
+  document.body.dataset.theme = resolved;
+  document.body.dataset.themePreference = preference;
+
   localStorage.setItem(storageKey, preference);
 }
 
@@ -80,7 +84,7 @@ export function ThemeToggle() {
 
   return (
     <div
-      className="inline-flex rounded-[var(--pa-radius-control)] border border-[var(--pa-border)] bg-[color-mix(in_srgb,var(--pa-surface)_82%,transparent)] p-1 shadow-[var(--pa-shadow-card)]"
+      className="inline-flex rounded-[9px] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] p-[3px]"
       role="group"
       aria-label="Theme preference"
     >
@@ -96,13 +100,18 @@ export function ThemeToggle() {
             size="sm"
             aria-pressed={isActive}
             aria-label={`${item.label} theme`}
-            className={cn("h-8 px-2.5", isActive && "text-[var(--pa-foreground)]")}
+            className={cn(
+              "h-8 rounded-[6px] border-0 px-2.5 font-mono uppercase tracking-[0.06em]",
+              isActive && "bg-[var(--cc-cyan)] text-[var(--cc-cyan-ink)]"
+            )}
             onClick={() => {
               setPreference(item.value);
             }}
           >
             <Icon className="size-4" aria-hidden="true" />
-            <span className="sr-only sm:not-sr-only sm:text-xs">{item.label}</span>
+            <span className="sr-only sm:not-sr-only sm:text-[var(--cc-fs-caption)]">
+              {item.label}
+            </span>
           </Button>
         );
       })}
