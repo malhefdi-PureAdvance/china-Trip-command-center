@@ -23,6 +23,16 @@ The web app runs from `apps/web` and exposes:
 - `/team`
 - `/admin/data-review`
 
+## Deployment
+
+Production is deployed on Vercel:
+
+- URL: https://china-2026-command-center.vercel.app
+- Project: `pure-advance/china-2026-command-center`
+- Root directory: `apps/web`
+- Build command: `pnpm --filter @pure-advance/web build`
+- Install command: `corepack enable && corepack prepare pnpm@11.9.0 --activate && pnpm install --frozen-lockfile`
+
 ## Validation
 
 ```bash
