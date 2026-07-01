@@ -1,0 +1,25 @@
+import { expect, test } from "@playwright/test";
+
+const routes = [
+  { path: "/", heading: "China 2026 Demo Mission" },
+  { path: "/today", heading: "China 2026 Demo Mission" },
+  { path: "/itinerary", heading: "Mission Schedule" },
+  { path: "/map", heading: "Hong Kong <-> Shenzhen Corridor" },
+  { path: "/business-targets", heading: "Visit Pipeline" },
+  { path: "/notes", heading: "Team Notes" },
+  { path: "/team", heading: "Mission Team" },
+  { path: "/admin/data-review", heading: "Data Review" }
+];
+
+test.describe("command center smoke", () => {
+  for (const route of routes) {
+    test(`${route.path} renders`, async ({ page }) => {
+      await page.goto(route.path);
+
+      await expect(page.getByRole("heading", { name: route.heading })).toBeVisible();
+      await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
+      await expect(page.getByText("Hong Kong").first()).toBeVisible();
+      await expect(page.getByText("Shenzhen").first()).toBeVisible();
+    });
+  }
+});
