@@ -18,6 +18,7 @@ import {
 } from "@pure-advance/database";
 
 import { buildActivationReadinessModel } from "@/lib/activation-readiness-view";
+import { getPrivateTierState } from "@/lib/private-tier";
 import {
   businessTargetDryRunFixtureBatch,
   dryRunBusinessTargetIngestionBatch
@@ -59,7 +60,11 @@ export default async function DataReviewPage() {
     fetchBusinessVisitReviewSnapshot()
   ]);
   const supabaseRows = buildSupabaseHealthRows(supabaseHealth);
-  const readiness = buildActivationReadinessModel(supabaseHealth, expectedTables.length);
+  const readiness = buildActivationReadinessModel(
+    supabaseHealth,
+    expectedTables.length,
+    getPrivateTierState().tier
+  );
   const reviewModel = buildBusinessVisitReviewModel(reviewSnapshot, demoData);
   const dryRunModel = buildIngestionDryRunModel(
     dryRunBusinessTargetIngestionBatch(businessTargetDryRunFixtureBatch)

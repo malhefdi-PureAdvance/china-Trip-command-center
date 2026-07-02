@@ -8,6 +8,7 @@ import {
   ClipboardCheck,
   DatabaseZap,
   FileText,
+  KeyRound,
   LayoutDashboard,
   Map,
   Users
@@ -27,6 +28,7 @@ const primaryNavItems = [
 
 const secondaryNavItems = [
   { href: "/team", label: "Team", icon: Users },
+  { href: "/private", label: "Private", icon: KeyRound },
   { href: "/admin/data-review", label: "Data Review", icon: DatabaseZap }
 ];
 

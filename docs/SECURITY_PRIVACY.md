@@ -21,7 +21,7 @@ Do not import or commit:
 The app ships a conservative offline shell (`apps/web/public/sw.js` + `/offline`):
 
 - **What it guarantees:** the app shell, previously visited pages, and a small precached set (`/today`, `/itinerary`, `/business-targets`, `/map`, `/offline`) keep working without a connection. Navigations are network-first, so content is always fresh when online.
-- **What it does not guarantee:** unvisited dossier pages may be unavailable offline; `/admin/data-review` is deliberately network-only so Supabase/live status is never shown stale.
+- **What it does not guarantee:** unvisited dossier pages may be unavailable offline; `/admin`, `/private`, and `/auth` routes are deliberately **network-only** (never intercepted, never cached) so live status and any future per-user content can never be served stale or leak into the on-device cache.
 - **What is safe to cache:** everything the app currently serves — it is all public, demo-safe content (sanitized schedule anchors, app-safe dossiers, tokens/fonts/icons). Field notes never leave the device (localStorage), independent of the worker.
 - **Why private-tier data still requires auth first:** a service worker caches whatever the origin serves into browser storage on the device, and this deployment is unauthenticated — any private-tier content would be exposed both over the network and in cache. Private data must not ship until authentication, authorization, and a private-tier cache policy (or no-cache) exist. Do not add private content to the precache list or to any app route before that.
 

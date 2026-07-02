@@ -4,8 +4,14 @@ export const demoSeedPath = "packages/database/seeds/china_2026_demo.sql";
 export const migrationPaths = [
   "packages/database/migrations/0001_core_schema.sql",
   "packages/database/migrations/0002_business_visit_source_url_standard.sql",
-  "packages/database/migrations/0003_app_intel_tables.sql"
+  "packages/database/migrations/0003_app_intel_tables.sql",
+  "packages/database/migrations/0004_auth_private_tier.sql"
 ] as const;
+
+// Private-tier role model (migration 0004). Fail-closed: users without an
+// app_members row have no role and no Tier-2 access.
+export const appRoles = ["owner", "team", "program_viewer"] as const;
+export type AppRole = (typeof appRoles)[number];
 
 export const databaseArtifactPaths = {
   migrations: [...migrationPaths],
@@ -40,7 +46,9 @@ export const expectedTables = [
   "mission_phases",
   "business_target_dossiers",
   "itinerary_intel",
-  "hydration_sources"
+  "hydration_sources",
+  "app_members",
+  "team_notes"
 ] as const;
 
 export const requiredEnvVars = [

@@ -22,7 +22,8 @@ The app is demo-safe by default: it carries **real sanitized trip anchors** (pro
 - **Notes**: shared mission context plus local-only field capture (meeting note / lead follow-up / daily debrief templates; browser storage, no uploads).
 - **Team**: Pure Advance roster separated from program representatives.
 - **Admin / Data Review**: hydration counts and source files, privacy-guard status, Supabase readiness, ingestion dry-run.
-- **PWA / offline shell**: web-app manifest, home-screen icons, self-hosted fonts (next/font), and a conservative service worker (network-first navigations, cached shell + visited pages, `/offline` fallback; `/admin` never cached). See SECURITY_PRIVACY for caching boundaries.
+- **PWA / offline shell**: web-app manifest, home-screen icons, self-hosted fonts (next/font), and a conservative service worker (network-first navigations, cached shell + visited pages, `/offline` fallback; `/admin`, `/private`, and `/auth` never cached). See SECURITY_PRIVACY for caching boundaries.
+- **Auth / private-tier shell** (`/private`): magic-link auth wiring that degrades gracefully without credentials, a fail-closed role model (owner / team / program_viewer, migration 0004), and honest state reporting — deliberately inactive until Mohammed verifies RLS and enables the flag. No Tier-2/Tier-3 data ships. See PRIVATE_TIER.md.
 - Shared domain schemas (Zod) with app-facing `MissionPhase` and `BusinessTargetDossier` structures.
 - SQL migration for core domain tables and conservative RLS placeholders; ingestion dry-run contract (`writesPerformed: 0`).
 

@@ -12,11 +12,12 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@pure-advance/database": "workspace:*",
     "@pure-advance/data-ingestion": "workspace:*",
+    "@pure-advance/database": "workspace:*",
     "@pure-advance/design-system": "workspace:*",
     "@pure-advance/domain": "workspace:*",
     "@pure-advance/maps": "workspace:*",
+    "@supabase/supabase-js": "^2.110.0",
     "lucide-react": "^1.23.0",
     "next": "^16.2.10",
     "react": "^19.2.7",

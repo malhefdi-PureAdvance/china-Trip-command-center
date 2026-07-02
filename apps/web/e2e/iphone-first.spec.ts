@@ -78,6 +78,7 @@ test.describe("iPhone-first command center shell", () => {
       "/business-targets",
       "/notes",
       "/team",
+      "/private",
       "/admin/data-review"
     ]) {
       await page.goto(path);

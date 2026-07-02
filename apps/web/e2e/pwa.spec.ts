@@ -25,8 +25,12 @@ test.describe("pwa artifacts", () => {
     const body = await sw.text();
     expect(body).toContain("CACHE_VERSION");
     expect(body).toContain("/offline");
-    // Admin stays network-only.
-    expect(body).toContain('startsWith("/admin")');
+    // Auth/private/admin surfaces are never intercepted or cached.
+    expect(body).toContain('NETWORK_ONLY_PREFIXES = ["/admin", "/private", "/auth"]');
+    // Private routes must never be precached: inspect the precache list itself.
+    const precacheList = body.match(/const PRECACHE_URLS = \[[^\]]*\]/s)?.[0] ?? "";
+    expect(precacheList.length).toBeGreaterThan(0);
+    expect(precacheList).not.toMatch(/\/(private|auth|admin)/);
 
     for (const icon of [
       "/icons/icon-192.png",
