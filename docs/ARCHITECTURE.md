@@ -6,7 +6,7 @@
 - `packages/domain`: shared Zod schemas, inferred types, and the synthetic demo dataset.
 - `packages/design-system`: reusable UI primitives and theme tokens.
 - `packages/maps`: provider-agnostic map placeholder helpers.
-- `packages/database`: SQL migration and seed artifact paths.
+- `packages/database`: SQL migration, seed artifact paths, Supabase config helpers, initial database types, and admin health checks.
 - `packages/data-ingestion`: validation and placeholder import logic for future source-backed records.
 
 ## Web App
@@ -40,3 +40,5 @@ Future production flow:
 `packages/database/migrations/0001_core_schema.sql` creates enums and core tables matching the domain model. RLS is enabled on every table with authenticated read-only placeholder policies. Mutation policies are intentionally not created yet.
 
 `packages/database/seeds/china_2026_demo.sql` inserts synthetic demo data only.
+
+`packages/database/src/supabase.ts` exposes runtime-safe Supabase configuration helpers. The web app uses these helpers in `/admin/data-review` to distinguish four states: not configured, public config only, reachable with seed present, and unreachable/error.

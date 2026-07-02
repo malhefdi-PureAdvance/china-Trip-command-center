@@ -12,6 +12,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@pure-advance/database": "workspace:*",
     "@pure-advance/design-system": "workspace:*",
     "@pure-advance/domain": "workspace:*",
     "@pure-advance/maps": "workspace:*",

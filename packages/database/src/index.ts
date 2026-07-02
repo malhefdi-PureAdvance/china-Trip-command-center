@@ -10,3 +10,22 @@ export const conservativeRlsPolicyMode =
   "authenticated-read-only-placeholder; no anonymous or mutation policies are created";
 
 export const businessVisitDataStandardId = "china-2026-business-visit-v0.1";
+
+export type { Database, Json } from "./database.types";
+export {
+  checkSupabaseHealth,
+  createSupabaseAdminClient,
+  createSupabaseBrowserClient,
+  getSupabaseConfigStatus,
+  readSupabaseRuntimeConfig,
+  supabaseEnvKeys
+} from "./supabase";
+export type {
+  SupabaseConfigMode,
+  SupabaseConfigStatus,
+  SupabaseDemoSeedStatus,
+  SupabaseHealth,
+  SupabaseHealthOptions,
+  SupabaseHealthStatus,
+  SupabaseRuntimeConfig
+} from "./supabase";
