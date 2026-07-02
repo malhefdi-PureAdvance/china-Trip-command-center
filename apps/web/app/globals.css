@@ -5,6 +5,16 @@
 @source "../src/**/*.{ts,tsx}";
 @source "../../../packages/design-system/src/**/*.{ts,tsx}";
 
+/* Self-hosted fonts (next/font) take priority over the theme's named-family
+   fallbacks; the design language is unchanged — same families, now served
+   from our own origin with no runtime CDN dependency. */
+:root {
+  --cc-font-sans:
+    var(--font-montserrat), "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --cc-font-mono:
+    var(--font-geist-mono), "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
 * {
   box-sizing: border-box;
 }

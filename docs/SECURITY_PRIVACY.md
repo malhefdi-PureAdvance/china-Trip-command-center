@@ -16,6 +16,17 @@ Do not import or commit:
 - Passwords, API keys, tokens, secrets, or live credentials.
 - Unsourced supplier, contact, or visit intelligence.
 
+## Offline / PWA caching boundaries
+
+The app ships a conservative offline shell (`apps/web/public/sw.js` + `/offline`):
+
+- **What it guarantees:** the app shell, previously visited pages, and a small precached set (`/today`, `/itinerary`, `/business-targets`, `/map`, `/offline`) keep working without a connection. Navigations are network-first, so content is always fresh when online.
+- **What it does not guarantee:** unvisited dossier pages may be unavailable offline; `/admin/data-review` is deliberately network-only so Supabase/live status is never shown stale.
+- **What is safe to cache:** everything the app currently serves — it is all public, demo-safe content (sanitized schedule anchors, app-safe dossiers, tokens/fonts/icons). Field notes never leave the device (localStorage), independent of the worker.
+- **Why private-tier data still requires auth first:** a service worker caches whatever the origin serves into browser storage on the device, and this deployment is unauthenticated — any private-tier content would be exposed both over the network and in cache. Private data must not ship until authentication, authorization, and a private-tier cache policy (or no-cache) exist. Do not add private content to the precache list or to any app route before that.
+
+Cache invalidation: bump `CACHE_VERSION` in `sw.js`; old caches are deleted on activate.
+
 ## Ingestion Guardrails
 
 `packages/data-ingestion` recursively checks payload field names before parsing. If a blocked field is found, validation returns `rejected` and the placeholder import function stages zero records.

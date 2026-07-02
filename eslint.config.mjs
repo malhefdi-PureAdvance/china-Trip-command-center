@@ -21,6 +21,15 @@ export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    // The offline service worker is plain JS running in a worker scope.
+    files: ["**/public/sw.js"],
+    languageOptions: {
+      globals: {
+        ...globals.serviceworker
+      }
+    }
+  },
+  {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       parserOptions: {
