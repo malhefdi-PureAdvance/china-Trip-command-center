@@ -303,3 +303,10 @@
   --pa-shadow-card: var(--cc-elev-1);
   --pa-shadow-glow: var(--cc-glow-cyan);
 }
+
+@media (max-width: 640px) {
+  :root {
+    --cc-pad-screen: 14px;
+    --cc-gap: 9px;
+  }
+}

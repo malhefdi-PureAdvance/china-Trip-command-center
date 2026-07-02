@@ -18,8 +18,8 @@ test.describe("command center smoke", () => {
 
       await expect(page.getByRole("heading", { name: route.heading })).toBeVisible();
       await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
-      await expect(page.getByText("Hong Kong").first()).toBeVisible();
-      await expect(page.getByText("Shenzhen").first()).toBeVisible();
+      await expect(page.locator("body")).toContainText("Hong Kong");
+      await expect(page.locator("body")).toContainText("Shenzhen");
 
       if (route.path === "/admin/data-review") {
         await expect(page.getByText("Supabase config")).toBeVisible();

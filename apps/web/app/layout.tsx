@@ -44,9 +44,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
         <div className="min-h-screen">
           <div className="border-b border-[var(--cc-border-faint)] bg-[var(--cc-surface-inset)]">
-            <div className="mx-auto flex max-w-5xl items-center gap-3 px-[var(--cc-pad-screen)] py-2 font-mono text-[var(--cc-fs-caption)] text-[var(--cc-text-faint)]">
-              <ShieldCheck className="size-4 shrink-0 text-[var(--cc-green)]" aria-hidden="true" />
-              <span>Demo-safe scaffold: Hong Kong / Shenzhen Greater Bay Area content only.</span>
+            <div className="mx-auto flex max-w-5xl items-center gap-2 px-[var(--cc-pad-screen)] py-1.5 font-mono text-[10px] leading-4 text-[var(--cc-text-faint)] sm:gap-3 sm:py-2 sm:text-[var(--cc-fs-caption)]">
+              <ShieldCheck
+                className="size-3.5 shrink-0 text-[var(--cc-green)] sm:size-4"
+                aria-hidden="true"
+              />
+              <span className="sm:hidden">Demo-safe HK / Shenzhen scaffold</span>
+              <span className="hidden sm:inline">
+                Demo-safe scaffold: Hong Kong / Shenzhen Greater Bay Area content only.
+              </span>
             </div>
           </div>
           <AppShell>{children}</AppShell>
