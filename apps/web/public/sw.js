@@ -9,7 +9,10 @@
  * - Hashed build assets (/_next/static) and icons are cache-first (immutable).
  * - Bump CACHE_VERSION to invalidate everything on the next deploy.
  */
-const CACHE_VERSION = "pa-cc-v1";
+const CACHE_VERSION = "pa-cc-v2";
+// Auth/private/admin surfaces are NEVER intercepted or cached: they may carry
+// per-user or live-status content and must always hit the network.
+const NETWORK_ONLY_PREFIXES = ["/admin", "/private", "/auth"];
 const OFFLINE_URL = "/offline";
 const PRECACHE_URLS = [
   OFFLINE_URL,
@@ -52,8 +55,9 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-  // Never intercept admin/live-status surfaces or the worker itself.
-  if (url.pathname.startsWith("/admin") || url.pathname === "/sw.js") return;
+  // Never intercept auth/private/admin surfaces or the worker itself.
+  if (NETWORK_ONLY_PREFIXES.some((prefix) => url.pathname.startsWith(prefix))) return;
+  if (url.pathname === "/sw.js") return;
 
   // Navigations: network-first → cached page → offline shell.
   if (request.mode === "navigate") {

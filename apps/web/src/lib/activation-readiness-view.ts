@@ -1,5 +1,7 @@
 import type { SupabaseHealth } from "@pure-advance/database";
 
+import { PRIVATE_TIER_FLAG, privateTierCopy, type PrivateTierStatus } from "./private-tier";
+
 export type ReadinessStepStatus = "ready" | "pending" | "action";
 
 export type ReadinessStep = {
@@ -28,7 +30,8 @@ export type ActivationReadinessModel = {
  */
 export function buildActivationReadinessModel(
   health: SupabaseHealth,
-  expectedTableCount: number
+  expectedTableCount: number,
+  privateTier: PrivateTierStatus
 ): ActivationReadinessModel {
   const config = health.configStatus;
   // "Connected" = env present, DB reachable, core standard row found. This is
@@ -73,11 +76,11 @@ export function buildActivationReadinessModel(
           : "Health check queries the business_visit_data_standards row"
       },
       {
-        // The health check does not query 0003's tables, so this is never
-        // asserted as applied — it stays a manual step until verified.
-        label: "App-intel tables (0003)",
+        // The health check does not query 0003/0004 tables, so these are never
+        // asserted as applied — they stay manual steps until verified.
+        label: "App-intel + auth tables (0003–0004)",
         status: "pending",
-        detail: `Not verified by the health check — apply 0003 + reseed (${expectedTableCount} tables) to activate mission phases, dossiers, and itinerary intel`
+        detail: `Not verified by the health check — apply 0003–0004 + reseed (${expectedTableCount} tables) for mission phases, dossiers, itinerary intel, and the role model`
       },
       {
         label: "Seed freshness",
@@ -85,9 +88,32 @@ export function buildActivationReadinessModel(
         detail: "Regenerate and reapply china_2026_demo.sql so live data matches the domain dataset"
       },
       {
+        label: "Auth shell",
+        status:
+          privateTier === "not_configured"
+            ? "action"
+            : privateTier === "enabled"
+              ? "pending"
+              : "ready",
+        detail:
+          privateTier === "not_configured"
+            ? "Supabase env vars missing — auth cannot start"
+            : privateTier === "enabled"
+              ? `${PRIVATE_TIER_FLAG}=true — sign-in active, RLS/membership still unverified`
+              : "Wired and deliberately inactive until RLS + redirect URLs are verified"
+      },
+      {
+        // Never "ready": even when enabled, activation is unverified until
+        // Mohammed confirms sign-in + RLS against production.
+        label: "Private tier",
+        status: "pending",
+        detail: privateTierCopy[privateTier].label + " — " + privateTierCopy[privateTier].detail
+      },
+      {
         label: "RLS posture",
         status: "pending",
-        detail: "Authenticated read-only placeholders; no anon/mutation policies"
+        detail:
+          "Fail-closed role model in 0004 (owner / team / program_viewer); verification in production still required"
       }
     ]
   };

@@ -56,7 +56,14 @@ If using the SQL editor instead of CLI, apply in this order:
 1. `packages/database/migrations/0001_core_schema.sql`
 2. `packages/database/migrations/0002_business_visit_source_url_standard.sql`
 3. `packages/database/migrations/0003_app_intel_tables.sql`
-4. `packages/database/seeds/china_2026_demo.sql`
+4. `packages/database/migrations/0004_auth_private_tier.sql` (role model + fail-closed RLS; ships empty)
+5. `packages/database/seeds/china_2026_demo.sql`
+
+After activation, regenerate typed client bindings if the app starts querying
+the new tables (`supabase gen types typescript`), and configure Supabase Auth:
+Site URL = production origin; allowed redirect URL
+`https://china-2026-command-center.vercel.app/private`. The auth/private-tier
+runbook lives in `docs/PRIVATE_TIER.md`.
 
 The seed is public-tier / demo-safe only. Private-tier data (Tier 3 in
 `docs/PRIVATE_TIER.md`) must never be added to it.

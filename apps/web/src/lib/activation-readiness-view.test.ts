@@ -28,7 +28,7 @@ function health(overrides: Partial<SupabaseHealth> = {}): SupabaseHealth {
 
 describe("activation readiness model", () => {
   it("never claims live when not configured", () => {
-    const model = buildActivationReadinessModel(health(), 25);
+    const model = buildActivationReadinessModel(health(), 27, "not_configured");
     expect(model.liveConfirmed).toBe(false);
     expect(model.headline).toContain("Not activated");
     expect(model.missingEnv).toContain("SUPABASE_SERVICE_ROLE_KEY");
@@ -49,7 +49,8 @@ describe("activation readiness model", () => {
           missingAdminEnv: ["SUPABASE_SERVICE_ROLE_KEY"]
         }
       }),
-      25
+      27,
+      "ready_inactive"
     );
     expect(model.liveConfirmed).toBe(false);
     expect(model.headline).not.toContain("Live");
@@ -69,15 +70,59 @@ describe("activation readiness model", () => {
           missingAdminEnv: []
         }
       }),
-      25
+      27,
+      "ready_inactive"
     );
     expect(model.liveConfirmed).toBe(true);
     expect(model.headline).toContain("Connected · core schema live");
     expect(model.missingEnv).toHaveLength(0);
-    // The health check cannot prove 0003 or the current seed — never "ready".
-    const intel = model.steps.find((step) => step.label === "App-intel tables (0003)");
+    // The health check cannot prove 0003/0004 or the current seed — never "ready".
+    const intel = model.steps.find((step) => step.label === "App-intel + auth tables (0003–0004)");
     const seed = model.steps.find((step) => step.label === "Seed freshness");
     expect(intel?.status).toBe("pending");
     expect(seed?.status).toBe("pending");
+  });
+
+  it("keeps the private tier pending even when the flag is enabled", () => {
+    const model = buildActivationReadinessModel(
+      health({
+        status: "ready",
+        databaseReachable: true,
+        configStatus: {
+          mode: "admin_configured",
+          isPublicConfigured: true,
+          isAdminConfigured: true,
+          missingPublicEnv: [],
+          missingAdminEnv: []
+        }
+      }),
+      27,
+      "enabled"
+    );
+    const tier = model.steps.find((step) => step.label === "Private tier");
+    const auth = model.steps.find((step) => step.label === "Auth shell");
+    expect(tier?.status).toBe("pending");
+    expect(tier?.detail).toContain("not verified");
+    expect(auth?.status).toBe("pending");
+    expect(auth?.detail).toContain("unverified");
+  });
+
+  it("marks auth as inactive-but-wired when configured with the flag off", () => {
+    const model = buildActivationReadinessModel(
+      health({
+        configStatus: {
+          mode: "public_configured",
+          isPublicConfigured: true,
+          isAdminConfigured: false,
+          missingPublicEnv: [],
+          missingAdminEnv: ["SUPABASE_SERVICE_ROLE_KEY"]
+        }
+      }),
+      27,
+      "ready_inactive"
+    );
+    const auth = model.steps.find((step) => step.label === "Auth shell");
+    expect(auth?.status).toBe("ready");
+    expect(auth?.detail).toContain("deliberately inactive");
   });
 });

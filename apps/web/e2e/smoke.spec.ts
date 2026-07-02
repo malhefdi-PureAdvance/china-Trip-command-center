@@ -8,6 +8,7 @@ const routes = [
   { path: "/business-targets", heading: "Visit Targets" },
   { path: "/notes", heading: "Notes & Field Capture" },
   { path: "/team", heading: "Mission Team" },
+  { path: "/private", heading: "Private Tier" },
   { path: "/admin/data-review", heading: "Data Review" }
 ];
 
