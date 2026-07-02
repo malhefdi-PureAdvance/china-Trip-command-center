@@ -1,9 +1,9 @@
 import { expect, test } from "@playwright/test";
 
 const routes = [
-  { path: "/", heading: "China 2026 Demo Mission" },
-  { path: "/today", heading: "China 2026 Demo Mission" },
-  { path: "/itinerary", heading: "Mission Schedule" },
+  { path: "/", heading: "China 2026 · Tech Founders" },
+  { path: "/today", heading: "China 2026 · Tech Founders" },
+  { path: "/itinerary", heading: "Mission Timeline" },
   { path: "/map", heading: "Hong Kong <-> Shenzhen Corridor" },
   { path: "/business-targets", heading: "Visit Pipeline" },
   { path: "/notes", heading: "Team Notes" },

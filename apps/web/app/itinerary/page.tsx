@@ -1,54 +1,73 @@
-import { CalendarDays, MapPin, UserRound } from "lucide-react";
+import { cn } from "@pure-advance/design-system";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@pure-advance/design-system";
-
+import { MissionTimelineView } from "@/components/mission-timeline";
 import { PageHeader } from "@/components/page-header";
-import { StatusPill } from "@/components/status-pill";
-import { activeTrip, demoData, getLocationById, getUserPerson } from "@/lib/demo-data";
+import { demoData, getMissionTimeline, missionPhases } from "@/lib/demo-data";
+import { corridorDateKey, shortDate } from "@/lib/mission-timeline";
+
+function activeWeekId(now: Date) {
+  const today = corridorDateKey(now);
+  const weeks = missionPhases.filter((phase) => phase.label.startsWith("Week"));
+  const current = weeks.find((phase) => today >= phase.startsOn && today <= phase.endsOn);
+
+  if (current) {
+    return current.id;
+  }
+
+  const upcoming = weeks.find((phase) => phase.startsOn > today);
+  return (upcoming ?? weeks.at(-1))?.id;
+}
 
 export default function ItineraryPage() {
+  const now = new Date();
+  const timeline = getMissionTimeline(now);
+  const items = demoData.itineraryItems;
+  const firstKey = corridorDateKey(items[0].startsAt);
+  const lastKey = corridorDateKey(items[items.length - 1].startsAt);
+  const currentWeek = activeWeekId(now);
+  const weeks = missionPhases.filter((phase) => phase.label.startsWith("Week"));
+
   return (
     <>
       <PageHeader
         eyebrow="Itinerary"
-        title="Mission Schedule"
-        summary={`${activeTrip.startsOn} to ${activeTrip.endsOn} across ${activeTrip.region}.`}
-        badge="Draft operations plan"
+        title="Mission Timeline"
+        summary={`${shortDate(firstKey)} – ${shortDate(lastKey)} · Hong Kong → Shenzhen · Tech Founders program`}
+        badge={`${timeline.totalEvents} events`}
       />
-      <section className="grid gap-4">
-        {demoData.itineraryItems.map((item) => {
-          const location = getLocationById(item.locationId);
-          const owner = getUserPerson(item.ownerUserId);
+      <section aria-label="Program weeks" className="mb-2 flex gap-1.5">
+        {weeks.map((phase) => {
+          const isActive = phase.id === currentWeek;
 
           return (
-            <Card key={item.id}>
-              <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <CardTitle>{item.title}</CardTitle>
-                <StatusPill status={item.status} />
-              </CardHeader>
-              <CardContent className="grid gap-4 md:grid-cols-3">
-                <p className="flex items-center gap-2 text-sm text-[var(--pa-muted)]">
-                  <CalendarDays className="size-4 text-[var(--pa-cyan)]" aria-hidden="true" />
-                  {new Date(item.startsAt).toLocaleString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    hour: "numeric",
-                    minute: "2-digit"
-                  })}
-                </p>
-                <p className="flex items-center gap-2 text-sm text-[var(--pa-muted)]">
-                  <MapPin className="size-4 text-[var(--pa-green)]" aria-hidden="true" />
-                  {location ? `${location.name}, ${location.city}` : "Location pending"}
-                </p>
-                <p className="flex items-center gap-2 text-sm text-[var(--pa-muted)]">
-                  <UserRound className="size-4 text-[var(--pa-amber)]" aria-hidden="true" />
-                  {owner?.displayName ?? "Owner pending"}
-                </p>
-              </CardContent>
-            </Card>
+            <div
+              key={phase.id}
+              className={cn(
+                "min-w-0 flex-1 rounded-[var(--cc-r-icon)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] px-2 py-1.5 text-center",
+                isActive && "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)]"
+              )}
+            >
+              <div
+                className={cn(
+                  "font-mono text-[9px] tracking-[0.1em]",
+                  isActive ? "text-[var(--cc-cyan)]" : "text-[var(--cc-text-faint)]"
+                )}
+              >
+                {phase.label.replace("Week ", "WK ")} · {phase.weekTag}
+              </div>
+              <div
+                className={cn(
+                  "mt-0.5 truncate text-[11px] font-semibold",
+                  isActive ? "text-[var(--cc-text)]" : "text-[var(--cc-text-2)]"
+                )}
+              >
+                {phase.name}
+              </div>
+            </div>
           );
         })}
       </section>
+      <MissionTimelineView timeline={timeline} />
     </>
   );
 }

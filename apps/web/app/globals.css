@@ -82,3 +82,80 @@ a {
   background: var(--cc-green);
   box-shadow: 0 0 0 4px var(--cc-green-tint);
 }
+
+/* Mission timeline rail */
+.mission-rail {
+  position: relative;
+  padding-left: 60px;
+}
+
+.mission-rail::before {
+  position: absolute;
+  left: 44px;
+  top: 6px;
+  bottom: 10px;
+  width: 2px;
+  background: linear-gradient(var(--cc-rail), var(--cc-rail) 72%, transparent);
+  content: "";
+}
+
+.mission-day {
+  position: relative;
+}
+
+.mission-date {
+  position: absolute;
+  left: -60px;
+  top: 2px;
+  width: 36px;
+  text-align: right;
+}
+
+.mission-node {
+  position: absolute;
+  left: -23px;
+  top: 3px;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--cc-rail);
+  border-radius: 999px;
+  background: var(--cc-bg);
+}
+
+.mission-node[data-state="done"] {
+  border-color: var(--cc-text-disabled);
+  background: var(--cc-text-disabled);
+}
+
+.mission-node[data-state="next"] {
+  border-color: var(--cc-cyan);
+  box-shadow: 0 0 0 4px var(--cc-cyan-ring);
+}
+
+.mission-node[data-state="now"] {
+  border-color: var(--cc-cyan);
+  background: var(--cc-cyan);
+  box-shadow: var(--cc-glow-cyan-dot);
+}
+
+.mission-node[data-finale="true"] {
+  border-color: var(--cc-purple);
+  background: var(--cc-purple);
+  box-shadow: var(--cc-glow-purple-dot);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mission-live-dot {
+    animation: mission-pulse 2s var(--cc-ease) infinite;
+  }
+}
+
+@keyframes mission-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
