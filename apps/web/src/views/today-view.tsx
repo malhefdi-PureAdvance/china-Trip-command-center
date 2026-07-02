@@ -5,9 +5,16 @@ import { Badge, Card, CardContent, CardHeader, CardTitle, cn } from "@pure-advan
 
 import { MissionClockHero } from "@/components/mission-clock";
 import { PageHeader } from "@/components/page-header";
+import { RelatedTargetChips } from "@/components/related-targets";
 import { StatusPill } from "@/components/status-pill";
-import { activeTrip, getMissionClock, getMissionTimeline } from "@/lib/demo-data";
+import {
+  activeTrip,
+  getItineraryIntel,
+  getMissionClock,
+  getMissionTimeline
+} from "@/lib/demo-data";
 import { categoryMeta, priorityMeta, topTarget } from "@/lib/targets";
+import { shortDate } from "@/lib/mission-timeline";
 
 export function TodayView() {
   const now = new Date();
@@ -25,6 +32,14 @@ export function TodayView() {
     .slice(0, 4);
 
   const featured = topTarget();
+
+  // The next schedule item with source-linked dossiers — what to prep for.
+  const nextLinked = timeline.phases
+    .flatMap((phase) => phase.days)
+    .filter((day) => day.state !== "done")
+    .flatMap((day) => day.events.map((event) => ({ event, day })))
+    .map((entry) => ({ ...entry, intel: getItineraryIntel(entry.event.item.id) }))
+    .find((entry) => (entry.intel?.relatedTargetIds.length ?? 0) > 0);
 
   return (
     <>
@@ -98,6 +113,17 @@ export function TodayView() {
                   </div>
                 </div>
               ))}
+              {nextLinked ? (
+                <div className="rounded-[var(--cc-r-row)] border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] p-3">
+                  <p className="font-mono text-[9.5px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
+                    Prep · {shortDate(nextLinked.day.date)}
+                  </p>
+                  <p className="mt-1 truncate text-[12.5px] font-semibold text-[var(--cc-text)]">
+                    {nextLinked.event.item.title}
+                  </p>
+                  <RelatedTargetChips targetIds={nextLinked.intel?.relatedTargetIds ?? []} />
+                </div>
+              ) : null}
             </CardContent>
           </Card>
 

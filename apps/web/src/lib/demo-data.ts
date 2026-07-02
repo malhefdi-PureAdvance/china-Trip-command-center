@@ -1,4 +1,4 @@
-import { demoChina2026, demoMissionPhases } from "@pure-advance/domain";
+import { demoChina2026, demoItineraryIntel, demoMissionPhases } from "@pure-advance/domain";
 import { formatCoordinates, getStaticMapPlaceholderLabel } from "@pure-advance/maps";
 
 import { buildMissionTimeline, missionClock } from "./mission-timeline";
@@ -56,6 +56,12 @@ export function getLocationCity(locationId: string | null) {
 
 export function getOwnerName(userId: string | null) {
   return getUserPerson(userId)?.displayName ?? null;
+}
+
+const intelByItemId = new Map(demoItineraryIntel.map((intel) => [intel.itineraryItemId, intel]));
+
+export function getItineraryIntel(itineraryItemId: string) {
+  return intelByItemId.get(itineraryItemId) ?? null;
 }
 
 export function getMissionClock(now: Date) {

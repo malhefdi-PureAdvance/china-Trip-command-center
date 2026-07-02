@@ -333,7 +333,7 @@ export const demoChina2026 = {
       title: "LEAP East at HKCEC — Day 1",
       kind: "site_visit",
       status: "confirmed",
-      startsAt: "2026-07-08T10:00:00+08:00",
+      startsAt: "2026-07-08T09:00:00+08:00",
       endsAt: "2026-07-08T17:00:00+08:00",
       timezone: "Asia/Hong_Kong",
       ownerUserId: "00000000-0000-4000-8000-000000000201",
@@ -348,7 +348,7 @@ export const demoChina2026 = {
       title: "LEAP East at HKCEC — Day 2",
       kind: "site_visit",
       status: "confirmed",
-      startsAt: "2026-07-09T10:00:00+08:00",
+      startsAt: "2026-07-09T09:00:00+08:00",
       endsAt: "2026-07-09T17:00:00+08:00",
       timezone: "Asia/Hong_Kong",
       ownerUserId: "00000000-0000-4000-8000-000000000201",
@@ -363,8 +363,8 @@ export const demoChina2026 = {
       title: "LEAP East — Day 3 & Rocket Fuel Grand Finale",
       kind: "site_visit",
       status: "confirmed",
-      startsAt: "2026-07-10T10:00:00+08:00",
-      endsAt: "2026-07-10T16:30:00+08:00",
+      startsAt: "2026-07-10T09:00:00+08:00",
+      endsAt: "2026-07-10T17:00:00+08:00",
       timezone: "Asia/Hong_Kong",
       ownerUserId: "00000000-0000-4000-8000-000000000203",
       notes:
@@ -379,11 +379,44 @@ export const demoChina2026 = {
       title: "Hong Kong → Shenzhen · border crossing & base move",
       kind: "transfer",
       status: "proposed",
-      startsAt: "2026-07-11T12:00:00+08:00",
-      endsAt: "2026-07-11T15:00:00+08:00",
+      startsAt: "2026-07-12T12:00:00+08:00",
+      endsAt: "2026-07-12T15:00:00+08:00",
       timezone: "Asia/Hong_Kong",
       ownerUserId: "00000000-0000-4000-8000-000000000201",
-      notes: "Wan Chai to Nanshan. Confirm the border plan and Shenzhen check-in before moving.",
+      notes:
+        "Check out of the Hong Kong base by 12:00, then Wan Chai to Nanshan. Confirm the border plan and Shenzhen check-in before moving.",
+      createdAt: now,
+      updatedAt: now
+    },
+    {
+      id: "00000000-0000-4000-8000-000000000913",
+      tripId: "00000000-0000-4000-8000-000000000501",
+      locationId: "00000000-0000-4000-8000-000000000703",
+      title: "LEAP East prep · badge & exhibitor setup",
+      kind: "admin",
+      status: "proposed",
+      startsAt: "2026-07-06T13:00:00+08:00",
+      endsAt: "2026-07-06T16:00:00+08:00",
+      timezone: "Asia/Hong_Kong",
+      ownerUserId: "00000000-0000-4000-8000-000000000201",
+      notes:
+        "Priority 0 before the show: badge registration, exhibitor app access, and booth readiness ahead of the Jul 7 setup deadline.",
+      createdAt: now,
+      updatedAt: now
+    },
+    {
+      id: "00000000-0000-4000-8000-000000000914",
+      tripId: "00000000-0000-4000-8000-000000000501",
+      locationId: null,
+      title: "Free day · Kowloon & Bruce Lee trail",
+      kind: "buffer",
+      status: "proposed",
+      startsAt: "2026-07-11T10:00:00+08:00",
+      endsAt: "2026-07-11T20:00:00+08:00",
+      timezone: "Asia/Hong_Kong",
+      ownerUserId: "00000000-0000-4000-8000-000000000201",
+      notes:
+        "The one open Hong Kong day: Heritage Museum, Avenue of Stars, Kowloon. Also the fallback window for a Science Park business visit.",
       createdAt: now,
       updatedAt: now
     },
@@ -673,9 +706,9 @@ export const demoMissionPhases = [
     name: "Hong Kong → Shenzhen",
     city: "Shenzhen",
     weekTag: "SZ",
-    startsOn: "2026-07-11",
+    startsOn: "2026-07-12",
     endsOn: "2026-07-12",
-    headline: "Border crossing · base move to Nanshan"
+    headline: "Check-out 12:00 · border crossing to Nanshan"
   },
   {
     id: "phase_week2_sz",

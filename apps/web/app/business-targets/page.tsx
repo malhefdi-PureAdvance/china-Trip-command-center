@@ -4,6 +4,7 @@ import { cn } from "@pure-advance/design-system";
 
 import { PageHeader } from "@/components/page-header";
 import { TargetCard } from "@/components/target-card";
+import { TargetSearch } from "@/components/target-search";
 import {
   businessTargets,
   categoriesPresent,
@@ -14,12 +15,13 @@ import {
   sortTargets
 } from "@/lib/targets";
 
-type Search = { corridor?: string; category?: string };
+type Search = { corridor?: string; category?: string; q?: string };
 
 function chipHref(next: Search): string {
   const query = new URLSearchParams();
   if (next.corridor) query.set("corridor", next.corridor);
   if (next.category) query.set("category", next.category);
+  if (next.q) query.set("q", next.q);
   const q = query.toString();
   return q ? `/business-targets?${q}` : "/business-targets";
 }
@@ -47,8 +49,8 @@ function Chip({
 export default async function BusinessTargetsPage({
   searchParams
 }: Readonly<{ searchParams: Promise<Search> }>) {
-  const { corridor, category } = await searchParams;
-  const active: Search = { corridor, category };
+  const { corridor, category, q } = await searchParams;
+  const active: Search = { corridor, category, q };
 
   const filtered = filterTargets(businessTargets, active);
   const corridors = corridorsPresent(businessTargets);
@@ -64,22 +66,23 @@ export default async function BusinessTargetsPage({
         badge="App-safe intel"
       />
 
+      <TargetSearch />
       <div className="mb-2 flex gap-1.5 overflow-x-auto pb-1">
-        <Chip href={chipHref({ category })} active={!corridor}>
+        <Chip href={chipHref({ category, q })} active={!corridor}>
           All corridors
         </Chip>
         {corridors.map((c) => (
-          <Chip key={c} href={chipHref({ corridor: c, category })} active={corridor === c}>
+          <Chip key={c} href={chipHref({ corridor: c, category, q })} active={corridor === c}>
             {c}
           </Chip>
         ))}
       </div>
       <div className="mb-4 flex gap-1.5 overflow-x-auto pb-1">
-        <Chip href={chipHref({ corridor })} active={!category}>
+        <Chip href={chipHref({ corridor, q })} active={!category}>
           All types
         </Chip>
         {categories.map((c) => (
-          <Chip key={c} href={chipHref({ corridor, category: c })} active={category === c}>
+          <Chip key={c} href={chipHref({ corridor, category: c, q })} active={category === c}>
             {categoryMeta[c].label}
           </Chip>
         ))}
