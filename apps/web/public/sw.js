@@ -9,7 +9,7 @@
  * - Hashed build assets (/_next/static) and icons are cache-first (immutable).
  * - Bump CACHE_VERSION to invalidate everything on the next deploy.
  */
-const CACHE_VERSION = "pa-cc-v2";
+const CACHE_VERSION = "pa-cc-v3";
 // Auth/private/admin surfaces are NEVER intercepted or cached: they may carry
 // per-user or live-status content and must always hit the network.
 const NETWORK_ONLY_PREFIXES = ["/admin", "/private", "/auth"];
@@ -55,6 +55,9 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+  // Authenticated requests are never intercepted or cached — defense in depth
+  // for any future same-origin API carrying a bearer token.
+  if (request.headers.has("authorization")) return;
   // Never intercept auth/private/admin surfaces or the worker itself.
   if (NETWORK_ONLY_PREFIXES.some((prefix) => url.pathname.startsWith(prefix))) return;
   if (url.pathname === "/sw.js") return;

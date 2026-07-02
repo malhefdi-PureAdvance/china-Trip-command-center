@@ -27,6 +27,8 @@ test.describe("pwa artifacts", () => {
     expect(body).toContain("/offline");
     // Auth/private/admin surfaces are never intercepted or cached.
     expect(body).toContain('NETWORK_ONLY_PREFIXES = ["/admin", "/private", "/auth"]');
+    // Authenticated (bearer-token) requests are never intercepted or cached.
+    expect(body).toContain('request.headers.has("authorization")');
     // Private routes must never be precached: inspect the precache list itself.
     const precacheList = body.match(/const PRECACHE_URLS = \[[^\]]*\]/s)?.[0] ?? "";
     expect(precacheList.length).toBeGreaterThan(0);

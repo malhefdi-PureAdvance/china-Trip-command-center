@@ -25,18 +25,16 @@ export function resolvePrivateTierStatus(
   return flagValue === "true" ? "enabled" : "ready_inactive";
 }
 
-/** Server-side read (dynamic env access is fine on the server). */
+/**
+ * Server-side read (dynamic env access is fine on the server). Client
+ * components use the build-time-inlined equivalent in lib/supabase-browser.ts.
+ */
 export function getPrivateTierState() {
   const config = readSupabaseRuntimeConfig();
   const status = getSupabaseConfigStatus(config);
   const tier = resolvePrivateTierStatus(status.isPublicConfigured, process.env[PRIVATE_TIER_FLAG]);
 
-  return {
-    tier,
-    // Public-by-definition values, passed to the client auth panel only when
-    // the tier is enabled. Never includes the service-role key.
-    publicConfig: tier === "enabled" ? { url: config.url!, anonKey: config.anonKey! } : null
-  };
+  return { tier };
 }
 
 export const privateTierCopy: Record<PrivateTierStatus, { label: string; detail: string }> = {

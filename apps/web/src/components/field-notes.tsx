@@ -1,7 +1,9 @@
 "use client";
 
-import { useRef, useState, useSyncExternalStore } from "react";
-import { NotebookPen, Plus, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import type { Session } from "@supabase/supabase-js";
+import Link from "next/link";
+import { CloudUpload, KeyRound, NotebookPen, Plus, RefreshCw, Trash2 } from "lucide-react";
 
 import {
   Badge,
@@ -12,22 +14,22 @@ import {
   CardTitle
 } from "@pure-advance/design-system";
 
-type Template = "meeting" | "lead" | "debrief";
-
-type FieldNote = {
-  id: string;
-  template: Template;
-  title: string;
-  body: string;
-  createdAt: number;
-};
+import { getBrowserSupabase } from "@/lib/supabase-browser";
+import {
+  deleteRemoteNote,
+  syncTeamNotes,
+  type FieldNote,
+  type SyncState,
+  type Template
+} from "@/lib/team-notes-sync";
 
 const STORAGE_KEY = "pa-field-notes";
 const EMPTY: FieldNote[] = [];
 
 // External store (localStorage-backed) read via useSyncExternalStore so there
 // is no setState-in-effect and no SSR/hydration mismatch. getSnapshot must
-// return a stable reference between writes.
+// return a stable reference between writes. Local-first: sync only decorates
+// notes with metadata; storage stays the device's source of truth.
 let cache: FieldNote[] | null = null;
 const listeners = new Set<() => void>();
 
@@ -91,6 +93,17 @@ function formatTime(ts: number): string {
   }
 }
 
+const syncBadge: Record<SyncState, { text: string; tone: "neutral" | "cyan" | "green" | "amber" }> =
+  {
+    local_only: { text: "Local only", tone: "neutral" },
+    signed_out: { text: "Sign in to sync", tone: "neutral" },
+    idle: { text: "Signed in", tone: "cyan" },
+    syncing: { text: "Syncing…", tone: "cyan" },
+    synced: { text: "Synced", tone: "green" },
+    offline: { text: "Offline", tone: "amber" },
+    error: { text: "Sync failed", tone: "amber" }
+  };
+
 export function FieldNotes() {
   const notes = useSyncExternalStore(
     subscribe,
@@ -100,7 +113,36 @@ export function FieldNotes() {
   const [template, setTemplate] = useState<Template>("meeting");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState(templates.meeting.scaffold);
+  const [session, setSession] = useState<Session | null>(null);
+  const [syncState, setSyncState] = useState<SyncState>("local_only");
+  const [syncMessage, setSyncMessage] = useState<string | null>(null);
   const counter = useRef(0);
+
+  const supabase = typeof window !== "undefined" ? getBrowserSupabase() : null;
+
+  useEffect(() => {
+    // No client → the initial "local_only" state already applies.
+    if (!supabase) return;
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setSyncState(data.session ? "idle" : "signed_out");
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, next) => {
+      setSession(next);
+      setSyncState(next ? "idle" : "signed_out");
+    });
+    return () => sub.subscription.unsubscribe();
+  }, [supabase]);
+
+  async function runSync() {
+    if (!supabase || !session) return;
+    setSyncState("syncing");
+    setSyncMessage(null);
+    const outcome = await syncTeamNotes(supabase, session.user.id, readNotes());
+    writeNotes(outcome.notes);
+    setSyncState(outcome.state);
+    setSyncMessage(outcome.message);
+  }
 
   function pickTemplate(next: Template) {
     setTemplate(next);
@@ -119,15 +161,31 @@ export function FieldNotes() {
       body: body.trim(),
       createdAt: Date.now()
     };
-    writeNotes([note, ...notes]);
+    writeNotes([note, ...readNotes()]);
     setTitle("");
     setBody(templates[template].scaffold);
   }
 
-  function removeNote(id: string) {
-    writeNotes(notes.filter((note) => note.id !== id));
+  async function removeNote(note: FieldNote) {
+    // Local-first: never lose the local copy if the remote delete fails.
+    if (note.remoteId && note.mine && supabase && session) {
+      const result = await deleteRemoteNote(supabase, note);
+      if (!result.ok) {
+        setSyncState("error");
+        setSyncMessage(result.message ?? "Remote delete failed — note kept.");
+        return;
+      }
+    }
+    writeNotes(readNotes().filter((candidate) => candidate.id !== note.id));
   }
 
+  function noteBadge(note: FieldNote): { text: string; tone: "neutral" | "cyan" | "green" } {
+    if (note.origin === "remote" && !note.mine) return { text: "Team", tone: "cyan" };
+    if (note.remoteId) return { text: "Synced", tone: "green" };
+    return { text: "Local", tone: "neutral" };
+  }
+
+  const badge = syncBadge[syncState];
   const inputClass =
     "w-full rounded-[var(--cc-r-icon)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] px-3 py-2 text-[13px] text-[var(--cc-text)] outline-none placeholder:text-[var(--cc-text-dim)] focus:border-[var(--cc-cyan-line)]";
 
@@ -139,8 +197,55 @@ export function FieldNotes() {
           Field capture
         </span>
         <span className="h-px flex-1 bg-[var(--cc-border)]" />
-        <Badge tone="neutral">On this device</Badge>
+        {syncState === "signed_out" ? (
+          <Link
+            href="/private"
+            className="inline-flex items-center gap-1 rounded-full border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.06em] text-[var(--cc-cyan)]"
+          >
+            <KeyRound className="size-3" aria-hidden="true" />
+            {badge.text}
+          </Link>
+        ) : (
+          <Badge tone={badge.tone}>{badge.text}</Badge>
+        )}
       </div>
+
+      {session ? (
+        <div className="mb-3 flex items-start justify-between gap-3 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]">
+          <div className="min-w-0">
+            <p className="text-[12px] font-semibold text-[var(--cc-text)]">Team sync · signed in</p>
+            <p className="mt-1 text-[11px] leading-[1.5] text-[var(--cc-text-3)]">
+              Syncing shares a note with Pure Advance team members. Meeting and debrief text only —
+              never booking references, IDs, payments, or private contacts.
+            </p>
+            {syncMessage ? (
+              <p
+                className={`mt-1.5 text-[11.5px] ${
+                  syncState === "error" || syncState === "offline"
+                    ? "text-[var(--cc-amber-text)]"
+                    : "text-[var(--cc-green)]"
+                }`}
+              >
+                {syncMessage}
+              </p>
+            ) : null}
+          </div>
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            disabled={syncState === "syncing"}
+            onClick={runSync}
+          >
+            {syncState === "syncing" ? (
+              <RefreshCw className="size-4 animate-spin" aria-hidden="true" />
+            ) : (
+              <CloudUpload className="size-4" aria-hidden="true" />
+            )}
+            Sync now
+          </Button>
+        </div>
+      ) : null}
 
       <Card className="min-w-0">
         <CardContent className="space-y-3">
@@ -173,7 +278,9 @@ export function FieldNotes() {
           />
           <div className="flex items-center justify-between gap-3">
             <p className="text-[11px] text-[var(--cc-text-faint)]">
-              Saved only in this browser. Nothing is uploaded.
+              {session
+                ? "Saved on this device first; sync when you choose."
+                : "Saved only in this browser. Nothing is uploaded."}
             </p>
             <Button type="button" size="sm" onClick={addNote}>
               <Plus className="size-4" aria-hidden="true" />
@@ -185,31 +292,37 @@ export function FieldNotes() {
 
       {notes.length > 0 ? (
         <div className="mt-3 space-y-2.5">
-          {notes.map((note) => (
-            <Card key={note.id} className="min-w-0">
-              <CardHeader className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <CardTitle className="truncate">{note.title}</CardTitle>
-                  <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--cc-text-faint)]">
-                    {templates[note.template].label} · {formatTime(note.createdAt)}
+          {notes.map((note) => {
+            const label = noteBadge(note);
+            return (
+              <Card key={note.id} className="min-w-0">
+                <CardHeader className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <CardTitle className="truncate">{note.title}</CardTitle>
+                    <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--cc-text-faint)]">
+                      {templates[note.template]?.label ?? "Note"} · {formatTime(note.createdAt)}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-1.5">
+                    <Badge tone={label.tone}>{label.text}</Badge>
+                    <button
+                      type="button"
+                      onClick={() => removeNote(note)}
+                      aria-label={`Delete ${note.title}`}
+                      className="rounded-[var(--cc-r-icon)] p-1.5 text-[var(--cc-text-faint)] active:translate-y-px"
+                    >
+                      <Trash2 className="size-4" aria-hidden="true" />
+                    </button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="whitespace-pre-wrap font-mono text-[12px] leading-[1.5] text-[var(--cc-text-2)]">
+                    {note.body}
                   </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => removeNote(note.id)}
-                  aria-label={`Delete ${note.title}`}
-                  className="shrink-0 rounded-[var(--cc-r-icon)] p-1.5 text-[var(--cc-text-faint)] active:translate-y-px"
-                >
-                  <Trash2 className="size-4" aria-hidden="true" />
-                </button>
-              </CardHeader>
-              <CardContent>
-                <p className="whitespace-pre-wrap font-mono text-[12px] leading-[1.5] text-[var(--cc-text-2)]">
-                  {note.body}
-                </p>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       ) : null}
     </section>
