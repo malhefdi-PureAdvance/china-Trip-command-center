@@ -25,6 +25,10 @@ test.describe("command center smoke", () => {
         await expect(page.getByText("Supabase config")).toBeVisible();
         await expect(page.getByText("Not configured", { exact: true })).toBeVisible();
         await expect(page.getByText("RLS policy mode")).toBeVisible();
+        await expect(page.getByText("Ingestion dry-run")).toBeVisible();
+        await expect(page.getByText("Dry-run corrections needed")).toBeVisible();
+        await expect(page.getByText("Dry-run accepted")).toBeVisible();
+        await expect(page.getByRole("heading", { name: "Database writes" })).toBeVisible();
       }
     });
   }

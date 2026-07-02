@@ -17,6 +17,7 @@ values (
     'status',
     'source_confidence',
     'source_label',
+    'source_url',
     'last_checked_at',
     'action_summary',
     'visit_objective'

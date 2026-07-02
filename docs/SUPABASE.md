@@ -4,12 +4,15 @@ This repository is backend-ready but does not contain live Supabase credentials.
 
 ## Current status
 
-- SQL migration: `packages/database/migrations/0001_core_schema.sql`
+- SQL migrations:
+  - `packages/database/migrations/0001_core_schema.sql`
+  - `packages/database/migrations/0002_business_visit_source_url_standard.sql`
 - Demo seed: `packages/database/seeds/china_2026_demo.sql`
 - Typed client helpers: `packages/database/src/supabase.ts`
 - Initial database types: `packages/database/src/database.types.ts`
 - Admin health surface: `/admin/data-review`
 - Live read-only review metrics: `/admin/data-review` can fetch business target source counts, manual review queue counts, and targets awaiting verification from Supabase when admin config is available
+- Ingestion dry-run contract: `/admin/data-review` displays synthetic accepted/rejected fixture results from `packages/data-ingestion` with zero database writes
 
 The repo does not commit Supabase CLI credentials, service-role keys, database passwords, or connection strings. The app handles missing secrets safely: demo data remains active, live review metrics fall back to synthetic demo rows, and the admin page reports Supabase as `Not configured` or `Public only` as appropriate. Production activation requires Vercel environment variables plus the migration and seed applied to the remote Supabase project.
 
@@ -40,7 +43,7 @@ Link the project:
 supabase link --project-ref "$SUPABASE_PROJECT_REF"
 ```
 
-Apply the migration and demo seed:
+Apply the migrations and demo seed:
 
 ```bash
 supabase db push
@@ -50,7 +53,8 @@ supabase db execute --file packages/database/seeds/china_2026_demo.sql
 If using the SQL editor instead of CLI, apply in this order:
 
 1. `packages/database/migrations/0001_core_schema.sql`
-2. `packages/database/seeds/china_2026_demo.sql`
+2. `packages/database/migrations/0002_business_visit_source_url_standard.sql`
+3. `packages/database/seeds/china_2026_demo.sql`
 
 ## RLS posture
 
@@ -73,8 +77,9 @@ The first migration enables RLS on every core table and creates authenticated re
    - `business_targets` exact count where `source_confidence != verified`;
    - up to six `business_targets` awaiting verification.
 6. If any live review query is unavailable, the page keeps the admin health result visible and falls back to demo review metrics rather than crashing.
+7. The page also runs a synthetic ingestion dry-run fixture that demonstrates one accepted row, three rejected row types, and `writesPerformed: 0`.
 
-These live reads use the server-side service-role key only from the Next.js server component. The key is never passed to a client component or static bundle.
+These live reads use the server-side service-role key only from the Next.js server component. The key is never passed to a client component or static bundle. The dry-run fixture is local and synthetic; it performs no Supabase writes.
 
 ## Verification
 
@@ -82,6 +87,7 @@ Run:
 
 ```bash
 pnpm --filter @pure-advance/database test
+pnpm --filter @pure-advance/data-ingestion test
 pnpm --filter @pure-advance/web test -- src/lib/supabase-health-view.test.ts src/lib/data-review-view.test.ts
 pnpm typecheck
 pnpm lint

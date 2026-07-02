@@ -2,6 +2,7 @@ import type {
   BusinessVisitReviewSnapshot,
   BusinessVisitReviewTarget
 } from "@pure-advance/database";
+import type { IngestionDryRunResult } from "@pure-advance/data-ingestion";
 import type { BadgeProps } from "@pure-advance/design-system";
 import type { BusinessTarget, DemoDataset } from "@pure-advance/domain";
 
@@ -24,6 +25,23 @@ export type DataReviewModel = {
   source: DataReviewSource;
   summaryRows: DataReviewSummaryRow[];
   targetsAwaitingVerification: BusinessVisitReviewTarget[];
+};
+
+export type IngestionDryRunRejectionRow = {
+  index: number;
+  name: string;
+  tone: BadgeTone;
+  reasons: string[];
+};
+
+export type IngestionDryRunModel = {
+  status: {
+    label: "Dry-run clean" | "Dry-run corrections needed";
+    tone: BadgeTone;
+    note: string;
+  };
+  summaryRows: DataReviewSummaryRow[];
+  rejectionRows: IngestionDryRunRejectionRow[];
 };
 
 function isVerifiedSource(sourceConfidence: string) {
@@ -120,5 +138,43 @@ export function buildBusinessVisitReviewModel(
       }
     ],
     targetsAwaitingVerification: snapshot.targetsAwaitingVerification
+  };
+}
+
+export function buildIngestionDryRunModel(dryRun: IngestionDryRunResult): IngestionDryRunModel {
+  const hasRejections = dryRun.summary.rejectedRecords > 0;
+
+  return {
+    status: {
+      label: hasRejections ? "Dry-run corrections needed" : "Dry-run clean",
+      tone: hasRejections ? "amber" : "green",
+      note: "No database writes performed"
+    },
+    summaryRows: [
+      {
+        label: "Dry-run accepted",
+        value: dryRun.summary.acceptedRecords,
+        tone: "green",
+        note: "Rows ready for human review"
+      },
+      {
+        label: "Dry-run rejected",
+        value: dryRun.summary.rejectedRecords,
+        tone: hasRejections ? "amber" : "green",
+        note: "Rows blocked before staging"
+      },
+      {
+        label: "Database writes",
+        value: dryRun.summary.writesPerformed,
+        tone: "green",
+        note: "Dry-run only"
+      }
+    ],
+    rejectionRows: dryRun.rejectedRecords.map((record) => ({
+      index: record.index,
+      name: record.name ?? `Record ${record.index + 1}`,
+      tone: record.sensitiveFieldPaths.length > 0 ? "coral" : "amber",
+      reasons: record.reasons
+    }))
   };
 }

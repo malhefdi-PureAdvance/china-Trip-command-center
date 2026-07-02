@@ -254,6 +254,7 @@ export const BusinessVisitRequiredFieldSchema = z.enum([
   "status",
   "source_confidence",
   "source_label",
+  "source_url",
   "last_checked_at",
   "action_summary",
   "visit_objective"
@@ -291,6 +292,7 @@ export const businessVisitDataStandard = BusinessVisitDataStandardSchema.parse({
     "status",
     "source_confidence",
     "source_label",
+    "source_url",
     "last_checked_at",
     "action_summary",
     "visit_objective"

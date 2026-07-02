@@ -26,6 +26,7 @@ Allowed country value:
 - `status`: business target workflow status.
 - `source_confidence`: `unknown`, `low`, `medium`, `high`, or `verified`.
 - `source_label`: human-readable source name.
+- `source_url`: source URL used for dry-run ingestion review.
 - `last_checked_at`: ISO timestamp for source review.
 - `action_summary`: short operational summary.
 - `visit_objective`: reason to consider a visit.
@@ -70,3 +71,11 @@ The standard blocks identity, payment, credential, private contact, and home add
 ## Review Rule
 
 Unknown or low-confidence records require human review. The scaffold stages zero database writes until an approved ingestion source contract exists.
+
+The dry-run contract in `packages/data-ingestion` evaluates every record independently and returns:
+
+- accepted rows ready for human review;
+- rejected rows with row index, target name, reasons, and sensitive field paths;
+- `writesPerformed: 0` for every run.
+
+Synthetic fixture examples cover one accepted target and three rejected target shapes: missing `sourceUrl`, blocked private/payment-style field names, and an out-of-corridor city.
