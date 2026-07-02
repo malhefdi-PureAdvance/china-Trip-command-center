@@ -16,11 +16,14 @@ export {
   checkSupabaseHealth,
   createSupabaseAdminClient,
   createSupabaseBrowserClient,
+  fetchBusinessVisitReviewSnapshot,
   getSupabaseConfigStatus,
   readSupabaseRuntimeConfig,
   supabaseEnvKeys
 } from "./supabase";
 export type {
+  BusinessVisitReviewSnapshot,
+  BusinessVisitReviewTarget,
   SupabaseConfigMode,
   SupabaseConfigStatus,
   SupabaseDemoSeedStatus,
