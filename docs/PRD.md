@@ -22,6 +22,7 @@ The app is demo-safe by default: it carries **real sanitized trip anchors** (pro
 - **Notes**: shared mission context plus local-only field capture (meeting note / lead follow-up / daily debrief templates; browser storage, no uploads).
 - **Team**: Pure Advance roster separated from program representatives.
 - **Admin / Data Review**: hydration counts and source files, privacy-guard status, Supabase readiness, ingestion dry-run.
+- **PWA / offline shell**: web-app manifest, home-screen icons, self-hosted fonts (next/font), and a conservative service worker (network-first navigations, cached shell + visited pages, `/offline` fallback; `/admin` never cached). See SECURITY_PRIVACY for caching boundaries.
 - Shared domain schemas (Zod) with app-facing `MissionPhase` and `BusinessTargetDossier` structures.
 - SQL migration for core domain tables and conservative RLS placeholders; ingestion dry-run contract (`writesPerformed: 0`).
 

@@ -1,13 +1,37 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { ShieldCheck } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
+import { ServiceWorkerRegister } from "@/components/sw-register";
+import { geistMono, montserrat } from "@/lib/fonts";
 
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "China 2026 Command Center",
-  description: "Demo-safe command center scaffold for the Hong Kong and Shenzhen corridor."
+  description: "Demo-safe command center scaffold for the Hong Kong and Shenzhen corridor.",
+  applicationName: "China 2026 Command Center",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "China 2026",
+    statusBarStyle: "black-translucent"
+  },
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: "/icons/apple-touch-icon.png"
+  },
+  formatDetection: { telephone: false }
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f4efe4" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d1016" }
+  ]
 };
 
 const themeBootScript = `
@@ -37,11 +61,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       lang="en"
       data-theme="dark"
       data-theme-preference="system"
-      className="dark"
+      className={`dark ${montserrat.variable} ${geistMono.variable}`}
       suppressHydrationWarning
     >
       <body data-theme="dark" data-theme-preference="system" suppressHydrationWarning>
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+        <ServiceWorkerRegister />
         <div className="min-h-screen">
           <div className="border-b border-[var(--cc-border-faint)] bg-[var(--cc-surface-inset)]">
             <div className="mx-auto flex max-w-5xl items-center gap-2 px-[var(--cc-pad-screen)] py-1.5 font-mono text-[10px] leading-4 text-[var(--cc-text-faint)] sm:gap-3 sm:py-2 sm:text-[var(--cc-fs-caption)]">
