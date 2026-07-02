@@ -1,10 +1,26 @@
 import Link from "next/link";
-import { ChevronRight, MapPin } from "lucide-react";
+import {
+  Brain,
+  Building2,
+  ChevronRight,
+  FlaskConical,
+  MapPin,
+  Network,
+  Sprout
+} from "lucide-react";
 
 import { cn } from "@pure-advance/design-system";
-import type { BusinessTargetDossier } from "@pure-advance/domain";
+import type { BusinessTargetDossier, TargetCategory } from "@pure-advance/domain";
 
 import { categoryMeta, priorityMeta } from "@/lib/targets";
+
+export const categoryIcons: Record<TargetCategory, typeof Brain> = {
+  "ai-biotech": Brain,
+  biomanufacturing: FlaskConical,
+  "coolvex-sourcing": Sprout,
+  "corporate-visit": Building2,
+  ecosystem: Network
+};
 
 const priorityToneClass: Record<string, string> = {
   cyan: "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint)] text-[var(--cc-cyan)]",
@@ -16,6 +32,7 @@ const priorityToneClass: Record<string, string> = {
 export function TargetCard({ target }: Readonly<{ target: BusinessTargetDossier }>) {
   const priority = priorityMeta[target.priority];
   const category = categoryMeta[target.category];
+  const CategoryIcon = categoryIcons[target.category];
 
   return (
     <Link
@@ -32,7 +49,8 @@ export function TargetCard({ target }: Readonly<{ target: BusinessTargetDossier 
           {priority.label}
         </span>
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[var(--cc-text-faint)]">
+          <span className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-[0.1em] text-[var(--cc-text-faint)]">
+            <CategoryIcon className="size-3 text-[var(--cc-text-dim)]" aria-hidden="true" />
             {category.short}
           </span>
           {typeof target.fitScore === "number" ? (

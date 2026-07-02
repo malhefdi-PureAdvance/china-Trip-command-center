@@ -15,6 +15,8 @@ import {
   dryRunBusinessTargetIngestionBatch
 } from "@pure-advance/data-ingestion";
 
+import { demoItineraryIntel } from "@pure-advance/domain";
+
 import { PageHeader } from "@/components/page-header";
 import { demoData, missionPhases } from "@/lib/demo-data";
 import { businessTargets } from "@/lib/targets";
@@ -24,14 +26,18 @@ import { buildSupabaseHealthRows } from "@/lib/supabase-health-view";
 const hydrationTiles = [
   { label: "Visit dossiers", value: businessTargets.length },
   { label: "Itinerary items", value: demoData.itineraryItems.length },
+  { label: "Enriched events", value: demoItineraryIntel.length },
+  {
+    label: "Dossier links",
+    value: demoItineraryIntel.reduce((sum, intel) => sum + intel.relatedTargetIds.length, 0)
+  },
   { label: "Mission phases", value: missionPhases.length },
-  { label: "Locations", value: demoData.locations.length },
-  { label: "Shared notes", value: demoData.notes.length },
   { label: "Team members", value: demoData.tripMembers.length }
 ];
 
 const hydrationSources = [
   "itinerary/master_itinerary.md",
+  "itinerary/hong_kong_week1_plan.md",
   "dashboard/program_phases.csv",
   "business/dossiers/*.md",
   "dashboard/places.csv"

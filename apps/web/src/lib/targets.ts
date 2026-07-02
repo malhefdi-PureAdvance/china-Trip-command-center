@@ -70,13 +70,52 @@ export function categoriesPresent(list: BusinessTargetDossier[]): TargetCategory
 
 export function filterTargets(
   list: BusinessTargetDossier[],
-  filters: { corridor?: string; category?: string }
+  filters: { corridor?: string; category?: string; q?: string }
 ): BusinessTargetDossier[] {
+  const query = filters.q?.trim().toLowerCase();
+
   return list.filter((target) => {
     if (filters.corridor && target.corridor !== filters.corridor) return false;
     if (filters.category && target.category !== filters.category) return false;
+    if (query) {
+      const haystack = [
+        target.name,
+        target.nameLocal ?? "",
+        target.oneLiner,
+        target.area,
+        target.city,
+        categoryMeta[target.category].label
+      ]
+        .join("\n")
+        .toLowerCase();
+      if (!haystack.includes(query)) return false;
+    }
     return true;
   });
+}
+
+/**
+ * Source-grounded visit-window hint per corridor. Week-1 plan rule: Jul 8–10
+ * is fully blocked by LEAP East; HK business windows are Jul 6–7 or Jul 11.
+ * Shenzhen/GBA visits run from the Nanshan base (Jul 12 – Aug 1), with Week 3
+ * (Jul 20–24) as the supply-chain window.
+ */
+export function visitWindowHint(target: BusinessTargetDossier): string | null {
+  switch (target.corridor) {
+    case "Hong Kong":
+      return "Best Jul 6–7 or Jul 11 · avoid Jul 8–10 (LEAP East)";
+    case "Shenzhen":
+      return "From the Nanshan base · Jul 13–31";
+    case "Guangzhou":
+      return "Day-trip from Shenzhen · Weeks 2–4";
+    case "Dongguan":
+      return "Week 3 supply-chain window · Jul 20–24";
+    case "Zhuhai":
+    case "Foshan":
+      return "GBA day-trip · Weeks 2–4";
+    default:
+      return null;
+  }
 }
 
 export function groupByCorridor(

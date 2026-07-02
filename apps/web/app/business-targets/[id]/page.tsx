@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   ArrowLeft,
+  CalendarClock,
   CircleHelp,
   ExternalLink,
   Lightbulb,
@@ -14,7 +15,13 @@ import {
 
 import { Badge, cn } from "@pure-advance/design-system";
 
-import { businessTargets, categoryMeta, getTargetById, priorityMeta } from "@/lib/targets";
+import {
+  businessTargets,
+  categoryMeta,
+  getTargetById,
+  priorityMeta,
+  visitWindowHint
+} from "@/lib/targets";
 
 export function generateStaticParams() {
   return businessTargets.map((target) => ({ id: target.id }));
@@ -109,6 +116,12 @@ export default async function TargetDossierPage({
           <MapPin className="size-3.5 shrink-0 text-[var(--cc-cyan)]" aria-hidden="true" />
           {target.area} · {target.corridor}
         </p>
+        {visitWindowHint(target) ? (
+          <p className="mt-1.5 flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.05em] text-[var(--cc-amber-text)]">
+            <CalendarClock className="size-3.5 shrink-0" aria-hidden="true" />
+            {visitWindowHint(target)}
+          </p>
+        ) : null}
         <p className="mt-3 text-[13.5px] leading-[1.5] text-[var(--cc-text)]">{target.oneLiner}</p>
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <Badge tone={target.confidence === "unknown" ? "amber" : "cyan"}>

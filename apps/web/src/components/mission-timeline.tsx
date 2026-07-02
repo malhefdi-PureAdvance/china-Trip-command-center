@@ -2,7 +2,9 @@ import { MapPin } from "lucide-react";
 
 import { cn } from "@pure-advance/design-system";
 
+import { RelatedTargetChips } from "@/components/related-targets";
 import { StatusPill } from "@/components/status-pill";
+import { getItineraryIntel } from "@/lib/demo-data";
 import {
   shortDate,
   type DayState,
@@ -40,6 +42,7 @@ function EventCard({
   emphasize
 }: Readonly<{ event: TimelineEvent; dayState: DayState; emphasize: boolean }>) {
   const { item } = event;
+  const intel = getItineraryIntel(item.id);
   const finale = isFinaleEvent(event);
   const key = item.title.includes("LEAP East");
   const glow = dayState === "now" || (dayState === "next" && emphasize);
@@ -113,6 +116,36 @@ function EventCard({
           </span>
         ) : null}
       </div>
+      {intel && intel.subSessions.length > 0 ? (
+        <ul
+          className={cn(
+            "mt-2 space-y-1 border-t pt-2",
+            finale ? "border-[var(--cc-finale-border)]" : "border-[var(--cc-border-faint)]"
+          )}
+        >
+          {intel.subSessions.map((session) => (
+            <li key={`${session.time}-${session.title}`} className="flex min-w-0 gap-2">
+              <span
+                className={cn(
+                  "w-11 shrink-0 text-right font-mono text-[9.5px] uppercase leading-[1.6] tracking-[0.04em]",
+                  finale ? "text-[var(--cc-finale-date)]" : "text-[var(--cc-cyan)]"
+                )}
+              >
+                {session.time}
+              </span>
+              <span
+                className={cn(
+                  "min-w-0 truncate text-[11.5px] leading-[1.4]",
+                  finale ? "text-[var(--cc-finale-text)]" : "text-[var(--cc-text-3)]"
+                )}
+              >
+                {session.title}
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {intel ? <RelatedTargetChips targetIds={intel.relatedTargetIds} /> : null}
     </article>
   );
 }

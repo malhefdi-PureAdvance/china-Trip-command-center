@@ -429,6 +429,21 @@ export const BusinessTargetDossierSchema = z.object({
 });
 export const BusinessTargetDossiersSchema = z.array(BusinessTargetDossierSchema).min(1);
 
+// App-facing itinerary enrichment: compact sub-sessions (public program facts
+// only) and source-grounded links from schedule items to target dossiers.
+// Kept outside DemoDataset so core entities stay aligned with the SQL schema.
+export const ItinerarySubSessionSchema = z.object({
+  time: z.string().min(1),
+  title: z.string().min(2)
+});
+
+export const ItineraryIntelSchema = z.object({
+  itineraryItemId: UuidSchema,
+  subSessions: z.array(ItinerarySubSessionSchema).default([]),
+  relatedTargetIds: z.array(z.string().min(2)).default([])
+});
+export const ItineraryIntelListSchema = z.array(ItineraryIntelSchema);
+
 export const DemoDatasetSchema = z.object({
   persons: z.array(PersonSchema),
   users: z.array(UserSchema),
@@ -479,4 +494,6 @@ export type MissionPhase = z.infer<typeof MissionPhaseSchema>;
 export type TargetCategory = z.infer<typeof TargetCategorySchema>;
 export type TargetPriority = z.infer<typeof TargetPrioritySchema>;
 export type BusinessTargetDossier = z.infer<typeof BusinessTargetDossierSchema>;
+export type ItinerarySubSession = z.infer<typeof ItinerarySubSessionSchema>;
+export type ItineraryIntel = z.infer<typeof ItineraryIntelSchema>;
 export type DemoDataset = z.infer<typeof DemoDatasetSchema>;
