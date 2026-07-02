@@ -1,4 +1,12 @@
-import { AlertTriangle, CheckCircle2, DatabaseZap, ShieldCheck } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  DatabaseZap,
+  FileText,
+  Layers,
+  Lock,
+  ShieldCheck
+} from "lucide-react";
 
 import { Badge, Card, CardContent, CardHeader, CardTitle } from "@pure-advance/design-system";
 import { checkSupabaseHealth, fetchBusinessVisitReviewSnapshot } from "@pure-advance/database";
@@ -8,9 +16,26 @@ import {
 } from "@pure-advance/data-ingestion";
 
 import { PageHeader } from "@/components/page-header";
-import { demoData } from "@/lib/demo-data";
+import { demoData, missionPhases } from "@/lib/demo-data";
+import { businessTargets } from "@/lib/targets";
 import { buildBusinessVisitReviewModel, buildIngestionDryRunModel } from "@/lib/data-review-view";
 import { buildSupabaseHealthRows } from "@/lib/supabase-health-view";
+
+const hydrationTiles = [
+  { label: "Visit dossiers", value: businessTargets.length },
+  { label: "Itinerary items", value: demoData.itineraryItems.length },
+  { label: "Mission phases", value: missionPhases.length },
+  { label: "Locations", value: demoData.locations.length },
+  { label: "Shared notes", value: demoData.notes.length },
+  { label: "Team members", value: demoData.tripMembers.length }
+];
+
+const hydrationSources = [
+  "itinerary/master_itinerary.md",
+  "dashboard/program_phases.csv",
+  "business/dossiers/*.md",
+  "dashboard/places.csv"
+];
 
 export const dynamic = "force-dynamic";
 
@@ -30,9 +55,67 @@ export default async function DataReviewPage() {
       <PageHeader
         eyebrow="Admin"
         title="Data Review"
-        summary="Review queue scaffold for future source-backed ingestion, Supabase health, and approval workflows."
+        summary="What real sanitized data is live, where it came from, what is guarded, Supabase readiness, and the staged import contract."
         badge="Backend-ready"
       />
+
+      <section aria-label="Hydration" className="mb-4">
+        <div className="mb-2 flex items-center gap-2.5">
+          <Layers className="size-4 text-[var(--cc-cyan)]" aria-hidden="true" />
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
+            Hydration
+          </span>
+          <span className="h-px flex-1 bg-[var(--cc-border)]" />
+          <Badge tone="cyan">Live · demo-safe</Badge>
+        </div>
+        <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-6">
+          {hydrationTiles.map((tile) => (
+            <div
+              key={tile.label}
+              className="rounded-[var(--cc-r-tile)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]"
+            >
+              <p className="font-mono text-[20px] font-semibold leading-none text-[var(--cc-cyan)]">
+                {tile.value}
+              </p>
+              <p className="mt-1.5 text-[10.5px] leading-tight text-[var(--cc-text-3)]">
+                {tile.label}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-2.5 grid gap-2.5 lg:grid-cols-2">
+          <div className="rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]">
+            <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--cc-text-faint)]">
+              <FileText className="size-3.5" aria-hidden="true" />
+              Source files
+            </p>
+            <ul className="mt-2 space-y-1">
+              {hydrationSources.map((source) => (
+                <li key={source} className="font-mono text-[11px] text-[var(--cc-text-2)]">
+                  {source}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]">
+            <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--cc-text-faint)]">
+              <Lock className="size-3.5" aria-hidden="true" />
+              Privacy guard
+            </p>
+            <p className="mt-2 text-[12px] leading-[1.5] text-[var(--cc-text-2)]">
+              App data carries no contact identifiers, personal IDs, booking references, or QR
+              payloads. Company intel is district-level and public-source-backed; contact routes
+              stay in the private pack.
+            </p>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              <Badge tone="green">No PII</Badge>
+              <Badge tone="green">No booking refs</Badge>
+              <Badge tone="cyan">HK / Shenzhen corridor</Badge>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="grid gap-4 lg:grid-cols-4">
         {supabaseRows.map((row) => (
           <Card key={row.label}>

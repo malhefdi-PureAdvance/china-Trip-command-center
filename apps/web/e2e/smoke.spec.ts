@@ -4,9 +4,9 @@ const routes = [
   { path: "/", heading: "China 2026 · Tech Founders" },
   { path: "/today", heading: "China 2026 · Tech Founders" },
   { path: "/itinerary", heading: "Mission Timeline" },
-  { path: "/map", heading: "Hong Kong <-> Shenzhen Corridor" },
+  { path: "/map", heading: "Hong Kong ↔ Shenzhen Corridor" },
   { path: "/business-targets", heading: "Visit Targets" },
-  { path: "/notes", heading: "Team Notes" },
+  { path: "/notes", heading: "Notes & Field Capture" },
   { path: "/team", heading: "Mission Team" },
   { path: "/admin/data-review", heading: "Data Review" }
 ];

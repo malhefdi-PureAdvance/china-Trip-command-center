@@ -18,6 +18,13 @@
 - `shares`: entity-level sharing placeholders.
 - `activity_log`: audit-style activity summaries.
 
+## App-facing structures (in `packages/domain`, outside `DemoDataset`)
+
+These typed constants power the productized screens and are validated by Zod:
+
+- `demoMissionPhases` (`MissionPhaseSchema`): the seven-phase program spine (arrival → Week 1 HK / LEAP East → transition → Weeks 2–4 Shenzhen → Demo Day → departure). Drives the Today mission clock and the Itinerary timeline.
+- `demoBusinessTargets` (`BusinessTargetDossierSchema`): app-facing, human-curated visit dossiers (what-they-do, rationale, visit objective + route, talking points, open questions, risks, fit, confidence, public sources). Distinct from the ingestion-demo `business_targets`. Sanitized for a public deployment — no contact identifiers, personal names, or exact addresses (see SECURITY_PRIVACY).
+
 ## Business Target Workflow
 
 Business target statuses are:
@@ -42,6 +49,6 @@ Required fields are `name`, `city`, `country`, `sector`, `status`, `source_confi
 
 Blocked sensitive fields include identity, payment, credential, private contact, and home address fields.
 
-## Demo Scope
+## Demo / app data scope
 
-Current demo records are synthetic and limited to Hong Kong and Shenzhen in the Greater Bay Area corridor.
+App-facing content uses **real sanitized trip anchors** for the Jul 4 – Aug 2, 2026 mission (Hong Kong Week 1 with LEAP East at HKCEC Jul 8–10, the Shenzhen program through Demo Day on Jul 31), plus the source-backed visit dossiers. All of it stays inside the Hong Kong / Shenzhen Greater Bay Area corridor and excludes booking references, personal identifiers, and contact details. The `business_targets` ingestion demo and the Supabase seed remain synthetic. A regression test blocks any return of the old April 2026 placeholder dates.
