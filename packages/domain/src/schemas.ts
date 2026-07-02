@@ -391,6 +391,44 @@ export const MissionPhaseSchema = z.object({
 
 export const MissionPhasesSchema = z.array(MissionPhaseSchema).min(1);
 
+// App-facing, human-curated visit intelligence (distinct from the ingestion
+// demo `businessTargets`). Sourced from sanitized business dossiers; ships to a
+// public deployment, so no contact identifiers, personal names, or exact
+// unit/street addresses — area/district level only.
+export const TargetCategorySchema = z.enum([
+  "ai-biotech",
+  "biomanufacturing",
+  "coolvex-sourcing",
+  "corporate-visit",
+  "ecosystem"
+]);
+export const TargetPrioritySchema = z.enum(["must_contact", "high", "medium", "watchlist"]);
+
+export const BusinessTargetDossierSchema = z.object({
+  id: z.string().min(2),
+  name: z.string().min(2),
+  nameLocal: z.string().optional(),
+  category: TargetCategorySchema,
+  city: z.string().min(2),
+  area: z.string().min(1),
+  corridor: z.string().min(2),
+  website: z.string().optional(),
+  oneLiner: z.string().min(2),
+  whatTheyDo: z.string().min(2),
+  whyItMatters: z.string().min(2),
+  visitObjective: z.string().min(2),
+  route: z.string().min(1),
+  priority: TargetPrioritySchema,
+  confidence: SourceConfidenceSchema,
+  talkingPoints: z.array(z.string()).default([]),
+  openQuestions: z.array(z.string()).default([]),
+  risks: z.array(z.string()).default([]),
+  fitScore: z.number().int().min(0).max(100).optional(),
+  status: BusinessTargetStatusSchema,
+  publicSources: z.array(z.string()).default([])
+});
+export const BusinessTargetDossiersSchema = z.array(BusinessTargetDossierSchema).min(1);
+
 export const DemoDatasetSchema = z.object({
   persons: z.array(PersonSchema),
   users: z.array(UserSchema),
@@ -438,4 +476,7 @@ export type Share = z.infer<typeof ShareSchema>;
 export type ItineraryProposal = z.infer<typeof ItineraryProposalSchema>;
 export type ActivityLog = z.infer<typeof ActivityLogSchema>;
 export type MissionPhase = z.infer<typeof MissionPhaseSchema>;
+export type TargetCategory = z.infer<typeof TargetCategorySchema>;
+export type TargetPriority = z.infer<typeof TargetPrioritySchema>;
+export type BusinessTargetDossier = z.infer<typeof BusinessTargetDossierSchema>;
 export type DemoDataset = z.infer<typeof DemoDatasetSchema>;
