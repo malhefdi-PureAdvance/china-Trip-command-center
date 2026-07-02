@@ -4,16 +4,27 @@ import { Badge, Card, CardContent, CardHeader, CardTitle } from "@pure-advance/d
 
 import { FieldNotes } from "@/components/field-notes";
 import { PageHeader } from "@/components/page-header";
+import { getCurrentMissionNow } from "@/lib/clock";
 import { activeTrip, demoData, getUserPerson } from "@/lib/demo-data";
+import { buildMissionOps } from "@/lib/mission-ops";
 
-export default function NotesPage() {
+type Search = { prompt?: string };
+
+export const dynamic = "force-dynamic";
+
+export default async function NotesPage({
+  searchParams
+}: Readonly<{ searchParams: Promise<Search> }>) {
+  const { prompt } = await searchParams;
+  const ops = buildMissionOps(getCurrentMissionNow());
+
   return (
     <>
       <PageHeader
         eyebrow="Notes"
         title="Notes & Field Capture"
         summary={`Shared mission context for ${activeTrip.name}, plus on-device capture for meetings and debriefs across Hong Kong and Shenzhen.`}
-        badge="No uploads"
+        badge="Local-first"
       />
 
       <section aria-label="Shared notes">
@@ -53,7 +64,7 @@ export default function NotesPage() {
         </div>
       </section>
 
-      <FieldNotes />
+      <FieldNotes prompts={ops.notePrompts} initialPromptId={prompt} />
     </>
   );
 }

@@ -13,34 +13,34 @@ export type SupabaseHealthRow = {
 function configValue(health: SupabaseHealth) {
   switch (health.configStatus.mode) {
     case "admin_configured":
-      return { tone: "green" as const, value: "Admin configured" };
+      return { tone: "green" as const, value: "Verified" };
     case "public_configured":
-      return { tone: "amber" as const, value: "Public only" };
+      return { tone: "amber" as const, value: "Action required" };
     case "not_configured":
-      return { tone: "amber" as const, value: "Not configured" };
+      return { tone: "amber" as const, value: "Action required" };
   }
 }
 
 function reachabilityValue(health: SupabaseHealth) {
   if (health.databaseReachable) {
-    return { tone: "green" as const, value: "Reachable" };
+    return { tone: "green" as const, value: "Verified" };
   }
 
   if (health.status === "not_configured" || health.status === "admin_key_missing") {
-    return { tone: "amber" as const, value: "Not checked" };
+    return { tone: "amber" as const, value: "Not verified" };
   }
 
-  return { tone: "coral" as const, value: "Unreachable" };
+  return { tone: "coral" as const, value: "Action required" };
 }
 
 function seedValue(health: SupabaseHealth) {
   switch (health.demoSeedStatus) {
     case "present":
-      return { tone: "green" as const, value: health.standardVersion ?? "Present" };
+      return { tone: "green" as const, value: health.standardVersion ?? "Verified" };
     case "missing":
-      return { tone: "coral" as const, value: "Missing" };
+      return { tone: "coral" as const, value: "Action required" };
     case "not_checked":
-      return { tone: "amber" as const, value: "Not checked" };
+      return { tone: "amber" as const, value: "Not verified" };
   }
 }
 
@@ -75,9 +75,9 @@ export function buildSupabaseHealthRows(health: SupabaseHealth): SupabaseHealthR
     },
     {
       label: "RLS policy mode",
-      value: "Read-only placeholder",
-      tone: "cyan",
-      note: health.rlsPolicyMode
+      value: "Not verified",
+      tone: "amber",
+      note: `${health.rlsPolicyMode}; production RLS behavior requires manual verification`
     }
   ];
 }

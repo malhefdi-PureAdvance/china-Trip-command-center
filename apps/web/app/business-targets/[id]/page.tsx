@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import {
   ArrowLeft,
   CalendarClock,
+  CheckCircle2,
   CircleHelp,
   ExternalLink,
   Lightbulb,
@@ -13,8 +14,11 @@ import {
   TriangleAlert
 } from "lucide-react";
 
-import { Badge, cn } from "@pure-advance/design-system";
+import { cn } from "@pure-advance/design-system";
 
+import { SourceConfidenceBadge } from "@/components/source-confidence-badge";
+import { getCurrentMissionNow } from "@/lib/clock";
+import { buildMissionOps, relevanceForTarget } from "@/lib/mission-ops";
 import {
   businessTargets,
   categoryMeta,
@@ -26,6 +30,8 @@ import {
 export function generateStaticParams() {
   return businessTargets.map((target) => ({ id: target.id }));
 }
+
+export const dynamic = "force-dynamic";
 
 const priorityToneClass: Record<string, string> = {
   cyan: "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint)] text-[var(--cc-cyan)]",
@@ -74,6 +80,7 @@ export default async function TargetDossierPage({
   if (!target) notFound();
 
   const priority = priorityMeta[target.priority];
+  const relevance = relevanceForTarget(buildMissionOps(getCurrentMissionNow()), target);
 
   return (
     <>
@@ -124,9 +131,7 @@ export default async function TargetDossierPage({
         ) : null}
         <p className="mt-3 text-[13.5px] leading-[1.5] text-[var(--cc-text)]">{target.oneLiner}</p>
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <Badge tone={target.confidence === "unknown" ? "amber" : "cyan"}>
-            {target.confidence} confidence
-          </Badge>
+          <SourceConfidenceBadge confidence={target.confidence} />
           {target.website ? (
             <a
               href={target.website}
@@ -140,6 +145,28 @@ export default async function TargetDossierPage({
           ) : null}
         </div>
       </header>
+
+      <section className="mt-4 rounded-[var(--cc-r-card)] border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] p-3">
+        <p className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
+          <CheckCircle2 className="size-3.5" aria-hidden="true" />
+          Next action
+        </p>
+        <p className="mt-2 text-[13px] leading-[1.5] text-[var(--cc-text)]">
+          {relevance.nextAction}
+        </p>
+        <p className="mt-2 text-[12px] leading-[1.5] text-[var(--cc-text-3)]">
+          <span className="font-semibold text-[var(--cc-text-2)]">Why now:</span> {relevance.whyNow}
+        </p>
+        {relevance.relatedEvent ? (
+          <Link
+            href="/itinerary"
+            className="mt-3 inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--cc-cyan)]"
+          >
+            View related timeline block
+            <Route className="size-3.5" aria-hidden="true" />
+          </Link>
+        ) : null}
+      </section>
 
       <Section icon={Target} title="What they do">
         <p>{target.whatTheyDo}</p>

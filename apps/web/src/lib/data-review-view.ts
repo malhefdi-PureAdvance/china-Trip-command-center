@@ -16,7 +16,7 @@ export type DataReviewSummaryRow = {
 };
 
 export type DataReviewSource = {
-  label: "Live Supabase" | "Demo fallback";
+  label: "Verified" | "Demo fallback";
   tone: BadgeTone;
   note: string;
 };
@@ -82,7 +82,7 @@ function buildDemoReviewModel(
         label: "Business target sources",
         value: demoData.businessTargetSources.length,
         tone: "cyan",
-        note: "Synthetic records only"
+        note: "Static fallback rows"
       },
       {
         label: "Sensitive field guardrail",
@@ -113,7 +113,7 @@ export function buildBusinessVisitReviewModel(
 
   return {
     source: {
-      label: "Live Supabase",
+      label: "Verified",
       tone: "green",
       note: snapshot.message
     },
@@ -122,7 +122,7 @@ export function buildBusinessVisitReviewModel(
         label: "Business target sources",
         value: snapshot.businessTargetSourceCount ?? 0,
         tone: "green",
-        note: "Live Supabase rows"
+        note: "Verified Supabase rows"
       },
       {
         label: "Sensitive field guardrail",
@@ -134,7 +134,7 @@ export function buildBusinessVisitReviewModel(
         label: "Manual review queue",
         value: manualReviewQueueCount,
         tone: toneForManualQueue(manualReviewQueueCount),
-        note: "Live targets below verified confidence"
+        note: "Verified rows below source confidence"
       }
     ],
     targetsAwaitingVerification: snapshot.targetsAwaitingVerification

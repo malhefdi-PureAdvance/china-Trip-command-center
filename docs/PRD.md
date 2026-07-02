@@ -19,7 +19,7 @@ The app is demo-safe by default: it carries **real sanitized trip anchors** (pro
 - **Itinerary**: phase-grouped mission timeline (arrival → Week 1 HK / LEAP East Jul 8–10 → transition → Weeks 2–4 Shenzhen → Demo Day Jul 31 → departure) with per-day state.
 - **Business Targets**: 49 source-backed visit dossiers with corridor/category filters and per-target drill-in (what-they-do, why-it-matters, visit objective + route, talking points, open questions, risks, fit, confidence, public sources).
 - **Map**: corridor intelligence — bases, program venues, target clusters by corridor, China-first navigation guidance (Amap/Baidu/DiDi).
-- **Notes**: shared mission context plus local-only field capture (meeting note / lead follow-up / daily debrief templates; browser storage, no uploads).
+- **Notes**: shared mission context plus local-first field capture (meeting note / lead follow-up / daily debrief templates; browser storage first, optional team-note sync only after sign-in).
 - **Team**: Pure Advance roster separated from program representatives.
 - **Admin / Data Review**: hydration counts and source files, privacy-guard status, Supabase readiness, ingestion dry-run.
 - **PWA / offline shell**: web-app manifest, home-screen icons, self-hosted fonts (next/font), and a conservative service worker (network-first navigations, cached shell + visited pages, `/offline` fallback; `/admin`, `/private`, and `/auth` never cached). See SECURITY_PRIVACY for caching boundaries.

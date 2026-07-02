@@ -27,21 +27,25 @@ const baseHealth: SupabaseHealth = {
 describe("Supabase health view model", () => {
   it("summarizes a missing Supabase configuration as a non-blocking demo state", () => {
     expect(buildSupabaseHealthRows(baseHealth)).toEqual([
-      expect.objectContaining({ label: "Supabase config", tone: "amber", value: "Not configured" }),
+      expect.objectContaining({
+        label: "Supabase config",
+        tone: "amber",
+        value: "Action required"
+      }),
       expect.objectContaining({
         label: "Database reachability",
         tone: "amber",
-        value: "Not checked"
+        value: "Not verified"
       }),
       expect.objectContaining({
         label: "Business visit seed",
         tone: "amber",
-        value: "Not checked"
+        value: "Not verified"
       }),
       expect.objectContaining({
         label: "RLS policy mode",
-        tone: "cyan",
-        value: "Read-only placeholder"
+        tone: "amber",
+        value: "Not verified"
       })
     ]);
   });
@@ -68,18 +72,18 @@ describe("Supabase health view model", () => {
       expect.objectContaining({
         label: "Supabase config",
         tone: "green",
-        value: "Admin configured"
+        value: "Verified"
       }),
       expect.objectContaining({
         label: "Database reachability",
         tone: "green",
-        value: "Reachable"
+        value: "Verified"
       }),
       expect.objectContaining({ label: "Business visit seed", tone: "green", value: "0.1.0" }),
       expect.objectContaining({
         label: "RLS policy mode",
-        tone: "cyan",
-        value: "Read-only placeholder"
+        tone: "amber",
+        value: "Not verified"
       })
     ]);
   });

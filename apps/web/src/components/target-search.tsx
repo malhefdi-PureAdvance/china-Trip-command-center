@@ -23,7 +23,9 @@ export function TargetSearch() {
   }, []);
 
   function apply(next: string) {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(
+      typeof window === "undefined" ? searchParams.toString() : window.location.search
+    );
     if (next.trim()) {
       params.set("q", next.trim());
     } else {
@@ -36,7 +38,10 @@ export function TargetSearch() {
   function onChange(next: string) {
     setValue(next);
     if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => apply(next), 250);
+    timer.current = setTimeout(() => {
+      timer.current = null;
+      apply(next);
+    }, 250);
   }
 
   return (
@@ -61,7 +66,10 @@ export function TargetSearch() {
           aria-label="Clear search"
           onClick={() => {
             setValue("");
-            if (timer.current) clearTimeout(timer.current);
+            if (timer.current) {
+              clearTimeout(timer.current);
+              timer.current = null;
+            }
             apply("");
           }}
           className="absolute right-2 top-1/2 grid size-7 -translate-y-1/2 place-items-center rounded-full text-[var(--cc-text-faint)] active:translate-y-[calc(-50%+1px)]"

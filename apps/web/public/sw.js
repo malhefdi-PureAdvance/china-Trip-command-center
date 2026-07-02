@@ -1,8 +1,8 @@
 /* China 2026 Command Center — offline shell service worker.
  *
  * Conservative by design:
- * - Same-origin GET requests only. All app content is public, demo-safe data;
- *   nothing private or credentialed is ever cached (none exists client-side).
+ * - Same-origin GET requests only. Public app pages carry app-safe data and
+ *   may be cached; private/admin/auth surfaces are network-only.
  * - /admin is network-only so Supabase readiness is never shown stale.
  * - Navigations are network-first (fresh when online), falling back to the
  *   last cached copy, then to /offline.
@@ -11,7 +11,9 @@
  */
 const CACHE_VERSION = "pa-cc-v3";
 // Auth/private/admin surfaces are NEVER intercepted or cached: they may carry
-// per-user or live-status content and must always hit the network.
+// per-user or live-status content and must always hit the network. Team notes
+// use localStorage plus cross-origin Supabase REST under the user's session,
+// outside this worker's cache.
 const NETWORK_ONLY_PREFIXES = ["/admin", "/private", "/auth"];
 const OFFLINE_URL = "/offline";
 const PRECACHE_URLS = [

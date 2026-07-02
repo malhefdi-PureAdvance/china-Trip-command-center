@@ -2,6 +2,7 @@ import { cn } from "@pure-advance/design-system";
 
 import { MissionTimelineView } from "@/components/mission-timeline";
 import { PageHeader } from "@/components/page-header";
+import { getCurrentMissionNow } from "@/lib/clock";
 import { demoData, getMissionTimeline, missionPhases } from "@/lib/demo-data";
 import { corridorDateKey, shortDate } from "@/lib/mission-timeline";
 
@@ -18,8 +19,10 @@ function activeWeekId(now: Date) {
   return (upcoming ?? weeks.at(-1))?.id;
 }
 
+export const dynamic = "force-dynamic";
+
 export default function ItineraryPage() {
-  const now = new Date();
+  const now = getCurrentMissionNow();
   const timeline = getMissionTimeline(now);
   const items = demoData.itineraryItems;
   const firstKey = corridorDateKey(items[0].startsAt);
