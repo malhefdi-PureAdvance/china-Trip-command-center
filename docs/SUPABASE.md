@@ -7,7 +7,8 @@ This repository is backend-ready but does not contain live Supabase credentials.
 - SQL migrations:
   - `packages/database/migrations/0001_core_schema.sql`
   - `packages/database/migrations/0002_business_visit_source_url_standard.sql`
-- Demo seed: `packages/database/seeds/china_2026_demo.sql`
+  - `packages/database/migrations/0003_app_intel_tables.sql` (mission phases, business-target dossiers, itinerary intel, hydration sources)
+- Demo seed: `packages/database/seeds/china_2026_demo.sql` — **generated** from the domain dataset by `packages/database/scripts/generate-seed.ts` (25 tables incl. the app-intel tables, all 49 dossiers). Regenerate with `pnpm --filter @pure-advance/database generate:seed`; CI/tests assert it is in sync and free of private identifiers.
 - Typed client helpers: `packages/database/src/supabase.ts`
 - Initial database types: `packages/database/src/database.types.ts`
 - Admin health surface: `/admin/data-review`
@@ -54,7 +55,11 @@ If using the SQL editor instead of CLI, apply in this order:
 
 1. `packages/database/migrations/0001_core_schema.sql`
 2. `packages/database/migrations/0002_business_visit_source_url_standard.sql`
-3. `packages/database/seeds/china_2026_demo.sql`
+3. `packages/database/migrations/0003_app_intel_tables.sql`
+4. `packages/database/seeds/china_2026_demo.sql`
+
+The seed is public-tier / demo-safe only. Private-tier data (Tier 3 in
+`docs/PRIVATE_TIER.md`) must never be added to it.
 
 ## RLS posture
 

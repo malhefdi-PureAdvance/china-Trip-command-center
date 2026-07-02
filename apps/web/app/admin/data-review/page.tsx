@@ -1,6 +1,8 @@
 import {
   AlertTriangle,
   CheckCircle2,
+  CircleDashed,
+  Clock,
   DatabaseZap,
   FileText,
   Layers,
@@ -9,7 +11,13 @@ import {
 } from "lucide-react";
 
 import { Badge, Card, CardContent, CardHeader, CardTitle } from "@pure-advance/design-system";
-import { checkSupabaseHealth, fetchBusinessVisitReviewSnapshot } from "@pure-advance/database";
+import {
+  checkSupabaseHealth,
+  expectedTables,
+  fetchBusinessVisitReviewSnapshot
+} from "@pure-advance/database";
+
+import { buildActivationReadinessModel } from "@/lib/activation-readiness-view";
 import {
   businessTargetDryRunFixtureBatch,
   dryRunBusinessTargetIngestionBatch
@@ -51,6 +59,7 @@ export default async function DataReviewPage() {
     fetchBusinessVisitReviewSnapshot()
   ]);
   const supabaseRows = buildSupabaseHealthRows(supabaseHealth);
+  const readiness = buildActivationReadinessModel(supabaseHealth, expectedTables.length);
   const reviewModel = buildBusinessVisitReviewModel(reviewSnapshot, demoData);
   const dryRunModel = buildIngestionDryRunModel(
     dryRunBusinessTargetIngestionBatch(businessTargetDryRunFixtureBatch)
@@ -119,6 +128,61 @@ export default async function DataReviewPage() {
               <Badge tone="cyan">HK / Shenzhen corridor</Badge>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section aria-label="Activation readiness" className="mb-4">
+        <div className="mb-2 flex items-center gap-2.5">
+          <DatabaseZap className="size-4 text-[var(--cc-cyan)]" aria-hidden="true" />
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
+            Activation readiness
+          </span>
+          <span className="h-px flex-1 bg-[var(--cc-border)]" />
+          <Badge tone={readiness.liveConfirmed ? "green" : "amber"}>
+            {readiness.liveConfirmed ? "Live" : "Demo mode"}
+          </Badge>
+        </div>
+        <div className="rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]">
+          <p className="text-[13px] font-semibold text-[var(--cc-text)]">{readiness.headline}</p>
+          <ul className="mt-3 space-y-2">
+            {readiness.steps.map((step) => {
+              const Icon =
+                step.status === "ready"
+                  ? CheckCircle2
+                  : step.status === "action"
+                    ? AlertTriangle
+                    : step.status === "pending"
+                      ? Clock
+                      : CircleDashed;
+              const color =
+                step.status === "ready"
+                  ? "text-[var(--cc-green)]"
+                  : step.status === "action"
+                    ? "text-[var(--cc-amber-text)]"
+                    : "text-[var(--cc-text-faint)]";
+              return (
+                <li key={step.label} className="flex items-start gap-2.5">
+                  <Icon className={`mt-0.5 size-4 shrink-0 ${color}`} aria-hidden="true" />
+                  <div className="min-w-0">
+                    <p className="text-[12.5px] font-semibold text-[var(--cc-text-2)]">
+                      {step.label}
+                    </p>
+                    <p className="text-[11.5px] text-[var(--cc-text-3)]">{step.detail}</p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+          {readiness.missingEnv.length > 0 ? (
+            <p className="mt-3 border-t border-[var(--cc-border-faint)] pt-2 font-mono text-[11px] text-[var(--cc-amber-text)]">
+              Mohammed to set in Vercel: {readiness.missingEnv.join(" · ")}
+            </p>
+          ) : null}
+          <p className="mt-2 text-[11px] leading-[1.5] text-[var(--cc-text-faint)]">
+            Private-tier data (contacts, booking refs, IDs) never ships here — it requires
+            authentication first. This page reads live status only via the server-side service-role
+            key and never claims Supabase is active without a confirmed connection.
+          </p>
         </div>
       </section>
 

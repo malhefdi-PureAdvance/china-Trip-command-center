@@ -9,9 +9,14 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --max-warnings=0",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "generate:seed": "tsx scripts/generate-seed.ts"
   },
   "dependencies": {
+    "@pure-advance/domain": "workspace:*",
     "@supabase/supabase-js": "^2.110.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.22.4"
   }
 }
