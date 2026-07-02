@@ -108,9 +108,15 @@ test.describe("Pure Advance command-center design-system port", () => {
     expect(metrics.bodyScrollWidth).toBeLessThanOrEqual(metrics.viewportWidth);
 
     const primaryNav = page.getByRole("navigation", { name: "Primary" });
+    const secondaryNav = page.getByRole("navigation", { name: "Secondary" });
 
-    for (const name of ["Today", "Itinerary", "Map", "Targets", "Notes", "Team", "Data Review"]) {
+    for (const name of ["Today", "Itinerary", "Map", "Targets", "Notes"]) {
       const link = primaryNav.getByRole("link", { name, exact: true });
+      await link.click({ trial: true });
+    }
+
+    for (const name of ["Team", "Data Review"]) {
+      const link = secondaryNav.getByRole("link", { name, exact: true });
       await link.click({ trial: true });
     }
   });

@@ -1,6 +1,7 @@
 /** @type {import("next").NextConfig} */
 const nextConfig = {
   allowedDevOrigins: ["127.0.0.1"],
+  devIndicators: false,
   transpilePackages: ["@pure-advance/design-system", "@pure-advance/domain", "@pure-advance/maps"]
 };
 
