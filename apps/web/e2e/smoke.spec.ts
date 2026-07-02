@@ -24,7 +24,7 @@ test.describe("command center smoke", () => {
 
       if (route.path === "/admin/data-review") {
         await expect(page.getByText("Supabase config")).toBeVisible();
-        await expect(page.getByText("Not configured", { exact: true })).toBeVisible();
+        await expect(page.getByText("Action required", { exact: true }).first()).toBeVisible();
         await expect(page.getByText("RLS policy mode")).toBeVisible();
         await expect(page.getByText("Ingestion dry-run")).toBeVisible();
         await expect(page.getByText("Dry-run corrections needed")).toBeVisible();

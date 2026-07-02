@@ -106,7 +106,7 @@ test.describe("iPhone-first command center shell", () => {
   test("keeps critical mission content inside the first iPhone screen", async ({ page }) => {
     await page.goto("/business-targets");
 
-    const banner = page.getByText("Demo-safe HK / Shenzhen scaffold");
+    const banner = page.getByText("App-safe HK / Shenzhen ops");
     const pageHeadingLocator = page.getByRole("heading", { name: "Visit Targets" });
     const firstTargetCard = page.locator('a[href^="/business-targets/"]').first();
 
@@ -116,7 +116,7 @@ test.describe("iPhone-first command center shell", () => {
 
     const density = await page.evaluate(() => {
       const bannerElement = Array.from(document.querySelectorAll("span")).find((element) =>
-        element.textContent?.includes("Demo-safe HK / Shenzhen scaffold")
+        element.textContent?.includes("App-safe HK / Shenzhen ops")
       );
       const firstCard = document.querySelector('a[href^="/business-targets/"]');
       const pageHeading = Array.from(document.querySelectorAll("h1")).find((element) =>

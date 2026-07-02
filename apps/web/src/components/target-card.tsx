@@ -12,6 +12,8 @@ import {
 import { cn } from "@pure-advance/design-system";
 import type { BusinessTargetDossier, TargetCategory } from "@pure-advance/domain";
 
+import { SourceConfidenceBadge } from "@/components/source-confidence-badge";
+import { deriveTargetRelevance } from "@/lib/mission-ops";
 import { categoryMeta, priorityMeta } from "@/lib/targets";
 
 export const categoryIcons: Record<TargetCategory, typeof Brain> = {
@@ -33,6 +35,7 @@ export function TargetCard({ target }: Readonly<{ target: BusinessTargetDossier 
   const priority = priorityMeta[target.priority];
   const category = categoryMeta[target.category];
   const CategoryIcon = categoryIcons[target.category];
+  const relevance = deriveTargetRelevance(target);
 
   return (
     <Link
@@ -71,15 +74,19 @@ export function TargetCard({ target }: Readonly<{ target: BusinessTargetDossier 
       <p className="mt-1.5 line-clamp-2 text-[12px] leading-[1.45] text-[var(--cc-text-3)]">
         {target.oneLiner}
       </p>
+      <p className="mt-2 line-clamp-2 text-[11.5px] leading-[1.45] text-[var(--cc-text-2)]">
+        <span className="font-semibold text-[var(--cc-text)]">Next action:</span>{" "}
+        {relevance.nextAction}
+      </p>
       <div className="mt-2.5 flex items-center gap-1.5 text-[11px] text-[var(--cc-text-faint)]">
         <MapPin className="size-3.5 shrink-0 text-[var(--cc-cyan)]" aria-hidden="true" />
         <span className="min-w-0 truncate">
           {target.area} · {target.corridor}
         </span>
-        <ChevronRight
-          className="ml-auto size-4 shrink-0 text-[var(--cc-text-dim)]"
-          aria-hidden="true"
-        />
+        <span className="ml-auto shrink-0">
+          <SourceConfidenceBadge confidence={target.confidence} />
+        </span>
+        <ChevronRight className="size-4 shrink-0 text-[var(--cc-text-dim)]" aria-hidden="true" />
       </div>
     </Link>
   );

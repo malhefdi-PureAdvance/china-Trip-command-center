@@ -75,8 +75,8 @@ export default async function DataReviewPage() {
       <PageHeader
         eyebrow="Admin"
         title="Data Review"
-        summary="What real sanitized data is live, where it came from, what is guarded, Supabase readiness, and the staged import contract."
-        badge="Backend-ready"
+        summary="What public app data is hydrated, what the server health check verifies, what falls back to static data, and what still requires Mohammed action."
+        badge={readiness.liveConfirmed ? "Verified core" : "Demo fallback"}
       />
 
       <section aria-label="Hydration" className="mb-4">
@@ -86,7 +86,7 @@ export default async function DataReviewPage() {
             Hydration
           </span>
           <span className="h-px flex-1 bg-[var(--cc-border)]" />
-          <Badge tone="cyan">Live · demo-safe</Badge>
+          <Badge tone="cyan">Public app data</Badge>
         </div>
         <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-6">
           {hydrationTiles.map((tile) => (
@@ -144,7 +144,7 @@ export default async function DataReviewPage() {
           </span>
           <span className="h-px flex-1 bg-[var(--cc-border)]" />
           <Badge tone={readiness.liveConfirmed ? "green" : "amber"}>
-            {readiness.liveConfirmed ? "Connected" : "Demo mode"}
+            {readiness.liveConfirmed ? "Verified" : "Action required"}
           </Badge>
         </div>
         <div className="rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]">

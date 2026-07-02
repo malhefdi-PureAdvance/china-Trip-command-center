@@ -9,7 +9,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "China 2026 Command Center",
-  description: "Demo-safe command center scaffold for the Hong Kong and Shenzhen corridor.",
+  description: "Public app-safe command center for the Hong Kong and Shenzhen corridor.",
   applicationName: "China 2026 Command Center",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
@@ -74,9 +74,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 className="size-3.5 shrink-0 text-[var(--cc-green)] sm:size-4"
                 aria-hidden="true"
               />
-              <span className="sm:hidden">Demo-safe HK / Shenzhen scaffold</span>
+              <span className="sm:hidden">App-safe HK / Shenzhen ops</span>
               <span className="hidden sm:inline">
-                Demo-safe scaffold: Hong Kong / Shenzhen Greater Bay Area content only.
+                Public app-safe: Hong Kong / Shenzhen Greater Bay Area mission data only.
               </span>
             </div>
           </div>

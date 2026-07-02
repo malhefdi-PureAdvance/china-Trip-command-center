@@ -9,7 +9,9 @@ test.describe("real mission timeline", () => {
 
     await expect(page.getByRole("heading", { name: "China 2026 · Tech Founders" })).toBeVisible();
     await expect(page.getByRole("region", { name: "Mission clock" })).toBeVisible();
-    await expect(page.getByText("Up next")).toBeVisible();
+    await expect(page.getByText(/Next operating block|Current operating block/)).toBeVisible();
+    await expect(page.getByText("Targets that matter now")).toBeVisible();
+    await expect(page.getByText("Next preparation action")).toBeVisible();
 
     const body = page.locator("body");
     await expect(body).not.toContainText("April");

@@ -40,7 +40,7 @@ describe("data review view model", () => {
     const model = buildBusinessVisitReviewModel(liveSnapshot, demoChina2026);
 
     expect(model.source).toEqual({
-      label: "Live Supabase",
+      label: "Verified",
       tone: "green",
       note: "Supabase business visit review data loaded."
     });
@@ -49,14 +49,14 @@ describe("data review view model", () => {
         label: "Business target sources",
         value: 3,
         tone: "green",
-        note: "Live Supabase rows"
+        note: "Verified Supabase rows"
       }),
       expect.objectContaining({ label: "Sensitive field guardrail", value: "On" }),
       expect.objectContaining({
         label: "Manual review queue",
         value: 2,
         tone: "amber",
-        note: "Live targets below verified confidence"
+        note: "Verified rows below source confidence"
       })
     ]);
     expect(model.targetsAwaitingVerification).toEqual(liveSnapshot.targetsAwaitingVerification);
@@ -86,7 +86,7 @@ describe("data review view model", () => {
         label: "Business target sources",
         value: demoChina2026.businessTargetSources.length,
         tone: "cyan",
-        note: "Synthetic records only"
+        note: "Static fallback rows"
       }),
       expect.objectContaining({ label: "Sensitive field guardrail", value: "On" }),
       expect.objectContaining({

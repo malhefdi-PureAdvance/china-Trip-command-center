@@ -14,6 +14,7 @@ import {
   CardTitle
 } from "@pure-advance/design-system";
 
+import type { FieldNotePrompt } from "@/lib/mission-ops";
 import { getBrowserSupabase } from "@/lib/supabase-browser";
 import {
   deleteRemoteNote,
@@ -104,15 +105,21 @@ const syncBadge: Record<SyncState, { text: string; tone: "neutral" | "cyan" | "g
     error: { text: "Sync failed", tone: "amber" }
   };
 
-export function FieldNotes() {
+export function FieldNotes({
+  prompts = [],
+  initialPromptId
+}: Readonly<{ prompts?: FieldNotePrompt[]; initialPromptId?: string }>) {
   const notes = useSyncExternalStore(
     subscribe,
     () => readNotes(),
     () => EMPTY
   );
-  const [template, setTemplate] = useState<Template>("meeting");
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState(templates.meeting.scaffold);
+  const selectedPrompt = initialPromptId
+    ? (prompts.find((candidate) => candidate.id === initialPromptId) ?? null)
+    : null;
+  const [template, setTemplate] = useState<Template>(selectedPrompt?.template ?? "meeting");
+  const [title, setTitle] = useState(selectedPrompt?.title ?? "");
+  const [body, setBody] = useState(selectedPrompt?.body ?? templates.meeting.scaffold);
   const [session, setSession] = useState<Session | null>(null);
   const [syncState, setSyncState] = useState<SyncState>("local_only");
   const [syncMessage, setSyncMessage] = useState<string | null>(null);
@@ -149,6 +156,12 @@ export function FieldNotes() {
     if (body === templates[template].scaffold || body.trim() === "") {
       setBody(templates[next].scaffold);
     }
+  }
+
+  function applyPrompt(prompt: FieldNotePrompt) {
+    setTemplate(prompt.template);
+    setTitle(prompt.title);
+    setBody(prompt.body);
   }
 
   function addNote() {
@@ -244,6 +257,30 @@ export function FieldNotes() {
             )}
             Sync now
           </Button>
+        </div>
+      ) : null}
+
+      {prompts.length > 0 ? (
+        <div className="mb-3 grid gap-2.5 lg:grid-cols-2">
+          {prompts.map((prompt) => (
+            <button
+              key={prompt.id}
+              type="button"
+              onClick={() => applyPrompt(prompt)}
+              className="min-w-0 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 text-left shadow-[var(--cc-elev-1)] active:translate-y-px"
+            >
+              <span className="font-mono text-[9.5px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
+                {prompt.label}
+              </span>
+              <span className="mt-1 block truncate text-[12.5px] font-semibold text-[var(--cc-text)]">
+                {prompt.title}
+              </span>
+              <span className="mt-1 line-clamp-2 text-[11.5px] leading-[1.45] text-[var(--cc-text-3)]">
+                Use this app-safe template for the current mission context. Do not add IDs, booking
+                references, payment data, or private contacts.
+              </span>
+            </button>
+          ))}
         </div>
       ) : null}
 

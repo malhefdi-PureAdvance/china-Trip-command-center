@@ -26,7 +26,8 @@ test.describe("itinerary intelligence", () => {
   test("today surfaces prep dossiers for the next linked event", async ({ page }) => {
     await page.goto("/today");
 
-    await expect(page.getByText(/^Prep · /)).toBeVisible();
+    await expect(page.getByText("Targets that matter now")).toBeVisible();
+    await expect(page.getByText("Next action:").first()).toBeVisible();
     await expect(page.locator('a[href^="/business-targets/"]').first()).toBeVisible();
   });
 

@@ -23,6 +23,8 @@ test.describe("business target dossiers", () => {
     await page.goto("/business-targets/sz-synceres");
 
     await expect(page.getByRole("heading", { name: "Synceres Biosciences" })).toBeVisible();
+    await expect(page.getByText("Next action").first()).toBeVisible();
+    await expect(page.getByText("Why now:")).toBeVisible();
     await expect(page.getByText("What they do")).toBeVisible();
     await expect(page.getByText("Talking points")).toBeVisible();
     await expect(page.getByText(/verify privately/i)).toBeVisible();
