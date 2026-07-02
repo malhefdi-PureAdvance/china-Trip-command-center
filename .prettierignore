@@ -1,0 +1,8 @@
+# Package-manager-owned; never reformat.
+pnpm-lock.yaml
+
+# Generated SQL (no prettier parser) and build artifacts.
+**/*.sql
+**/.next/
+**/playwright-report/
+**/test-results/
