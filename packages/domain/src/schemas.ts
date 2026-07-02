@@ -377,6 +377,20 @@ export const ActivityLogSchema = z.object({
   createdAt: IsoDateTimeSchema
 });
 
+export const MissionPhaseSchema = z.object({
+  id: z.string().min(2),
+  order: z.number().int().positive(),
+  label: z.string().min(1),
+  name: z.string().min(2),
+  city: z.string().min(2),
+  weekTag: z.string().min(1),
+  startsOn: IsoDateSchema,
+  endsOn: IsoDateSchema,
+  headline: z.string().min(2).optional()
+});
+
+export const MissionPhasesSchema = z.array(MissionPhaseSchema).min(1);
+
 export const DemoDatasetSchema = z.object({
   persons: z.array(PersonSchema),
   users: z.array(UserSchema),
@@ -423,4 +437,5 @@ export type Lead = z.infer<typeof LeadSchema>;
 export type Share = z.infer<typeof ShareSchema>;
 export type ItineraryProposal = z.infer<typeof ItineraryProposalSchema>;
 export type ActivityLog = z.infer<typeof ActivityLogSchema>;
+export type MissionPhase = z.infer<typeof MissionPhaseSchema>;
 export type DemoDataset = z.infer<typeof DemoDatasetSchema>;

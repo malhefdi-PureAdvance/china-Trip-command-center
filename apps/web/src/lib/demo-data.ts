@@ -1,8 +1,11 @@
-import { demoChina2026 } from "@pure-advance/domain";
+import { demoChina2026, demoMissionPhases } from "@pure-advance/domain";
 import { formatCoordinates, getStaticMapPlaceholderLabel } from "@pure-advance/maps";
+
+import { buildMissionTimeline, missionClock } from "./mission-timeline";
 
 export const demoData = demoChina2026;
 export const activeTrip = demoData.trips[0];
+export const missionPhases = demoMissionPhases;
 
 export function getLocationById(locationId: string | null) {
   if (!locationId) {
@@ -41,6 +44,30 @@ export function getTargetScore(targetId: string) {
 
 export function getTargetSources(targetId: string) {
   return demoData.businessTargetSources.filter((source) => source.businessTargetId === targetId);
+}
+
+export function getLocationName(locationId: string | null) {
+  return getLocationById(locationId)?.name ?? null;
+}
+
+export function getLocationCity(locationId: string | null) {
+  return getLocationById(locationId)?.city ?? null;
+}
+
+export function getOwnerName(userId: string | null) {
+  return getUserPerson(userId)?.displayName ?? null;
+}
+
+export function getMissionClock(now: Date) {
+  return missionClock(activeTrip, now);
+}
+
+export function getMissionTimeline(now: Date) {
+  return buildMissionTimeline(demoData.itineraryItems, missionPhases, now, {
+    getLocationName,
+    getLocationCity,
+    getOwnerName
+  });
 }
 
 export function getRouteLocations() {

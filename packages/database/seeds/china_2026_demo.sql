@@ -55,19 +55,19 @@ values
   (
     '00000000-0000-4000-8000-000000000101',
     'traveler',
-    'Demo Mission Lead',
+    'Mohammed',
     'Pure Advance',
-    'Mission Lead',
-    'Coordinates the China 2026 operating rhythm.',
+    'Founder · Mission Lead',
+    'Runs the China 2026 operating rhythm across Hong Kong and Shenzhen.',
     '2026-01-15T09:00:00+08:00',
     '2026-01-15T09:00:00+08:00'
   ),
   (
     '00000000-0000-4000-8000-000000000102',
-    'operator',
-    'Demo Operations Coordinator',
+    'traveler',
+    'Sultan',
     'Pure Advance',
-    'Operations',
+    'Co-founder',
     null,
     '2026-01-15T09:00:00+08:00',
     '2026-01-15T09:00:00+08:00'
@@ -90,7 +90,7 @@ values
     '00000000-0000-4000-8000-000000000201',
     '00000000-0000-4000-8000-000000000101',
     'demo',
-    'mission-lead',
+    'mohammed',
     'owner',
     '2026-01-15T09:00:00+08:00',
     '2026-01-15T09:00:00+08:00'
@@ -99,7 +99,7 @@ values
     '00000000-0000-4000-8000-000000000202',
     '00000000-0000-4000-8000-000000000102',
     'demo',
-    'ops',
+    'sultan',
     'admin',
     '2026-01-15T09:00:00+08:00',
     '2026-01-15T09:00:00+08:00'
@@ -109,9 +109,9 @@ on conflict (id) do nothing;
 insert into public.teams (id, name, slug, description, created_at, updated_at)
 values (
   '00000000-0000-4000-8000-000000000301',
-  'Pure Advance China 2026',
+  'Pure Advance · China 2026',
   'pure-advance-china-2026',
-  'Demo command center team for planning and review.',
+  'Command center team for the Tech Founders China 2026 mission.',
   '2026-01-15T09:00:00+08:00',
   '2026-01-15T09:00:00+08:00'
 )
@@ -130,7 +130,7 @@ values
     '00000000-0000-4000-8000-000000000402',
     '00000000-0000-4000-8000-000000000301',
     '00000000-0000-4000-8000-000000000202',
-    'operator',
+    'traveler',
     '2026-01-15T09:00:00+08:00'
   )
 on conflict (id) do nothing;
@@ -151,13 +151,13 @@ insert into public.trips (
 values (
   '00000000-0000-4000-8000-000000000501',
   '00000000-0000-4000-8000-000000000301',
-  'China 2026 Demo Mission',
-  'china-2026-demo-mission',
+  'China 2026 · Tech Founders',
+  'china-2026-tech-founders',
   'planning',
   'Hong Kong / Shenzhen Greater Bay Area',
-  '2026-04-12',
-  '2026-04-21',
-  'Demo-safe operating plan for business visits, logistics, and team notes.',
+  '2026-07-04',
+  '2026-08-02',
+  'Hong Kong Week 1 (Go Global from GBA) with LEAP East at HKCEC Jul 8-10, then the Shenzhen Tech Founders program through Demo Day on Jul 31.',
   '2026-01-15T09:00:00+08:00',
   '2026-01-15T09:00:00+08:00'
 )
@@ -170,15 +170,15 @@ values
     '00000000-0000-4000-8000-000000000501',
     '00000000-0000-4000-8000-000000000101',
     'mission_lead',
-    'Demo availability only.',
+    'On-ground Hong Kong Jul 5 through Shenzhen Demo Day Jul 31.',
     '2026-01-15T09:00:00+08:00'
   ),
   (
     '00000000-0000-4000-8000-000000000602',
     '00000000-0000-4000-8000-000000000501',
     '00000000-0000-4000-8000-000000000102',
-    'remote_support',
-    'Supports daily review windows.',
+    'traveler',
+    'Hong Kong base from Jul 4; full program traveler.',
     '2026-01-15T09:00:00+08:00'
   )
 on conflict (id) do nothing;
@@ -198,25 +198,25 @@ insert into public.locations (
 values
   (
     '00000000-0000-4000-8000-000000000701',
-    'Demo Hong Kong Arrival Base',
+    'The Hari Hong Kong',
     'Hong Kong',
     'China',
-    'Demo harbor district, no real address',
-    22.3193,
-    114.1694,
+    'Wan Chai, Hong Kong',
+    22.2789,
+    114.1755,
     'hotel',
     '2026-01-15T09:00:00+08:00',
     '2026-01-15T09:00:00+08:00'
   ),
   (
     '00000000-0000-4000-8000-000000000702',
-    'Demo Shenzhen Innovation Campus',
+    'Ascott Raffles City Shenzhen',
     'Shenzhen',
     'China',
-    'Demo industrial zone, no real address',
-    22.5431,
-    114.0579,
-    'factory',
+    'Nanshan, Shenzhen',
+    22.5267,
+    113.9345,
+    'hotel',
     '2026-01-15T09:00:00+08:00',
     '2026-01-15T09:00:00+08:00'
   )
@@ -227,8 +227,8 @@ values (
   '00000000-0000-4000-8000-000000000801',
   '00000000-0000-4000-8000-000000000501',
   '00000000-0000-4000-8000-000000000701',
-  'Base',
-  'Demo staging location for daily briefings.',
+  'Hong Kong base',
+  'Week 1 base in Wan Chai — walkable to HKCEC for LEAP East.',
   '00000000-0000-4000-8000-000000000202',
   '2026-01-15T09:00:00+08:00'
 )
@@ -254,14 +254,14 @@ values
     '00000000-0000-4000-8000-000000000901',
     '00000000-0000-4000-8000-000000000501',
     '00000000-0000-4000-8000-000000000701',
-    'Arrival and operations briefing',
+    'Arrival & Hong Kong base setup',
     'admin',
     'confirmed',
-    '2026-04-12T18:00:00+08:00',
-    '2026-04-12T19:00:00+08:00',
+    '2026-07-05T09:00:00+08:00',
+    '2026-07-05T12:00:00+08:00',
     'Asia/Hong_Kong',
     '00000000-0000-4000-8000-000000000202',
-    'Review demo route plan and business target readiness.',
+    'Arrive HKG and settle the Hong Kong base. Payments, eSIM/VPN, and maps readiness.',
     '2026-01-15T09:00:00+08:00',
     '2026-01-15T09:00:00+08:00'
   ),
@@ -269,14 +269,14 @@ values
     '00000000-0000-4000-8000-000000000902',
     '00000000-0000-4000-8000-000000000501',
     '00000000-0000-4000-8000-000000000702',
-    'Demo Shenzhen supplier capability visit',
-    'site_visit',
+    'Week 2 kickoff · InnoX mentors & KAUST Shenzhen Hub',
+    'meeting',
     'proposed',
-    '2026-04-14T10:00:00+08:00',
-    '2026-04-14T12:00:00+08:00',
-    'Asia/Hong_Kong',
+    '2026-07-13T10:00:00+08:00',
+    '2026-07-13T12:00:00+08:00',
+    'Asia/Shanghai',
     '00000000-0000-4000-8000-000000000201',
-    'Placeholder visit pending source review.',
+    '1:1 mentor support and tailored plan. Prepare Pure Advance intro asks before this week.',
     '2026-01-15T09:00:00+08:00',
     '2026-01-15T09:00:00+08:00'
   )
@@ -307,10 +307,10 @@ values (
   '00000000-0000-4000-8000-000000001101',
   '00000000-0000-4000-8000-000000000501',
   '00000000-0000-4000-8000-000000000202',
-  'Daily command rhythm',
-  'Demo note: hold a short morning brief and evening data review.',
+  'Week 1 · Go Global from GBA',
+  'Hong Kong Week 1 priority: LEAP East at HKCEC (Jul 8-10) and Saudi-ecosystem networking. Keep BJJ and food as recovery slots.',
   'team',
-  array['ops', 'demo'],
+  array['week1', 'hong kong', 'leap-east'],
   '2026-01-15T09:00:00+08:00',
   '2026-01-15T09:00:00+08:00'
 )
@@ -452,8 +452,8 @@ values (
   '00000000-0000-4000-8000-000000001201',
   '00000000-0000-4000-8000-000000000201',
   'draft',
-  '2026-04-14T09:00:00+08:00',
-  '2026-04-14T17:00:00+08:00',
+  '2026-07-20T09:00:00+08:00',
+  '2026-07-20T17:00:00+08:00',
   'Demo request draft. Replace with sourced, approved outreach before use.',
   '2026-01-15T09:00:00+08:00',
   '2026-01-15T09:00:00+08:00'
@@ -527,11 +527,11 @@ values (
   '00000000-0000-4000-8000-000000001901',
   '00000000-0000-4000-8000-000000000501',
   '00000000-0000-4000-8000-000000000202',
-  'Move supplier visit after readiness review',
+  'Shift a Shenzhen visit after readiness review',
   'Source confidence should be reviewed before calendar lock.',
   'open',
-  '2026-04-15T10:00:00+08:00',
-  '2026-04-15T12:00:00+08:00',
+  '2026-07-20T10:00:00+08:00',
+  '2026-07-20T12:00:00+08:00',
   '00000000-0000-4000-8000-000000000702',
   '2026-01-15T09:00:00+08:00',
   '2026-01-15T09:00:00+08:00'
