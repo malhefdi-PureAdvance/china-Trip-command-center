@@ -21,7 +21,7 @@ const roleRows = [
 ];
 
 export default function PrivatePage() {
-  const { tier, publicConfig } = getPrivateTierState();
+  const { tier } = getPrivateTierState();
   const copy = privateTierCopy[tier];
 
   return (
@@ -43,7 +43,7 @@ export default function PrivatePage() {
           <Badge tone={tier === "enabled" ? "amber" : "neutral"}>{copy.label}</Badge>
         </div>
         <p className="mb-3 text-[12.5px] leading-[1.5] text-[var(--cc-text-2)]">{copy.detail}</p>
-        <AuthPanel publicConfig={publicConfig} />
+        <AuthPanel />
       </section>
 
       <section aria-label="Role model" className="mb-4">

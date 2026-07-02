@@ -20,7 +20,22 @@ design tokens, fonts, icons. Field notes are Tier 1 UX but stay **on-device**
 **Rule:** demo-safe, source-grounded, no identifiers. A domain test and the seed
 generator both fail closed if a contact identifier or booking token appears.
 
-## Tier 2 — Authenticated Supabase-backed app data (foundation ready, not active)
+## Tier 2 — Authenticated Supabase-backed app data (ACTIVE: team note sync)
+
+**First live Tier-2 feature — team note sync** (`/notes`): field-capture notes
+remain **local-first** (localStorage is the device's source of truth; capture
+works offline and with the tier disabled). A signed-in `owner`/`team` member
+can _choose_ to sync: unsynced notes push to `public.team_notes`, and the
+team's notes pull back (labeled Local / Synced / Team). Every failure path
+keeps the local copy; RLS (0004) is the enforcement layer — anonymous,
+non-members, and `program_viewer` can neither read nor write. Sync traffic is
+cross-origin Supabase REST under the user's own session and is never
+intercepted by the service worker; the worker additionally refuses to touch
+any request carrying an `Authorization` header. Notes UI carries a visible
+warning: meeting/debrief text only — never booking refs, IDs, payments, or
+private contacts (those remain Tier 3).
+
+## Tier 2 (general rule)
 
 The same shapes as Tier 1 plus editable/operational data, served only to
 signed-in team members once auth exists. Backed by the SQL schema

@@ -1,31 +1,21 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { createClient, type Session } from "@supabase/supabase-js";
+import { useEffect, useState } from "react";
+import type { Session } from "@supabase/supabase-js";
 import { LogIn, LogOut, MailCheck, ShieldAlert } from "lucide-react";
 
 import { Badge, Button } from "@pure-advance/design-system";
 
-type Props = {
-  /** Present only when the private tier is enabled; public values only. */
-  publicConfig: { url: string; anonKey: string } | null;
-};
+import { getBrowserSupabase } from "@/lib/supabase-browser";
 
 /**
- * Magic-link auth panel. Renders nothing interactive unless the server passed
- * an enabled public config. Sessions live in browser storage only; nothing is
- * cached by the service worker (auth/private routes are network-only).
+ * Magic-link auth panel on the SHARED browser client (one session store and
+ * token-refresh loop across /private and the Notes sync). Renders nothing
+ * interactive unless the private tier is enabled. Sessions live in browser
+ * storage only; auth/private routes are network-only in the service worker.
  */
-export function AuthPanel({ publicConfig }: Readonly<Props>) {
-  const supabase = useMemo(
-    () =>
-      publicConfig
-        ? createClient(publicConfig.url, publicConfig.anonKey, {
-            auth: { autoRefreshToken: true, persistSession: true }
-          })
-        : null,
-    [publicConfig]
-  );
+export function AuthPanel() {
+  const supabase = typeof window !== "undefined" ? getBrowserSupabase() : null;
 
   const [session, setSession] = useState<Session | null>(null);
   const [email, setEmail] = useState("");
