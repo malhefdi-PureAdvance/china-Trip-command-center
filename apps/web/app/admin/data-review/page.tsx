@@ -139,7 +139,7 @@ export default async function DataReviewPage() {
           </span>
           <span className="h-px flex-1 bg-[var(--cc-border)]" />
           <Badge tone={readiness.liveConfirmed ? "green" : "amber"}>
-            {readiness.liveConfirmed ? "Live" : "Demo mode"}
+            {readiness.liveConfirmed ? "Connected" : "Demo mode"}
           </Badge>
         </div>
         <div className="rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]">

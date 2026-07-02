@@ -17,16 +17,22 @@ export type ActivationReadinessModel = {
 };
 
 /**
- * Builds the "activation readiness" checklist for the admin page WITHOUT
- * claiming Supabase is live unless the health check actually reached the DB
- * and found the seeded standard (`status === "ready"`). Everything else is
- * shown as pending/action so the page never overstates backend state.
+ * Builds the "activation readiness" checklist for the admin page.
+ *
+ * Honesty rule: only assert what the health check actually proves. It queries
+ * ONE core table (the `0001` data-standard row via the service-role key), so it
+ * can confirm the connection and the core schema — but it does NOT verify that
+ * migration `0003` (app-intel tables) or the current regenerated seed are
+ * applied. Those steps are therefore reported as unverified/pending regardless
+ * of connection state, so the page never overstates what is live.
  */
 export function buildActivationReadinessModel(
   health: SupabaseHealth,
   expectedTableCount: number
 ): ActivationReadinessModel {
   const config = health.configStatus;
+  // "Connected" = env present, DB reachable, core standard row found. This is
+  // the strongest thing the health check can prove — not full activation.
   const liveConfirmed = health.status === "ready" && health.databaseReachable;
   const missingEnv = [...config.missingPublicEnv, ...config.missingAdminEnv];
 
@@ -36,23 +42,16 @@ export function buildActivationReadinessModel(
       ? "pending"
       : "action";
 
-  const migrationStatus: ReadinessStepStatus = liveConfirmed
+  const coreStatus: ReadinessStepStatus = liveConfirmed
     ? "ready"
     : health.databaseReachable
       ? "action"
       : "pending";
 
-  const seedStatus: ReadinessStepStatus =
-    health.demoSeedStatus === "present"
-      ? "ready"
-      : health.demoSeedStatus === "missing"
-        ? "action"
-        : "pending";
-
   return {
     liveConfirmed,
     headline: liveConfirmed
-      ? "Live · Supabase connected and seeded"
+      ? "Connected · core schema live (verify app-intel migration + seed)"
       : config.isAdminConfigured
         ? "Configured · connection not yet confirmed"
         : "Not activated · running on public demo data",
@@ -67,14 +66,23 @@ export function buildActivationReadinessModel(
             : "Public + service-role keys present"
       },
       {
-        label: "Migrations applied",
-        status: migrationStatus,
-        detail: `3 migrations → ${expectedTableCount} expected tables`
+        label: "Core schema + standard",
+        status: coreStatus,
+        detail: liveConfirmed
+          ? "0001–0002 confirmed via the data-standard row"
+          : "Health check queries the business_visit_data_standards row"
       },
       {
-        label: "Demo seed applied",
-        status: seedStatus,
-        detail: "china_2026_demo.sql — regenerated from domain data"
+        // The health check does not query 0003's tables, so this is never
+        // asserted as applied — it stays a manual step until verified.
+        label: "App-intel tables (0003)",
+        status: "pending",
+        detail: `Not verified by the health check — apply 0003 + reseed (${expectedTableCount} tables) to activate mission phases, dossiers, and itinerary intel`
+      },
+      {
+        label: "Seed freshness",
+        status: "pending",
+        detail: "Regenerate and reapply china_2026_demo.sql so live data matches the domain dataset"
       },
       {
         label: "RLS posture",

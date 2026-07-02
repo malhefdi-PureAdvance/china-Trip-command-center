@@ -55,7 +55,7 @@ describe("activation readiness model", () => {
     expect(model.headline).not.toContain("Live");
   });
 
-  it("confirms live only when the DB is reachable and seeded", () => {
+  it("confirms core connection but never asserts 0003/seed as applied", () => {
     const model = buildActivationReadinessModel(
       health({
         status: "ready",
@@ -72,7 +72,12 @@ describe("activation readiness model", () => {
       25
     );
     expect(model.liveConfirmed).toBe(true);
-    expect(model.headline).toContain("Live");
+    expect(model.headline).toContain("Connected · core schema live");
     expect(model.missingEnv).toHaveLength(0);
+    // The health check cannot prove 0003 or the current seed — never "ready".
+    const intel = model.steps.find((step) => step.label === "App-intel tables (0003)");
+    const seed = model.steps.find((step) => step.label === "Seed freshness");
+    expect(intel?.status).toBe("pending");
+    expect(seed?.status).toBe("pending");
   });
 });
