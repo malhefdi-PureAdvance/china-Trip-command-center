@@ -20,7 +20,7 @@ The scaffold is intentionally demo-safe. It uses only synthetic Hong Kong and Sh
 - Shared domain schemas and demo data.
 - Business target workflow statuses and source confidence tracking.
 - SQL migration for core domain tables and conservative RLS placeholders.
-- Future ingestion functions that validate schema shape and reject sensitive fields.
+- Future ingestion functions that validate schema shape, reject sensitive fields, and dry-run row-level acceptance/rejection before any write workflow exists.
 
 ## Out Of Scope
 

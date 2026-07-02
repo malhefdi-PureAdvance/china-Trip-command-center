@@ -32,6 +32,7 @@ describe("domain schemas", () => {
   it("documents the business visit data standard in schemas", () => {
     expect(() => BusinessVisitDataStandardSchema.parse(businessVisitDataStandard)).not.toThrow();
     expect(businessVisitDataStandard.requiredFields).toContain("source_confidence");
+    expect(businessVisitDataStandard.requiredFields).toContain("source_url");
     expect(businessVisitDataStandard.blockedSensitiveFields).toContain("passport_number");
   });
 });

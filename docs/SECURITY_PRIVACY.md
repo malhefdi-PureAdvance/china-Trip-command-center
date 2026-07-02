@@ -16,7 +16,9 @@ Do not import or commit:
 
 `packages/data-ingestion` recursively checks payload field names before parsing. If a blocked field is found, validation returns `rejected` and the placeholder import function stages zero records.
 
-The current import function is intentionally non-writing. Future ingestion must be source-backed, human-reviewed, and covered by tests before it can persist records.
+The dry-run contract validates each record independently. It accepts source-backed Hong Kong/Shenzhen rows for human review, rejects unsafe rows with row-level reasons, and always reports `writesPerformed: 0`. The admin data-review screen uses only synthetic fixture rows to demonstrate accepted/rejected outcomes.
+
+The current import function is intentionally non-writing. Future ingestion must be source-backed, human-reviewed, authenticated, authorized, and covered by tests before it can persist records.
 
 ## Database RLS
 

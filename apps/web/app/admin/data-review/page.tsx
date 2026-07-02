@@ -2,10 +2,14 @@ import { AlertTriangle, CheckCircle2, DatabaseZap, ShieldCheck } from "lucide-re
 
 import { Badge, Card, CardContent, CardHeader, CardTitle } from "@pure-advance/design-system";
 import { checkSupabaseHealth, fetchBusinessVisitReviewSnapshot } from "@pure-advance/database";
+import {
+  businessTargetDryRunFixtureBatch,
+  dryRunBusinessTargetIngestionBatch
+} from "@pure-advance/data-ingestion";
 
 import { PageHeader } from "@/components/page-header";
 import { demoData } from "@/lib/demo-data";
-import { buildBusinessVisitReviewModel } from "@/lib/data-review-view";
+import { buildBusinessVisitReviewModel, buildIngestionDryRunModel } from "@/lib/data-review-view";
 import { buildSupabaseHealthRows } from "@/lib/supabase-health-view";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +21,9 @@ export default async function DataReviewPage() {
   ]);
   const supabaseRows = buildSupabaseHealthRows(supabaseHealth);
   const reviewModel = buildBusinessVisitReviewModel(reviewSnapshot, demoData);
+  const dryRunModel = buildIngestionDryRunModel(
+    dryRunBusinessTargetIngestionBatch(businessTargetDryRunFixtureBatch)
+  );
 
   return (
     <>
@@ -59,7 +66,36 @@ export default async function DataReviewPage() {
           </Card>
         ))}
       </section>
-      <section className="mt-6 grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+      <section className="mt-4 grid gap-4 lg:grid-cols-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Ingestion dry-run</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-end justify-between gap-4">
+                <p className="text-xl font-semibold tracking-normal">{dryRunModel.status.label}</p>
+                <Badge tone={dryRunModel.status.tone}>contract</Badge>
+              </div>
+              <p className="text-xs leading-5 text-[var(--pa-muted)]">{dryRunModel.status.note}</p>
+            </div>
+          </CardContent>
+        </Card>
+        {dryRunModel.summaryRows.map((row) => (
+          <Card key={row.label}>
+            <CardHeader>
+              <CardTitle>{row.label}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-end justify-between gap-4">
+                <p className="text-3xl font-semibold tracking-normal">{row.value}</p>
+                <Badge tone={row.tone}>{row.note}</Badge>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </section>
+      <section className="mt-6 grid gap-4 lg:grid-cols-3">
         <Card>
           <CardHeader>
             <CardTitle>Import Gates</CardTitle>
@@ -88,6 +124,27 @@ export default async function DataReviewPage() {
               RLS starts as authenticated read-only; anonymous and mutation policies are not
               granted.
             </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Dry-run Rejection Reasons</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {dryRunModel.rejectionRows.map((row) => (
+              <div
+                key={`${row.index}-${row.name}`}
+                className="border-b border-[var(--pa-border)] pb-3 last:border-0 last:pb-0"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm font-semibold tracking-normal">{row.name}</p>
+                  <Badge tone={row.tone}>row {row.index + 1}</Badge>
+                </div>
+                <p className="mt-2 text-xs leading-5 text-[var(--pa-muted)]">
+                  {row.reasons.join("; ")}
+                </p>
+              </div>
+            ))}
           </CardContent>
         </Card>
         <Card>
