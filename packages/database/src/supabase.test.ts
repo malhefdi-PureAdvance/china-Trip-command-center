@@ -78,6 +78,28 @@ describe("Supabase health check", () => {
     expect(fetcher).not.toHaveBeenCalled();
   });
 
+  it("reports unreachable instead of throwing when the health fetch rejects", async () => {
+    const fetcher = vi.fn<typeof fetch>().mockRejectedValue(new TypeError("network down"));
+
+    await expect(
+      checkSupabaseHealth(
+        {
+          url: "https://china-command.supabase.co/",
+          anonKey: "anon-live-shaped-value",
+          serviceRoleKey: "service-role-live-shaped-value"
+        },
+        { fetcher, now: () => new Date("2026-07-02T05:00:00.000Z") }
+      )
+    ).resolves.toMatchObject({
+      status: "unreachable",
+      databaseReachable: false,
+      standardVersion: null,
+      demoSeedStatus: "not_checked",
+      checkedAt: "2026-07-02T05:00:00.000Z",
+      message: "Supabase REST health query failed before returning usable data."
+    });
+  });
+
   it("reads the seeded business visit standard when admin config is present", async () => {
     const fetcher = vi.fn().mockResolvedValue(
       new Response(
@@ -132,6 +154,29 @@ describe("Business visit review snapshot", () => {
       targetsAwaitingVerification: []
     });
     expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it("falls back instead of throwing when a live review query rejects", async () => {
+    const fetcher = vi.fn<typeof fetch>().mockRejectedValue(new TypeError("network down"));
+
+    await expect(
+      fetchBusinessVisitReviewSnapshot(
+        {
+          url: "https://china-command.supabase.co/",
+          anonKey: "anon-live-shaped-value",
+          serviceRoleKey: "service-role-live-shaped-value"
+        },
+        { fetcher, now: () => new Date("2026-07-02T05:00:00.000Z") }
+      )
+    ).resolves.toMatchObject({
+      status: "unreachable",
+      source: "unavailable",
+      businessTargetSourceCount: null,
+      manualReviewQueueCount: null,
+      targetsAwaitingVerification: [],
+      checkedAt: "2026-07-02T05:00:00.000Z",
+      message: "Supabase business visit review query failed before returning usable data."
+    });
   });
 
   it("reads source counts and unverified target queue from Supabase REST with the service role key", async () => {

@@ -311,64 +311,73 @@ export async function fetchBusinessVisitReviewSnapshot(
   }
 
   const fetcher = options.fetcher ?? fetch;
-  const sourceCount = await fetchExactCount(config, fetcher, "business_target_sources");
 
-  if (sourceCount.count === null) {
-    return unavailableReviewSnapshot(
-      "unreachable",
-      checkedAt,
-      `Supabase business target source count failed with HTTP ${sourceCount.statusCode}.`,
-      sourceCount.statusCode
-    );
-  }
+  try {
+    const sourceCount = await fetchExactCount(config, fetcher, "business_target_sources");
 
-  const manualReviewQueueCount = await fetchExactCount(config, fetcher, "business_targets", [
-    ["source_confidence", "neq.verified"]
-  ]);
-
-  if (manualReviewQueueCount.count === null) {
-    return unavailableReviewSnapshot(
-      "unreachable",
-      checkedAt,
-      `Supabase manual review queue count failed with HTTP ${manualReviewQueueCount.statusCode}.`,
-      manualReviewQueueCount.statusCode
-    );
-  }
-
-  const targetsResponse = await fetcher(
-    getRestEndpoint(config.url!, "business_targets", [
-      ["select", "id,name,city,source_confidence,status,priority_rank"],
-      ["source_confidence", "neq.verified"],
-      ["order", "priority_rank.asc.nullslast"],
-      ["order", "name.asc"],
-      ["limit", "6"]
-    ]),
-    {
-      method: "GET",
-      headers: getAdminRestHeaders(config)
+    if (sourceCount.count === null) {
+      return unavailableReviewSnapshot(
+        "unreachable",
+        checkedAt,
+        `Supabase business target source count failed with HTTP ${sourceCount.statusCode}.`,
+        sourceCount.statusCode
+      );
     }
-  );
 
-  if (!targetsResponse.ok) {
+    const manualReviewQueueCount = await fetchExactCount(config, fetcher, "business_targets", [
+      ["source_confidence", "neq.verified"]
+    ]);
+
+    if (manualReviewQueueCount.count === null) {
+      return unavailableReviewSnapshot(
+        "unreachable",
+        checkedAt,
+        `Supabase manual review queue count failed with HTTP ${manualReviewQueueCount.statusCode}.`,
+        manualReviewQueueCount.statusCode
+      );
+    }
+
+    const targetsResponse = await fetcher(
+      getRestEndpoint(config.url!, "business_targets", [
+        ["select", "id,name,city,source_confidence,status,priority_rank"],
+        ["source_confidence", "neq.verified"],
+        ["order", "priority_rank.asc.nullslast"],
+        ["order", "name.asc"],
+        ["limit", "6"]
+      ]),
+      {
+        method: "GET",
+        headers: getAdminRestHeaders(config)
+      }
+    );
+
+    if (!targetsResponse.ok) {
+      return unavailableReviewSnapshot(
+        "unreachable",
+        checkedAt,
+        `Supabase targets awaiting verification query failed with HTTP ${targetsResponse.status}.`,
+        targetsResponse.status
+      );
+    }
+
+    const targets = (await targetsResponse.json()) as BusinessVisitReviewTargetRow[];
+
+    return {
+      status: "ready",
+      source: "supabase",
+      businessTargetSourceCount: sourceCount.count,
+      manualReviewQueueCount: manualReviewQueueCount.count,
+      targetsAwaitingVerification: targets.map(mapBusinessVisitReviewTarget),
+      checkedAt,
+      message: "Supabase business visit review data loaded."
+    };
+  } catch {
     return unavailableReviewSnapshot(
       "unreachable",
       checkedAt,
-      `Supabase targets awaiting verification query failed with HTTP ${targetsResponse.status}.`,
-      targetsResponse.status
+      "Supabase business visit review query failed before returning usable data."
     );
   }
-
-  const targets = (await targetsResponse.json()) as BusinessVisitReviewTargetRow[];
-
-  return {
-    status: "ready",
-    source: "supabase",
-    businessTargetSourceCount: sourceCount.count,
-    manualReviewQueueCount: manualReviewQueueCount.count,
-    targetsAwaitingVerification: targets.map(mapBusinessVisitReviewTarget),
-    checkedAt,
-    message: "Supabase business visit review data loaded."
-  };
 }
 
 export async function checkSupabaseHealth(
@@ -404,16 +413,34 @@ export async function checkSupabaseHealth(
   }
 
   const fetcher = options.fetcher ?? fetch;
-  const response = await fetcher(getHealthEndpoint(config.url!), {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${config.serviceRoleKey}`,
-      apikey: config.serviceRoleKey!
-    }
-  });
+  let response: Response;
+  let rows: BusinessVisitStandardHealthRow[];
 
-  if (!response.ok) {
+  try {
+    response = await fetcher(getHealthEndpoint(config.url!), {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${config.serviceRoleKey}`,
+        apikey: config.serviceRoleKey!
+      }
+    });
+
+    if (!response.ok) {
+      return makeHealthResult({
+        status: "unreachable",
+        databaseReachable: false,
+        configStatus,
+        standardVersion: null,
+        demoSeedStatus: "not_checked",
+        checkedAt,
+        statusCode: response.status,
+        message: `Supabase REST health query failed with HTTP ${response.status}.`
+      });
+    }
+
+    rows = (await response.json()) as BusinessVisitStandardHealthRow[];
+  } catch {
     return makeHealthResult({
       status: "unreachable",
       databaseReachable: false,
@@ -421,12 +448,10 @@ export async function checkSupabaseHealth(
       standardVersion: null,
       demoSeedStatus: "not_checked",
       checkedAt,
-      statusCode: response.status,
-      message: `Supabase REST health query failed with HTTP ${response.status}.`
+      message: "Supabase REST health query failed before returning usable data."
     });
   }
 
-  const rows = (await response.json()) as BusinessVisitStandardHealthRow[];
   const standard = rows.find((row) => row.id === businessVisitDataStandardId);
 
   if (!standard) {
