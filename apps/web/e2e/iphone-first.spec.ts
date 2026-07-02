@@ -106,29 +106,27 @@ test.describe("iPhone-first command center shell", () => {
     await page.goto("/business-targets");
 
     const banner = page.getByText("Demo-safe HK / Shenzhen scaffold");
-    const targetCardHeading = page.getByRole("heading", {
-      name: "Demo Shenzhen Advanced Materials Group"
-    });
+    const pageHeadingLocator = page.getByRole("heading", { name: "Visit Targets" });
+    const firstTargetCard = page.locator('a[href^="/business-targets/"]').first();
 
     await expect(banner).toBeVisible();
-    await expect(targetCardHeading).toBeVisible();
+    await expect(pageHeadingLocator).toBeVisible();
+    await expect(firstTargetCard).toBeVisible();
 
     const density = await page.evaluate(() => {
       const bannerElement = Array.from(document.querySelectorAll("span")).find((element) =>
         element.textContent?.includes("Demo-safe HK / Shenzhen scaffold")
       );
-      const firstCardHeading = Array.from(document.querySelectorAll("h2")).find((element) =>
-        element.textContent?.includes("Demo Shenzhen Advanced Materials Group")
-      );
+      const firstCard = document.querySelector('a[href^="/business-targets/"]');
       const pageHeading = Array.from(document.querySelectorAll("h1")).find((element) =>
-        element.textContent?.includes("Visit Pipeline")
+        element.textContent?.includes("Visit Targets")
       );
 
       return {
         viewportHeight: window.innerHeight,
         bannerHeight: bannerElement?.getBoundingClientRect().height ?? 999,
         pageHeadingTop: pageHeading?.getBoundingClientRect().top ?? 999,
-        firstCardTop: firstCardHeading?.getBoundingClientRect().top ?? 999
+        firstCardTop: firstCard?.getBoundingClientRect().top ?? 999
       };
     });
 
