@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import {
   checkSupabaseHealth,
+  fetchBusinessVisitReviewSnapshot,
   getSupabaseConfigStatus,
   readSupabaseRuntimeConfig,
   supabaseEnvKeys
@@ -113,6 +114,114 @@ describe("Supabase health check", () => {
         headers: expect.objectContaining({
           apikey: "service-role-live-shaped-value",
           Authorization: "Bearer service-role-live-shaped-value"
+        })
+      })
+    );
+  });
+});
+
+describe("Business visit review snapshot", () => {
+  it("does not query review tables until admin Supabase config is present", async () => {
+    const fetcher = vi.fn();
+
+    await expect(fetchBusinessVisitReviewSnapshot({}, { fetcher })).resolves.toMatchObject({
+      status: "not_configured",
+      source: "unavailable",
+      businessTargetSourceCount: null,
+      manualReviewQueueCount: null,
+      targetsAwaitingVerification: []
+    });
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it("reads source counts and unverified target queue from Supabase REST with the service role key", async () => {
+    const fetcher = vi.fn(async (input: RequestInfo | URL) => {
+      const url = input.toString();
+
+      if (url.includes("/business_target_sources")) {
+        return new Response("[]", {
+          status: 200,
+          headers: { "content-range": "0-0/3" }
+        });
+      }
+
+      if (url.includes("/business_targets") && url.includes("limit=0")) {
+        return new Response("[]", {
+          status: 200,
+          headers: { "content-range": "0-0/2" }
+        });
+      }
+
+      if (url.includes("/business_targets")) {
+        return new Response(
+          JSON.stringify([
+            {
+              id: "00000000-0000-4000-8000-000000001201",
+              name: "Demo Shenzhen Advanced Materials Group",
+              city: "Shenzhen",
+              source_confidence: "medium",
+              status: "profiled",
+              priority_rank: 1
+            },
+            {
+              id: "00000000-0000-4000-8000-000000001202",
+              name: "Demo Hong Kong Packaging Systems Studio",
+              city: "Hong Kong",
+              source_confidence: "unknown",
+              status: "source_needed",
+              priority_rank: null
+            }
+          ]),
+          { status: 200 }
+        );
+      }
+
+      return new Response("[]", { status: 404 });
+    });
+
+    await expect(
+      fetchBusinessVisitReviewSnapshot(
+        {
+          url: "https://china-command.supabase.co/",
+          anonKey: "anon-live-shaped-value",
+          serviceRoleKey: "service-role-live-shaped-value"
+        },
+        { fetcher, now: () => new Date("2026-07-02T05:00:00.000Z") }
+      )
+    ).resolves.toEqual({
+      status: "ready",
+      source: "supabase",
+      businessTargetSourceCount: 3,
+      manualReviewQueueCount: 2,
+      targetsAwaitingVerification: [
+        {
+          id: "00000000-0000-4000-8000-000000001201",
+          name: "Demo Shenzhen Advanced Materials Group",
+          city: "Shenzhen",
+          sourceConfidence: "medium",
+          status: "profiled",
+          priorityRank: 1
+        },
+        {
+          id: "00000000-0000-4000-8000-000000001202",
+          name: "Demo Hong Kong Packaging Systems Studio",
+          city: "Hong Kong",
+          sourceConfidence: "unknown",
+          status: "source_needed",
+          priorityRank: null
+        }
+      ],
+      checkedAt: "2026-07-02T05:00:00.000Z",
+      message: "Supabase business visit review data loaded."
+    });
+
+    expect(fetcher).toHaveBeenCalledTimes(3);
+    expect(fetcher).toHaveBeenCalledWith(
+      expect.stringContaining("/rest/v1/business_targets"),
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          Authorization: "Bearer service-role-live-shaped-value",
+          apikey: "service-role-live-shaped-value"
         })
       })
     );

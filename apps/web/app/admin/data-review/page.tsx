@@ -1,43 +1,22 @@
 import { AlertTriangle, CheckCircle2, DatabaseZap, ShieldCheck } from "lucide-react";
 
 import { Badge, Card, CardContent, CardHeader, CardTitle } from "@pure-advance/design-system";
-import { checkSupabaseHealth } from "@pure-advance/database";
+import { checkSupabaseHealth, fetchBusinessVisitReviewSnapshot } from "@pure-advance/database";
 
 import { PageHeader } from "@/components/page-header";
 import { demoData } from "@/lib/demo-data";
+import { buildBusinessVisitReviewModel } from "@/lib/data-review-view";
 import { buildSupabaseHealthRows } from "@/lib/supabase-health-view";
 
 export const dynamic = "force-dynamic";
 
-const reviewRows = [
-  {
-    label: "Business target sources",
-    value: demoData.businessTargetSources.length,
-    tone: "cyan" as const,
-    note: "Synthetic records only"
-  },
-  {
-    label: "Sensitive field guardrail",
-    value: "On",
-    tone: "green" as const,
-    note: "Future ingestion rejects blocked fields"
-  },
-  {
-    label: "Manual review queue",
-    value: demoData.businessTargets.filter((target) => !isVerifiedSource(target.sourceConfidence))
-      .length,
-    tone: "amber" as const,
-    note: "Source confidence below verified"
-  }
-];
-
-function isVerifiedSource(sourceConfidence: string) {
-  return sourceConfidence === "verified";
-}
-
 export default async function DataReviewPage() {
-  const supabaseHealth = await checkSupabaseHealth();
+  const [supabaseHealth, reviewSnapshot] = await Promise.all([
+    checkSupabaseHealth(),
+    fetchBusinessVisitReviewSnapshot()
+  ]);
   const supabaseRows = buildSupabaseHealthRows(supabaseHealth);
+  const reviewModel = buildBusinessVisitReviewModel(reviewSnapshot, demoData);
 
   return (
     <>
@@ -66,7 +45,7 @@ export default async function DataReviewPage() {
         ))}
       </section>
       <section className="mt-4 grid gap-4 lg:grid-cols-3">
-        {reviewRows.map((row) => (
+        {reviewModel.summaryRows.map((row) => (
           <Card key={row.label}>
             <CardHeader>
               <CardTitle>{row.label}</CardTitle>
@@ -86,6 +65,12 @@ export default async function DataReviewPage() {
             <CardTitle>Import Gates</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-[var(--pa-muted)]">
+            <p className="flex flex-wrap items-center gap-2">
+              <DatabaseZap className="size-4 text-[var(--pa-cyan)]" aria-hidden="true" />
+              Review data source:
+              <Badge tone={reviewModel.source.tone}>{reviewModel.source.label}</Badge>
+              <span className="text-xs">{reviewModel.source.note}</span>
+            </p>
             <p className="flex items-center gap-2">
               <CheckCircle2 className="size-4 text-[var(--pa-green)]" aria-hidden="true" />
               Source labels and confidence are required.
@@ -110,20 +95,27 @@ export default async function DataReviewPage() {
             <CardTitle>Targets Awaiting Verification</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {demoData.businessTargets.map((target) => (
+            {reviewModel.targetsAwaitingVerification.map((target) => (
               <div
                 key={target.id}
                 className="flex flex-col gap-2 border-b border-[var(--pa-border)] pb-3 last:border-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
                   <p className="text-sm font-semibold tracking-normal">{target.name}</p>
-                  <p className="text-sm text-[var(--pa-muted)]">{target.city}</p>
+                  <p className="text-sm text-[var(--pa-muted)]">
+                    {target.city} · {target.status.replaceAll("_", " ")}
+                  </p>
                 </div>
                 <Badge tone={target.sourceConfidence === "unknown" ? "amber" : "cyan"}>
                   {target.sourceConfidence}
                 </Badge>
               </div>
             ))}
+            {reviewModel.targetsAwaitingVerification.length === 0 ? (
+              <p className="text-sm text-[var(--pa-muted)]">
+                No targets currently require verification.
+              </p>
+            ) : null}
           </CardContent>
         </Card>
       </section>

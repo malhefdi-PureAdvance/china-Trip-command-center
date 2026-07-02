@@ -164,6 +164,38 @@ type BusinessVisitStandardHealthRow = {
   created_at: string;
 };
 
+type BusinessTargetStatus = Database["public"]["Enums"]["business_target_status"];
+type SourceConfidence = Database["public"]["Enums"]["source_confidence"];
+
+type BusinessVisitReviewTargetRow = {
+  id: string;
+  name: string;
+  city: string;
+  source_confidence: SourceConfidence;
+  status: BusinessTargetStatus;
+  priority_rank: number | null;
+};
+
+export type BusinessVisitReviewTarget = {
+  id: string;
+  name: string;
+  city: string;
+  sourceConfidence: SourceConfidence;
+  status: BusinessTargetStatus;
+  priorityRank: number | null;
+};
+
+export type BusinessVisitReviewSnapshot = {
+  status: SupabaseHealthStatus;
+  source: "supabase" | "unavailable";
+  businessTargetSourceCount: number | null;
+  manualReviewQueueCount: number | null;
+  targetsAwaitingVerification: BusinessVisitReviewTarget[];
+  checkedAt: string;
+  message: string;
+  statusCode?: number;
+};
+
 function makeHealthResult(
   health: Omit<SupabaseHealth, "migrationPath" | "demoSeedPath" | "standardId" | "rlsPolicyMode">
 ): SupabaseHealth {
@@ -173,6 +205,169 @@ function makeHealthResult(
     demoSeedPath,
     standardId: businessVisitDataStandardId,
     rlsPolicyMode: conservativeRlsPolicyMode
+  };
+}
+
+function getRestEndpoint(url: string, table: string, params: Array<[string, string]>): string {
+  const endpoint = new URL(`/rest/v1/${table}`, url.endsWith("/") ? url : `${url}/`);
+
+  for (const [key, value] of params) {
+    endpoint.searchParams.append(key, value);
+  }
+
+  return endpoint.toString();
+}
+
+function getAdminRestHeaders(config: SupabaseRuntimeConfig, extra?: HeadersInit): HeadersInit {
+  return {
+    Accept: "application/json",
+    Authorization: `Bearer ${config.serviceRoleKey}`,
+    apikey: config.serviceRoleKey!,
+    ...extra
+  };
+}
+
+function unavailableReviewSnapshot(
+  status: SupabaseHealthStatus,
+  checkedAt: string,
+  message: string,
+  statusCode?: number
+): BusinessVisitReviewSnapshot {
+  return {
+    status,
+    source: "unavailable",
+    businessTargetSourceCount: null,
+    manualReviewQueueCount: null,
+    targetsAwaitingVerification: [],
+    checkedAt,
+    message,
+    ...(statusCode ? { statusCode } : {})
+  };
+}
+
+function parseExactCount(response: Response): number {
+  const contentRange = response.headers.get("content-range");
+  const countValue = contentRange?.split("/").at(-1);
+  const count = Number(countValue);
+
+  return Number.isFinite(count) ? count : 0;
+}
+
+async function fetchExactCount(
+  config: SupabaseRuntimeConfig,
+  fetcher: typeof fetch,
+  table: string,
+  filters: Array<[string, string]> = []
+): Promise<{ count: number; statusCode?: never } | { count: null; statusCode: number }> {
+  const response = await fetcher(
+    getRestEndpoint(config.url!, table, [["select", "id"], ...filters, ["limit", "0"]]),
+    {
+      method: "GET",
+      headers: getAdminRestHeaders(config, { Prefer: "count=exact" })
+    }
+  );
+
+  if (!response.ok) {
+    return { count: null, statusCode: response.status };
+  }
+
+  return { count: parseExactCount(response) };
+}
+
+function mapBusinessVisitReviewTarget(
+  row: BusinessVisitReviewTargetRow
+): BusinessVisitReviewTarget {
+  return {
+    id: row.id,
+    name: row.name,
+    city: row.city,
+    sourceConfidence: row.source_confidence,
+    status: row.status,
+    priorityRank: row.priority_rank
+  };
+}
+
+export async function fetchBusinessVisitReviewSnapshot(
+  config: SupabaseRuntimeConfig = readSupabaseRuntimeConfig(),
+  options: SupabaseHealthOptions = {}
+): Promise<BusinessVisitReviewSnapshot> {
+  const configStatus = getSupabaseConfigStatus(config);
+  const checkedAt = (options.now?.() ?? new Date()).toISOString();
+
+  if (!configStatus.isPublicConfigured) {
+    return unavailableReviewSnapshot(
+      "not_configured",
+      checkedAt,
+      "Supabase public environment variables are not configured. Demo review data remains active."
+    );
+  }
+
+  if (!configStatus.isAdminConfigured) {
+    return unavailableReviewSnapshot(
+      "admin_key_missing",
+      checkedAt,
+      "Supabase admin key is missing. Live review metrics are disabled."
+    );
+  }
+
+  const fetcher = options.fetcher ?? fetch;
+  const sourceCount = await fetchExactCount(config, fetcher, "business_target_sources");
+
+  if (sourceCount.count === null) {
+    return unavailableReviewSnapshot(
+      "unreachable",
+      checkedAt,
+      `Supabase business target source count failed with HTTP ${sourceCount.statusCode}.`,
+      sourceCount.statusCode
+    );
+  }
+
+  const manualReviewQueueCount = await fetchExactCount(config, fetcher, "business_targets", [
+    ["source_confidence", "neq.verified"]
+  ]);
+
+  if (manualReviewQueueCount.count === null) {
+    return unavailableReviewSnapshot(
+      "unreachable",
+      checkedAt,
+      `Supabase manual review queue count failed with HTTP ${manualReviewQueueCount.statusCode}.`,
+      manualReviewQueueCount.statusCode
+    );
+  }
+
+  const targetsResponse = await fetcher(
+    getRestEndpoint(config.url!, "business_targets", [
+      ["select", "id,name,city,source_confidence,status,priority_rank"],
+      ["source_confidence", "neq.verified"],
+      ["order", "priority_rank.asc.nullslast"],
+      ["order", "name.asc"],
+      ["limit", "6"]
+    ]),
+    {
+      method: "GET",
+      headers: getAdminRestHeaders(config)
+    }
+  );
+
+  if (!targetsResponse.ok) {
+    return unavailableReviewSnapshot(
+      "unreachable",
+      checkedAt,
+      `Supabase targets awaiting verification query failed with HTTP ${targetsResponse.status}.`,
+      targetsResponse.status
+    );
+  }
+
+  const targets = (await targetsResponse.json()) as BusinessVisitReviewTargetRow[];
+
+  return {
+    status: "ready",
+    source: "supabase",
+    businessTargetSourceCount: sourceCount.count,
+    manualReviewQueueCount: manualReviewQueueCount.count,
+    targetsAwaitingVerification: targets.map(mapBusinessVisitReviewTarget),
+    checkedAt,
+    message: "Supabase business visit review data loaded."
   };
 }
 
