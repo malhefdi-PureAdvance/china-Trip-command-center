@@ -2,38 +2,42 @@
 
 ## Purpose
 
-The China 2026 Command Center gives a small mission team a single operational view for itinerary, locations, business visit targets, notes, team assignments, and data review.
+The China 2026 Command Center is the iPhone-first operational surface for the Pure Advance **China 2026 · Tech Founders** mission (Jul 4 – Aug 2, 2026): live mission clock and timeline, source-backed business visit dossiers, corridor intelligence, field capture, team roster, and an admin hydration/import cockpit.
 
-The scaffold is intentionally demo-safe. It uses only synthetic Hong Kong and Shenzhen content for the Greater Bay Area corridor.
+The app is demo-safe by default: it carries **real sanitized trip anchors** (program schedule, public venues, first-name team roster) and **app-safe business intelligence** (public company facts, high-level rationale), while booking references, contact identifiers, personal data, and credentials stay in the private travel pack.
 
 ## Primary Users
 
-- Mission lead: reviews the daily plan, target readiness, and follow-up ownership.
-- Operations coordinator: maintains itinerary, notes, location placeholders, and data-review queues.
-- Traveler or remote support member: scans the latest schedule and assigned context.
+- Mission lead (Mohammed): opens Today for now/next, drills into a target dossier before a meeting.
+- Traveler (Sultan, Abdulrahman Alalmaee): scans the mission timeline and assigned context.
+- Remote support: follows progress and shared notes.
 - Future admin: reviews source-backed imports before business target records are staged.
 
-## Initial Scope
+## Current Scope (shipped)
 
-- Today command center at `/` and `/today`.
-- Route placeholders for itinerary, map, business targets, notes, team, and admin data review.
-- Shared domain schemas and demo data.
-- Business target workflow statuses and source confidence tracking.
-- SQL migration for core domain tables and conservative RLS placeholders.
-- Future ingestion functions that validate schema shape, reject sensitive fields, and dry-run row-level acceptance/rejection before any write workflow exists.
+- **Today** (`/`, `/today`): live mission clock (T-minus / DAY n / debrief), now/next schedule focus, priority-target deep link.
+- **Itinerary**: phase-grouped mission timeline (arrival → Week 1 HK / LEAP East Jul 8–10 → transition → Weeks 2–4 Shenzhen → Demo Day Jul 31 → departure) with per-day state.
+- **Business Targets**: 49 source-backed visit dossiers with corridor/category filters and per-target drill-in (what-they-do, why-it-matters, visit objective + route, talking points, open questions, risks, fit, confidence, public sources).
+- **Map**: corridor intelligence — bases, program venues, target clusters by corridor, China-first navigation guidance (Amap/Baidu/DiDi).
+- **Notes**: shared mission context plus local-only field capture (meeting note / lead follow-up / daily debrief templates; browser storage, no uploads).
+- **Team**: Pure Advance roster separated from program representatives.
+- **Admin / Data Review**: hydration counts and source files, privacy-guard status, Supabase readiness, ingestion dry-run.
+- Shared domain schemas (Zod) with app-facing `MissionPhase` and `BusinessTargetDossier` structures.
+- SQL migration for core domain tables and conservative RLS placeholders; ingestion dry-run contract (`writesPerformed: 0`).
 
-## Out Of Scope
+## Out Of Scope (still)
 
 - Real authentication and authorization flows.
 - Live map provider integration.
-- Real trip, supplier, contact, identity, credential, payment, or financial data.
+- Contact identifiers, booking references, identity, credential, payment, or financial data in app content.
 - Automated scraping or unsourced business enrichment.
 - Production write workflows for ingestion.
 
 ## Acceptance Criteria
 
 - The repo installs with pnpm and the app builds.
-- Required routes render with shared design-system components.
-- Demo content stays in the Hong Kong/Shenzhen corridor.
-- Business target data standard is represented in Zod schemas, SQL metadata, seed data, and docs.
-- E2E smoke tests cover the key screens.
+- All seven routes render meaningful, hydrated content with shared design-system components.
+- App content stays in the Hong Kong/Shenzhen Greater Bay Area corridor and never regresses to the April 2026 placeholder dates (regression-tested).
+- Business dossiers contain no contact identifiers or exact addresses (unit-tested and e2e-tested).
+- The business target data standard is represented in Zod schemas, SQL metadata, seed data, and docs.
+- E2E coverage: smoke on every route, iPhone-first shell (no horizontal overflow, thumb nav), mission timeline anchors, dossier flow.

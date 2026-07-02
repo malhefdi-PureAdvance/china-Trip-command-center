@@ -2,7 +2,11 @@
 
 ## Current Posture
 
-This repository is a scaffold with synthetic demo content only. It must not contain real sensitive data.
+The app carries **real sanitized trip content** (schedule anchors and source-backed business dossiers) plus synthetic backend/ingestion demo data. It must not contain real sensitive data as defined below.
+
+## Public-deployment filter for business dossiers
+
+The business-target dossiers (`packages/domain/src/demo/business-targets.ts`) ship in the client bundle on a public URL, so they carry **only app-safe intelligence**: company name, district/area, public website, what-they-do, high-level rationale, visit objective, talking points, open questions, risks, confidence, and public source links. They deliberately exclude contact emails/phones/WeChat, personal contact names, exact unit/street addresses, and unreleased product IP — contact routes stay in the private travel pack. A domain unit test (`business-targets.test.ts`) fails CI if a contact identifier or unit address regresses in, and an e2e asserts the rendered dossier has none.
 
 Do not import or commit:
 

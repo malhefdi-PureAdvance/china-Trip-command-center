@@ -31,9 +31,9 @@ export const demoChina2026 = {
     {
       id: "00000000-0000-4000-8000-000000000103",
       kind: "traveler",
-      displayName: "Abdulrahman",
+      displayName: "Abdulrahman Alalmaee",
       organization: "Pure Advance",
-      title: "BD · Investor Follow-up",
+      title: "BD Director · Investor follow-up",
       bio: "Joins in Hong Kong for LEAP East; leads BD triage and investor follow-up.",
       createdAt: now,
       updatedAt: now
@@ -44,6 +44,16 @@ export const demoChina2026 = {
       displayName: "Program partner liaison (demo)",
       organization: "Demo Shenzhen Partner",
       title: "Business Development",
+      createdAt: now,
+      updatedAt: now
+    },
+    {
+      id: "00000000-0000-4000-8000-000000000105",
+      kind: "external",
+      displayName: "Abdulrahman AlMansour",
+      organization: "Tech Founders / Multiverse",
+      title: "Program representative",
+      bio: "Tech Founders / Multiverse program point of contact — not a Pure Advance team member.",
       createdAt: now,
       updatedAt: now
     }
@@ -149,6 +159,14 @@ export const demoChina2026 = {
       personId: "00000000-0000-4000-8000-000000000103",
       role: "traveler",
       availabilityNote: "Joins Hong Kong Jul 9 for LEAP East; supports through Jul 16.",
+      createdAt: now
+    },
+    {
+      id: "00000000-0000-4000-8000-000000000604",
+      tripId: "00000000-0000-4000-8000-000000000501",
+      personId: "00000000-0000-4000-8000-000000000105",
+      role: "host",
+      availabilityNote: "Tech Founders / Multiverse program point of contact.",
       createdAt: now
     }
   ],
