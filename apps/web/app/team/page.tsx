@@ -1,7 +1,8 @@
 import { Building2, CalendarClock, UsersRound } from "lucide-react";
 
-import { Badge, Card, CardContent, CardHeader, CardTitle } from "@pure-advance/design-system";
+import { Card, CardContent, CardHeader, CardTitle } from "@pure-advance/design-system";
 
+import { MetaChip, SectionLabel } from "@/components/command-kit";
 import { PageHeader } from "@/components/page-header";
 import { activeTrip, demoData, getPersonById } from "@/lib/demo-data";
 
@@ -27,8 +28,8 @@ function MemberCard({
   const initial = (person?.displayName ?? "?").charAt(0).toUpperCase();
   const avatarClass =
     accent === "purple"
-      ? "bg-[var(--cc-purple-tint)] text-[var(--cc-purple)]"
-      : "bg-[var(--cc-cyan-tint)] text-[var(--cc-cyan)]";
+      ? "bg-[var(--cc-purple-tint)] text-[var(--cc-purple)] ring-1 ring-inset ring-[var(--cc-purple-line)]"
+      : "bg-[var(--cc-cyan-tint)] text-[var(--cc-cyan)] ring-1 ring-inset ring-[var(--cc-cyan-line-soft)]";
 
   return (
     <Card className="min-w-0">
@@ -45,7 +46,9 @@ function MemberCard({
             {person?.title ?? "Mission role"}
           </p>
         </div>
-        <Badge tone={accent === "purple" ? "neutral" : "cyan"}>{roleLabel[role] ?? role}</Badge>
+        <MetaChip tone={accent === "purple" ? "purple" : "cyan"} className="shrink-0">
+          {roleLabel[role] ?? role}
+        </MetaChip>
       </CardHeader>
       <CardContent className="space-y-2">
         <p className="flex items-center gap-2 text-[12px] text-[var(--cc-text-3)]">
@@ -53,7 +56,7 @@ function MemberCard({
           {person?.organization ?? "Pure Advance"}
         </p>
         {availabilityNote ? (
-          <p className="flex items-start gap-2 text-[12px] leading-[1.5] text-[var(--cc-text-2)]">
+          <p className="flex items-start gap-2 text-[12px] leading-[1.55] text-[var(--cc-text-2)]">
             <CalendarClock
               className="mt-0.5 size-3.5 shrink-0 text-[var(--cc-cyan)]"
               aria-hidden="true"
@@ -81,13 +84,12 @@ export default function TeamPage() {
       />
 
       <section aria-label="Pure Advance team">
-        <div className="mb-2 flex items-center gap-2.5">
-          <UsersRound className="size-4 text-[var(--cc-cyan)]" aria-hidden="true" />
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-            Pure Advance team
-          </span>
-          <span className="h-px flex-1 bg-[var(--cc-border)]" />
-        </div>
+        <SectionLabel
+          icon={UsersRound}
+          label="Pure Advance team"
+          meta={<MetaChip tone="faint">{pureAdvance.length}</MetaChip>}
+          className="mb-2.5"
+        />
         <div className="grid gap-3 lg:grid-cols-2">
           {pureAdvance.map((member) => (
             <MemberCard
@@ -103,13 +105,13 @@ export default function TeamPage() {
 
       {program.length > 0 ? (
         <section aria-label="Program" className="mt-6">
-          <div className="mb-2 flex items-center gap-2.5">
-            <Building2 className="size-4 text-[var(--cc-purple)]" aria-hidden="true" />
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-purple)]">
-              Program
-            </span>
-            <span className="h-px flex-1 bg-[var(--cc-border)]" />
-          </div>
+          <SectionLabel
+            icon={Building2}
+            label="Program"
+            tone="purple"
+            meta={<MetaChip tone="faint">{program.length}</MetaChip>}
+            className="mb-2.5"
+          />
           <div className="grid gap-3 lg:grid-cols-2">
             {program.map((member) => (
               <MemberCard

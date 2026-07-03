@@ -3,7 +3,18 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { Session } from "@supabase/supabase-js";
 import Link from "next/link";
-import { CloudUpload, KeyRound, NotebookPen, Plus, RefreshCw, Trash2 } from "lucide-react";
+import {
+  ClipboardCheck,
+  CloudUpload,
+  KeyRound,
+  NotebookPen,
+  Plus,
+  RefreshCw,
+  Trash2,
+  TrendingUp,
+  Users
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 import {
   Badge,
@@ -11,8 +22,11 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle
+  CardTitle,
+  cn
 } from "@pure-advance/design-system";
+
+import { SectionLabel } from "@/components/command-kit";
 
 import type { FieldNotePrompt } from "@/lib/mission-ops";
 import { getBrowserSupabase } from "@/lib/supabase-browser";
@@ -62,22 +76,37 @@ function subscribe(listener: () => void) {
   return () => listeners.delete(listener);
 }
 
-const templates: Record<Template, { label: string; titlePlaceholder: string; scaffold: string }> = {
+const templates: Record<
+  Template,
+  {
+    label: string;
+    titlePlaceholder: string;
+    scaffold: string;
+    icon: LucideIcon;
+    railClass: string;
+  }
+> = {
   meeting: {
     label: "Meeting note",
     titlePlaceholder: "Company / person met",
     scaffold:
-      "Context:\n\nKey points:\n- \n- \n\nAsks / offers:\n- \n\nNext action (owner · when):\n- "
+      "Context:\n\nKey points:\n- \n- \n\nAsks / offers:\n- \n\nNext action (owner · when):\n- ",
+    icon: Users,
+    railClass: "bg-[var(--cc-cyan)]"
   },
   lead: {
     label: "Lead follow-up",
     titlePlaceholder: "Lead / company",
-    scaffold: "Stage:\nOwner:\nNext step:\nDue:\nNotes:\n- "
+    scaffold: "Stage:\nOwner:\nNext step:\nDue:\nNotes:\n- ",
+    icon: TrendingUp,
+    railClass: "bg-[var(--cc-green)]"
   },
   debrief: {
     label: "Daily debrief",
     titlePlaceholder: "Day (e.g. Jul 8 · LEAP East)",
-    scaffold: "Wins:\n- \n\nBlockers:\n- \n\nTomorrow:\n- "
+    scaffold: "Wins:\n- \n\nBlockers:\n- \n\nTomorrow:\n- ",
+    icon: ClipboardCheck,
+    railClass: "bg-[var(--cc-purple)]"
   }
 };
 
@@ -203,25 +232,25 @@ export function FieldNotes({
     "w-full rounded-[var(--cc-r-icon)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] px-3 py-2 text-[13px] text-[var(--cc-text)] outline-none placeholder:text-[var(--cc-text-dim)] focus:border-[var(--cc-cyan-line)]";
 
   return (
-    <section aria-label="Field capture" className="mt-6">
-      <div className="mb-2 flex items-center gap-2.5">
-        <NotebookPen className="size-4 text-[var(--cc-cyan)]" aria-hidden="true" />
-        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-          Field capture
-        </span>
-        <span className="h-px flex-1 bg-[var(--cc-border)]" />
-        {syncState === "signed_out" ? (
-          <Link
-            href="/private"
-            className="inline-flex items-center gap-1 rounded-full border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.06em] text-[var(--cc-cyan)]"
-          >
-            <KeyRound className="size-3" aria-hidden="true" />
-            {badge.text}
-          </Link>
-        ) : (
-          <Badge tone={badge.tone}>{badge.text}</Badge>
-        )}
-      </div>
+    <section aria-label="Field capture" className="mt-7">
+      <SectionLabel
+        icon={NotebookPen}
+        label="Field capture"
+        className="mb-2.5"
+        meta={
+          syncState === "signed_out" ? (
+            <Link
+              href="/private"
+              className="inline-flex min-h-7 items-center gap-1 rounded-full border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] px-2.5 font-mono text-[10px] uppercase tracking-[0.06em] text-[var(--cc-cyan)] transition-colors hover:bg-[var(--cc-cyan-tint)]"
+            >
+              <KeyRound className="size-3" aria-hidden="true" />
+              {badge.text}
+            </Link>
+          ) : (
+            <Badge tone={badge.tone}>{badge.text}</Badge>
+          )
+        }
+      />
 
       {session ? (
         <div className="mb-3 flex items-start justify-between gap-3 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]">
@@ -261,46 +290,64 @@ export function FieldNotes({
       ) : null}
 
       {prompts.length > 0 ? (
-        <div className="mb-3 grid gap-2.5 lg:grid-cols-2">
-          {prompts.map((prompt) => (
-            <button
-              key={prompt.id}
-              type="button"
-              onClick={() => applyPrompt(prompt)}
-              className="min-w-0 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 text-left shadow-[var(--cc-elev-1)] active:translate-y-px"
-            >
-              <span className="font-mono text-[9.5px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-                {prompt.label}
-              </span>
-              <span className="mt-1 block truncate text-[12.5px] font-semibold text-[var(--cc-text)]">
-                {prompt.title}
-              </span>
-              <span className="mt-1 line-clamp-2 text-[11.5px] leading-[1.45] text-[var(--cc-text-3)]">
-                Use this app-safe template for the current mission context. Do not add IDs, booking
-                references, payment data, or private contacts.
-              </span>
-            </button>
-          ))}
+        <div className="mb-3">
+          <div className="grid gap-2.5 lg:grid-cols-2">
+            {prompts.map((prompt) => (
+              <button
+                key={prompt.id}
+                type="button"
+                onClick={() => applyPrompt(prompt)}
+                className="lift group min-w-0 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 text-left shadow-[var(--cc-elev-1)] hover:border-[var(--cc-cyan-line)]"
+              >
+                <span className="flex items-center justify-between gap-2">
+                  <span className="inline-flex min-h-[22px] items-center rounded-[var(--cc-r-chip)] border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint)] px-[7px] py-1 font-mono text-[9.5px] font-bold uppercase leading-none tracking-[0.1em] text-[var(--cc-cyan)]">
+                    {prompt.label}
+                  </span>
+                  <Plus
+                    className="size-3.5 shrink-0 text-[var(--cc-text-dim)] transition-colors group-hover:text-[var(--cc-cyan)]"
+                    aria-hidden="true"
+                  />
+                </span>
+                <span className="mt-2 block truncate text-[13px] font-bold tracking-[-0.01em] text-[var(--cc-text)]">
+                  {prompt.title}
+                </span>
+                <span className="mt-1 block font-mono text-[9.5px] uppercase tracking-[0.08em] text-[var(--cc-text-faint)]">
+                  Tap to load this template
+                </span>
+              </button>
+            ))}
+          </div>
+          <p className="mt-2 text-[11px] leading-[1.5] text-[var(--cc-text-faint)]">
+            App-safe templates for the current mission context. Do not add IDs, booking references,
+            payment data, or private contacts.
+          </p>
         </div>
       ) : null}
 
       <Card className="min-w-0">
         <CardContent className="space-y-3">
           <div className="flex flex-wrap gap-1.5">
-            {(Object.keys(templates) as Template[]).map((key) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => pickTemplate(key)}
-                className={`shrink-0 rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.06em] transition-colors ${
-                  template === key
-                    ? "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint)] text-[var(--cc-cyan)]"
-                    : "border-[var(--cc-border)] bg-[var(--cc-surface-inset)] text-[var(--cc-text-3)]"
-                }`}
-              >
-                {templates[key].label}
-              </button>
-            ))}
+            {(Object.keys(templates) as Template[]).map((key) => {
+              const TemplateIcon = templates[key].icon;
+
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => pickTemplate(key)}
+                  aria-pressed={template === key}
+                  className={cn(
+                    "inline-flex min-h-8 shrink-0 items-center gap-1.5 rounded-full border px-3 font-mono text-[10px] uppercase tracking-[0.06em] transition-colors",
+                    template === key
+                      ? "border-[var(--cc-cyan)] bg-[var(--cc-cyan)] font-semibold text-[var(--cc-cyan-ink)]"
+                      : "border-[var(--cc-border)] bg-[var(--cc-surface-inset)] text-[var(--cc-text-3)] hover:border-[var(--cc-border-strong)] hover:text-[var(--cc-text)]"
+                  )}
+                >
+                  <TemplateIcon className="size-3.5" aria-hidden="true" />
+                  {templates[key].label}
+                </button>
+              );
+            })}
           </div>
           <input
             className={inputClass}
@@ -331,13 +378,22 @@ export function FieldNotes({
         <div className="mt-3 space-y-2.5">
           {notes.map((note) => {
             const label = noteBadge(note);
+            const noteTemplate = templates[note.template];
+
             return (
-              <Card key={note.id} className="min-w-0">
-                <CardHeader className="flex items-start justify-between gap-3">
+              <Card key={note.id} className="relative min-w-0 overflow-hidden">
+                <span
+                  className={cn(
+                    "absolute inset-y-0 left-0 w-[3px]",
+                    noteTemplate?.railClass ?? "bg-[var(--cc-border-strong)]"
+                  )}
+                  aria-hidden="true"
+                />
+                <CardHeader className="flex items-start justify-between gap-3 pl-[17px]">
                   <div className="min-w-0">
                     <CardTitle className="truncate">{note.title}</CardTitle>
-                    <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--cc-text-faint)]">
-                      {templates[note.template]?.label ?? "Note"} · {formatTime(note.createdAt)}
+                    <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--cc-text-faint)]">
+                      {noteTemplate?.label ?? "Note"} · {formatTime(note.createdAt)}
                     </p>
                   </div>
                   <div className="flex shrink-0 items-center gap-1.5">
@@ -346,14 +402,14 @@ export function FieldNotes({
                       type="button"
                       onClick={() => removeNote(note)}
                       aria-label={`Delete ${note.title}`}
-                      className="rounded-[var(--cc-r-icon)] p-1.5 text-[var(--cc-text-faint)] active:translate-y-px"
+                      className="grid size-8 place-items-center rounded-[var(--cc-r-icon)] text-[var(--cc-text-faint)] transition-colors hover:bg-[var(--cc-surface-inset)] hover:text-[var(--cc-amber-text)] active:translate-y-px"
                     >
                       <Trash2 className="size-4" aria-hidden="true" />
                     </button>
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <p className="whitespace-pre-wrap font-mono text-[12px] leading-[1.5] text-[var(--cc-text-2)]">
+                <CardContent className="pl-[17px]">
+                  <p className="max-w-[70ch] whitespace-pre-wrap font-mono text-[12px] leading-[1.55] text-[var(--cc-text-2)]">
                     {note.body}
                   </p>
                 </CardContent>

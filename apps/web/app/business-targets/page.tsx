@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { SearchX } from "lucide-react";
 
 import { cn } from "@pure-advance/design-system";
 
+import { EmptyState, MetaChip, SectionLabel } from "@/components/command-kit";
 import { PageHeader } from "@/components/page-header";
 import { TargetCard } from "@/components/target-card";
 import { TargetSearch } from "@/components/target-search";
@@ -26,7 +28,7 @@ function chipHref(next: Search): string {
   return q ? `/business-targets?${q}` : "/business-targets";
 }
 
-function Chip({
+function FilterChip({
   href,
   active,
   children
@@ -35,10 +37,10 @@ function Chip({
     <Link
       href={href}
       className={cn(
-        "shrink-0 rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.06em] transition-colors",
+        "inline-flex min-h-8 shrink-0 items-center rounded-full border px-3 font-mono text-[10px] uppercase tracking-[0.06em] transition-colors",
         active
-          ? "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint)] text-[var(--cc-cyan)]"
-          : "border-[var(--cc-border)] bg-[var(--cc-surface-inset)] text-[var(--cc-text-3)]"
+          ? "border-[var(--cc-cyan)] bg-[var(--cc-cyan)] font-semibold text-[var(--cc-cyan-ink)]"
+          : "border-[var(--cc-border)] bg-[var(--cc-surface-inset)] text-[var(--cc-text-3)] hover:border-[var(--cc-border-strong)] hover:text-[var(--cc-text)]"
       )}
     >
       {children}
@@ -67,51 +69,49 @@ export default async function BusinessTargetsPage({
       />
 
       <TargetSearch />
-      <div className="mb-2 flex gap-1.5 overflow-x-auto pb-1">
-        <Chip href={chipHref({ category, q })} active={!corridor}>
+      <div className="mb-1.5 flex gap-1.5 overflow-x-auto pb-1">
+        <FilterChip href={chipHref({ category, q })} active={!corridor}>
           All corridors
-        </Chip>
+        </FilterChip>
         {corridors.map((c) => (
-          <Chip key={c} href={chipHref({ corridor: c, category, q })} active={corridor === c}>
+          <FilterChip key={c} href={chipHref({ corridor: c, category, q })} active={corridor === c}>
             {c}
-          </Chip>
+          </FilterChip>
         ))}
       </div>
       <div className="mb-4 flex gap-1.5 overflow-x-auto pb-1">
-        <Chip href={chipHref({ corridor, q })} active={!category}>
+        <FilterChip href={chipHref({ corridor, q })} active={!category}>
           All types
-        </Chip>
+        </FilterChip>
         {categories.map((c) => (
-          <Chip key={c} href={chipHref({ corridor, category: c, q })} active={category === c}>
+          <FilterChip key={c} href={chipHref({ corridor, category: c, q })} active={category === c}>
             {categoryMeta[c].label}
-          </Chip>
+          </FilterChip>
         ))}
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-6 text-center">
-          <p className="text-[13px] font-semibold text-[var(--cc-text)]">No targets match</p>
-          <p className="mt-1 text-[12px] text-[var(--cc-text-3)]">
-            Try a different corridor or type, or{" "}
-            <Link href="/business-targets" className="text-[var(--cc-cyan)]">
-              clear filters
-            </Link>
-            .
-          </p>
-        </div>
+        <EmptyState
+          icon={SearchX}
+          title="No targets match"
+          hint="Try a different corridor or type, or clear the active filters."
+        >
+          <Link
+            href="/business-targets"
+            className="lift inline-flex min-h-9 items-center rounded-[var(--cc-r-chip)] border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint)] px-3 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--cc-cyan)]"
+          >
+            Clear filters
+          </Link>
+        </EmptyState>
       ) : grouped ? (
-        <div className="space-y-5">
+        <div className="space-y-6">
           {grouped.map(({ corridor: c, targets }) => (
             <section key={c} aria-label={c}>
-              <div className="mb-2 flex items-center gap-2.5">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-                  {c}
-                </span>
-                <span className="h-px flex-1 bg-[var(--cc-border)]" />
-                <span className="font-mono text-[10px] text-[var(--cc-text-dim)]">
-                  {targets.length}
-                </span>
-              </div>
+              <SectionLabel
+                label={c}
+                meta={<MetaChip tone="faint">{targets.length}</MetaChip>}
+                className="mb-2.5"
+              />
               <div className="grid gap-2.5 sm:grid-cols-2">
                 {targets.map((target) => (
                   <TargetCard key={target.id} target={target} />

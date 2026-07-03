@@ -30,15 +30,22 @@ export function AuthPanel() {
 
   if (!supabase) {
     return (
-      <div className="flex items-start gap-2.5 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] p-3">
-        <ShieldAlert
-          className="mt-0.5 size-4 shrink-0 text-[var(--cc-text-faint)]"
+      <div className="flex items-start gap-3 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] p-3.5">
+        <span
+          className="grid size-8 shrink-0 place-items-center rounded-[var(--cc-r-icon)] bg-[var(--cc-surface-raised)] text-[var(--cc-text-3)]"
           aria-hidden="true"
-        />
-        <p className="text-[12px] leading-[1.5] text-[var(--cc-text-3)]">
-          Sign-in is disabled. The auth shell activates only after Mohammed verifies row-level
-          security and redirect URLs, then enables the private-tier flag.
-        </p>
+        >
+          <ShieldAlert className="size-4" />
+        </span>
+        <div className="min-w-0">
+          <p className="font-mono text-[10px] font-bold uppercase leading-none tracking-[0.12em] text-[var(--cc-text-faint)]">
+            Auth shell · inactive
+          </p>
+          <p className="mt-1.5 max-w-[60ch] text-[12px] leading-[1.55] text-[var(--cc-text-3)]">
+            Sign-in is disabled. The auth shell activates only after Mohammed verifies row-level
+            security and redirect URLs, then enables the private-tier flag.
+          </p>
+        </div>
       </div>
     );
   }

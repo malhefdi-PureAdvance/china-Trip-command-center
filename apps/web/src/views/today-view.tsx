@@ -1,8 +1,16 @@
 import Link from "next/link";
-import { ArrowRight, CalendarClock, CheckCircle2, FileText, MapPin } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarClock,
+  CalendarOff,
+  CheckCircle2,
+  FileText,
+  MapPin
+} from "lucide-react";
 
-import { Badge, Card, CardContent, CardHeader, CardTitle, cn } from "@pure-advance/design-system";
+import { Card, CardContent, CardHeader, CardTitle, cn } from "@pure-advance/design-system";
 
+import { EmptyState, MetaChip } from "@/components/command-kit";
 import { MissionClockHero } from "@/components/mission-clock";
 import { NextActionCard } from "@/components/next-action-card";
 import { PageHeader } from "@/components/page-header";
@@ -28,33 +36,46 @@ function EventBlock({
   return (
     <div
       className={cn(
-        "flex min-w-0 items-start gap-3 rounded-[var(--cc-r-row)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] p-3",
-        highlighted && "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)]"
+        "relative flex min-w-0 items-start gap-3 overflow-hidden rounded-[var(--cc-r-row)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] p-3",
+        highlighted && "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] pl-3.5"
       )}
     >
-      <div className="w-11 shrink-0 text-center font-mono">
-        <div className="text-[10px] uppercase leading-none tracking-[0.08em] text-[var(--cc-text-dim)]">
+      {highlighted ? (
+        <span
+          className="absolute inset-y-0 left-0 w-[3px] bg-[var(--cc-cyan)]"
+          aria-hidden="true"
+        />
+      ) : null}
+      <div
+        className={cn(
+          "grid h-11 w-11 shrink-0 place-content-center rounded-[10px] border text-center font-mono",
+          highlighted
+            ? "border-[var(--cc-cyan-line-soft)] bg-[var(--cc-surface)]"
+            : "border-[var(--cc-border-faint)] bg-[var(--cc-surface)]"
+        )}
+      >
+        <div className="text-[8.5px] uppercase leading-none tracking-[0.1em] text-[var(--cc-text-dim)]">
           {entry.day.monthLabel}
         </div>
-        <div className="mt-0.5 text-[16px] font-semibold leading-none text-[var(--cc-text)]">
+        <div className="mt-1 text-[17px] font-semibold leading-none text-[var(--cc-text)]">
           {entry.day.dayNumber}
         </div>
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
-          <span className="font-mono text-[11px] font-medium text-[var(--cc-cyan)]">
+          <span className="font-mono text-[11px] font-medium leading-none text-[var(--cc-cyan)]">
             {entry.event.timeLabel}
           </span>
           {highlighted ? (
-            <Badge tone="cyan">{eventStateLabel(entry)}</Badge>
+            <MetaChip tone="cyanSolid">{eventStateLabel(entry)}</MetaChip>
           ) : (
             <StatusPill status={entry.event.item.status} />
           )}
         </div>
         <p
           className={cn(
-            "mt-1 font-semibold tracking-[-0.01em] text-[var(--cc-text)]",
-            compact ? "truncate text-[13px]" : "text-[14px] leading-[1.25]"
+            "mt-1.5 font-bold tracking-[-0.01em] text-[var(--cc-text)]",
+            compact ? "truncate text-[13px]" : "text-[14px] leading-[1.3]"
           )}
         >
           {entry.event.item.title}
@@ -70,7 +91,7 @@ function EventBlock({
         {compact ? null : (
           <>
             {entry.event.item.notes ? (
-              <p className="mt-2 line-clamp-3 text-[12px] leading-[1.5] text-[var(--cc-text-2)]">
+              <p className="mt-2 line-clamp-3 max-w-[58ch] text-[12px] leading-[1.55] text-[var(--cc-text-2)]">
                 {entry.event.item.notes}
               </p>
             ) : null}
@@ -84,14 +105,11 @@ function EventBlock({
 
 function EmptyScheduleState() {
   return (
-    <div className="rounded-[var(--cc-r-row)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] p-4">
-      <p className="text-[13px] font-semibold text-[var(--cc-text)]">
-        No remaining scheduled blocks
-      </p>
-      <p className="mt-1 text-[12px] leading-[1.5] text-[var(--cc-text-3)]">
-        The timeline is complete. Capture the final debrief and keep follow-ups in notes.
-      </p>
-    </div>
+    <EmptyState
+      icon={CalendarOff}
+      title="No remaining scheduled blocks"
+      hint="The timeline is complete. Capture the final debrief and keep follow-ups in notes."
+    />
   );
 }
 
@@ -109,6 +127,7 @@ export function TodayView({ now = getCurrentMissionNow() }: Readonly<{ now?: Dat
           activeTrip.summary ?? "Mission command rhythm for the Hong Kong / Shenzhen corridor."
         }
         badge={ops.currentPhase?.weekTag ?? activeTrip.region}
+        badgeTone="cyan"
       />
       <div className="space-y-4">
         <MissionClockHero clock={ops.clock} context={ops.currentPhase?.headline ?? undefined} />
@@ -121,10 +140,13 @@ export function TodayView({ now = getCurrentMissionNow() }: Readonly<{ now?: Dat
               </CardTitle>
               <Link
                 href="/itinerary"
-                className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--cc-cyan)]"
+                className="group inline-flex min-h-8 items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--cc-cyan)]"
               >
                 Timeline
-                <ArrowRight className="size-3.5" aria-hidden="true" />
+                <ArrowRight
+                  className="size-3.5 transition-transform duration-[var(--cc-dur-fast)] ease-[var(--cc-ease)] group-hover:translate-x-0.5 motion-reduce:transition-none"
+                  aria-hidden="true"
+                />
               </Link>
             </CardHeader>
             <CardContent className="space-y-2.5">
@@ -138,7 +160,7 @@ export function TodayView({ now = getCurrentMissionNow() }: Readonly<{ now?: Dat
           <Card className="min-w-0">
             <CardHeader className="flex items-center justify-between gap-3">
               <CardTitle>Next preparation action</CardTitle>
-              <Badge tone="cyan">Prep</Badge>
+              <MetaChip tone="cyan">Prep</MetaChip>
             </CardHeader>
             <CardContent>
               {ops.nextPrepEntry ? (
@@ -147,11 +169,11 @@ export function TodayView({ now = getCurrentMissionNow() }: Readonly<{ now?: Dat
                     <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
                       {shortDate(ops.nextPrepEntry.day.date)} · {ops.nextPrepEntry.phase.name}
                     </p>
-                    <h2 className="mt-1 text-[15px] font-semibold leading-tight text-[var(--cc-text)]">
+                    <h3 className="mt-1.5 text-[15px] font-bold leading-tight tracking-[-0.01em] text-[var(--cc-text)]">
                       {ops.nextPrepEntry.event.item.title}
-                    </h2>
+                    </h3>
                     {ops.nextPrepEntry.event.item.notes ? (
-                      <p className="mt-2 line-clamp-3 text-[12.5px] leading-[1.5] text-[var(--cc-text-2)]">
+                      <p className="mt-2 line-clamp-3 max-w-[58ch] text-[12.5px] leading-[1.55] text-[var(--cc-text-2)]">
                         {ops.nextPrepEntry.event.item.notes}
                       </p>
                     ) : null}
@@ -159,11 +181,11 @@ export function TodayView({ now = getCurrentMissionNow() }: Readonly<{ now?: Dat
                   {ops.nextPrepEntry.intel?.subSessions.length ? (
                     <ul className="space-y-1.5 border-t border-[var(--cc-border-faint)] pt-3">
                       {ops.nextPrepEntry.intel.subSessions.slice(0, 4).map((session) => (
-                        <li key={`${session.time}-${session.title}`} className="flex gap-2">
-                          <span className="w-12 shrink-0 text-right font-mono text-[9.5px] uppercase leading-[1.6] tracking-[0.04em] text-[var(--cc-cyan)]">
+                        <li key={`${session.time}-${session.title}`} className="flex gap-2.5">
+                          <span className="w-12 shrink-0 text-right font-mono text-[9.5px] uppercase leading-[1.7] tracking-[0.04em] text-[var(--cc-cyan)]">
                             {session.time}
                           </span>
-                          <span className="min-w-0 text-[11.5px] leading-[1.45] text-[var(--cc-text-3)]">
+                          <span className="min-w-0 text-[11.5px] leading-[1.5] text-[var(--cc-text-3)]">
                             {session.title}
                           </span>
                         </li>
@@ -185,10 +207,13 @@ export function TodayView({ now = getCurrentMissionNow() }: Readonly<{ now?: Dat
               <CardTitle>Targets that matter now</CardTitle>
               <Link
                 href="/business-targets"
-                className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--cc-cyan)]"
+                className="group inline-flex min-h-8 items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--cc-cyan)]"
               >
                 All targets
-                <ArrowRight className="size-3.5" aria-hidden="true" />
+                <ArrowRight
+                  className="size-3.5 transition-transform duration-[var(--cc-dur-fast)] ease-[var(--cc-ease)] group-hover:translate-x-0.5 motion-reduce:transition-none"
+                  aria-hidden="true"
+                />
               </Link>
             </CardHeader>
             <CardContent className="grid gap-2.5 sm:grid-cols-2">
@@ -204,14 +229,21 @@ export function TodayView({ now = getCurrentMissionNow() }: Readonly<{ now?: Dat
               <CardTitle>Capture next debrief</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-[12.5px] leading-[1.5] text-[var(--cc-text-2)]">
-                {nextPrompt
-                  ? `${nextPrompt.label}: ${nextPrompt.title}`
-                  : "Capture a mission note or follow-up from the next useful block."}
-              </p>
+              {nextPrompt ? (
+                <>
+                  <MetaChip tone="cyan">{nextPrompt.label}</MetaChip>
+                  <p className="mt-2 text-[13px] font-semibold leading-[1.45] text-[var(--cc-text)]">
+                    {nextPrompt.title}
+                  </p>
+                </>
+              ) : (
+                <p className="text-[12.5px] leading-[1.5] text-[var(--cc-text-2)]">
+                  Capture a mission note or follow-up from the next useful block.
+                </p>
+              )}
               <Link
                 href={promptHref}
-                className="mt-3 inline-flex min-h-10 items-center gap-2 rounded-[var(--cc-r-button)] border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan)] px-3 font-mono text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--cc-cyan-ink)] shadow-[var(--cc-shadow-cta)] active:translate-y-px"
+                className="lift mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[12px] border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan)] px-3 font-mono text-[10.5px] font-semibold uppercase tracking-[0.06em] text-[var(--cc-cyan-ink)] shadow-[var(--cc-shadow-cta)]"
               >
                 <CheckCircle2 className="size-4" aria-hidden="true" />
                 Open note prompt
@@ -229,12 +261,22 @@ export function TodayView({ now = getCurrentMissionNow() }: Readonly<{ now?: Dat
             const content = (
               <>
                 <div className="flex items-center justify-between gap-2">
-                  <span className="font-mono text-[9.5px] uppercase tracking-[0.1em] text-[var(--cc-text-faint)]">
+                  <span className="min-w-0 truncate font-mono text-[9.5px] uppercase tracking-[0.1em] text-[var(--cc-text-faint)]">
                     {item.label}
                   </span>
-                  <Badge tone={item.tone}>{item.value}</Badge>
+                  {item.href ? (
+                    <ArrowRight
+                      className="size-3 shrink-0 text-[var(--cc-text-dim)]"
+                      aria-hidden="true"
+                    />
+                  ) : null}
                 </div>
-                <p className="mt-2 line-clamp-3 text-[11.5px] leading-[1.45] text-[var(--cc-text-3)]">
+                <p className="mt-2">
+                  <MetaChip tone={item.tone === "coral" ? "amber" : item.tone}>
+                    {item.value}
+                  </MetaChip>
+                </p>
+                <p className="mt-2 line-clamp-3 text-[11.5px] leading-[1.5] text-[var(--cc-text-3)]">
                   {item.detail}
                 </p>
               </>
@@ -244,7 +286,7 @@ export function TodayView({ now = getCurrentMissionNow() }: Readonly<{ now?: Dat
               <Link
                 key={item.label}
                 href={item.href}
-                className="block min-w-0 rounded-[var(--cc-r-tile)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] p-3 active:translate-y-px"
+                className="lift block min-w-0 rounded-[var(--cc-r-tile)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] p-3 hover:border-[var(--cc-border-strong)]"
               >
                 {content}
               </Link>

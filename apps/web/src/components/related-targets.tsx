@@ -24,7 +24,7 @@ export function RelatedTargetChips({ targetIds }: Readonly<{ targetIds: string[]
         <Link
           key={target.id}
           href={`/business-targets/${target.id}`}
-          className="max-w-full truncate rounded-full border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] px-2 py-1 font-mono text-[10px] leading-none text-[var(--cc-cyan)] active:translate-y-px"
+          className="inline-flex min-h-7 max-w-full items-center truncate rounded-full border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] px-2.5 font-mono text-[10px] leading-none text-[var(--cc-cyan)] transition-colors hover:bg-[var(--cc-cyan-tint)] active:translate-y-px"
         >
           {target.name}
         </Link>

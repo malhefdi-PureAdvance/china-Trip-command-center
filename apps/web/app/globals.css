@@ -38,6 +38,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Luminance shaping (dark only): a faint neutral glow at the very top gives
+   the cockpit depth without introducing a color gradient. Light theme keeps
+   plain warm paper. */
+[data-theme="dark"] body {
+  background:
+    radial-gradient(120% 300px at 50% -120px, rgba(255, 255, 255, 0.05), transparent 72%),
+    var(--cc-bg);
+}
+
 ::selection {
   background: var(--cc-cyan-tint);
   color: var(--cc-text);
@@ -51,6 +60,68 @@ a {
 button,
 a {
   -webkit-tap-highlight-color: transparent;
+}
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--cc-cyan);
+  outline-offset: 2px;
+}
+
+/* ---- Reading rhythm: dossier / brief body copy ------------------------
+   Measured line length, taller leading, and a real text ramp so dense
+   intel reads as a briefing, not a text wall. */
+.reading {
+  max-width: 62ch;
+  font-size: 13.5px;
+  line-height: 1.66;
+  color: var(--cc-text-2);
+  text-wrap: pretty;
+}
+
+.reading + .reading {
+  margin-top: 10px;
+}
+
+.reading strong {
+  color: var(--cc-text);
+  font-weight: 600;
+}
+
+.reading-lead {
+  max-width: 58ch;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--cc-text);
+  text-wrap: pretty;
+}
+
+/* ---- Interactive lift: hover raises, press settles --------------------
+   Hover styles are gated to hover-capable pointers; the press state works
+   everywhere. Motion respects prefers-reduced-motion. */
+.lift:active {
+  transform: translateY(1px);
+}
+
+@media (hover: hover) {
+  .lift:hover {
+    box-shadow: var(--cc-elev-2);
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .lift {
+    transition:
+      transform var(--cc-dur-fast) var(--cc-ease),
+      box-shadow var(--cc-dur-fast) var(--cc-ease),
+      border-color var(--cc-dur-fast) var(--cc-ease),
+      background-color var(--cc-dur-fast) var(--cc-ease);
+  }
+
+  .lift:hover {
+    transform: translateY(-1px);
+  }
 }
 
 .command-grid {
