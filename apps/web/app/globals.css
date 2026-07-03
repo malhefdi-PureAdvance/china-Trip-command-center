@@ -57,6 +57,84 @@ a {
   background-image: none;
 }
 
+/* ============================================================
+   Interaction layer — calm, Linear-style affordances.
+   Hover states are pointer-only; transitions are disabled under
+   prefers-reduced-motion; press feedback stays a 1px nudge.
+   ============================================================ */
+.cc-lift {
+  transition:
+    border-color var(--cc-dur-fast) var(--cc-ease),
+    background-color var(--cc-dur-fast) var(--cc-ease),
+    box-shadow var(--cc-dur-fast) var(--cc-ease),
+    color var(--cc-dur-fast) var(--cc-ease),
+    transform var(--cc-dur-fast) var(--cc-ease);
+}
+
+@media (hover: hover) {
+  .cc-lift:hover {
+    border-color: var(--cc-border-strong);
+    box-shadow: var(--cc-elev-2);
+  }
+}
+
+.cc-lift:active {
+  transform: translateY(1px);
+}
+
+.cc-ext-arrow {
+  transition: transform var(--cc-dur-fast) var(--cc-ease);
+}
+
+@media (hover: hover) {
+  .cc-lift:hover .cc-ext-arrow {
+    transform: translate(2px, -2px);
+  }
+}
+
+/* Gentle route entrance — replays when <main> remounts per pathname. */
+@media (prefers-reduced-motion: no-preference) {
+  .cc-route-enter {
+    animation: cc-route-enter 0.26s var(--cc-ease) both;
+  }
+}
+
+@keyframes cc-route-enter {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cc-lift,
+  .cc-ext-arrow {
+    transition: none;
+  }
+}
+
+/* Reading typography for dossier prose — the one place body copy is meant
+   to be read end-to-end, so it gets more size, leading, and measure. */
+.cc-prose {
+  max-width: 64ch;
+  font-size: 13.5px;
+  line-height: 1.62;
+  color: var(--cc-text-2);
+}
+
+.cc-prose p + p {
+  margin-top: 0.75em;
+}
+
+.cc-prose strong {
+  font-weight: 600;
+  color: var(--cc-text);
+}
+
 .route-visual {
   position: relative;
   min-height: 280px;

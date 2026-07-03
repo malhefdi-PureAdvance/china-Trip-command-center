@@ -1,7 +1,8 @@
 import { Tag, Users } from "lucide-react";
 
-import { Badge, Card, CardContent, CardHeader, CardTitle } from "@pure-advance/design-system";
+import { Card, CardContent, CardHeader, CardTitle } from "@pure-advance/design-system";
 
+import { Chip, SectionHeading } from "@/components/command-kit";
 import { FieldNotes } from "@/components/field-notes";
 import { PageHeader } from "@/components/page-header";
 import { getCurrentMissionNow } from "@/lib/clock";
@@ -28,13 +29,7 @@ export default async function NotesPage({
       />
 
       <section aria-label="Shared notes">
-        <div className="mb-2 flex items-center gap-2.5">
-          <Users className="size-4 text-[var(--cc-cyan)]" aria-hidden="true" />
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-            Shared context
-          </span>
-          <span className="h-px flex-1 bg-[var(--cc-border)]" />
-        </div>
+        <SectionHeading icon={Users} title="Shared context" />
         <div className="grid gap-3 lg:grid-cols-2">
           {demoData.notes.map((note) => {
             const author = getUserPerson(note.authorUserId);
@@ -43,20 +38,21 @@ export default async function NotesPage({
               <Card key={note.id} className="min-w-0">
                 <CardHeader>
                   <CardTitle>{note.title}</CardTitle>
-                  <p className="mt-0.5 text-[12px] text-[var(--cc-text-3)]">
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--cc-text-faint)]">
                     {author?.displayName ?? "Team"}
                   </p>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-[13px] leading-[1.5] text-[var(--cc-text-2)]">{note.body}</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {note.tags.map((tag) => (
-                      <Badge key={tag} tone="neutral">
-                        <Tag className="mr-1 inline size-3" aria-hidden="true" />
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
+                  <p className="text-[13px] leading-[1.55] text-[var(--cc-text-2)]">{note.body}</p>
+                  {note.tags.length > 0 ? (
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {note.tags.map((tag) => (
+                        <Chip key={tag} tone="soft" icon={Tag}>
+                          {tag}
+                        </Chip>
+                      ))}
+                    </div>
+                  ) : null}
                 </CardContent>
               </Card>
             );

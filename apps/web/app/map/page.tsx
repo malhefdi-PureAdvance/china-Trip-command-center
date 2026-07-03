@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { ArrowRight, Building2, Landmark, MapPin, Navigation, Waypoints } from "lucide-react";
+import { ArrowRight, Bed, Building2, Landmark, MapPin, Navigation, Waypoints } from "lucide-react";
 
-import { Badge, Card, CardContent, CardHeader, CardTitle, cn } from "@pure-advance/design-system";
+import { Card, CardContent, CardHeader, CardTitle, cn } from "@pure-advance/design-system";
 
+import { Chip, IconSquare, SectionHeading } from "@/components/command-kit";
 import { PageHeader } from "@/components/page-header";
 import { activeTrip, demoData } from "@/lib/demo-data";
 import { businessTargets } from "@/lib/targets";
@@ -29,7 +30,7 @@ function corridorClusters() {
 }
 
 const locationTypeMeta: Record<string, { label: string; icon: typeof MapPin }> = {
-  hotel: { label: "Base", icon: MapPin },
+  hotel: { label: "Base", icon: Bed },
   venue: { label: "Venue", icon: Landmark },
   office: { label: "Venue", icon: Building2 }
 };
@@ -62,57 +63,85 @@ export default function MapPage() {
           <div
             key={base?.id ?? index}
             className={cn(
-              "rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]",
+              "relative overflow-hidden rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]",
               index === 0 ? "sm:order-1" : "sm:order-3"
             )}
           >
-            <p className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-              {index === 0 ? "Week 1 · Hong Kong" : "Weeks 2–4 · Shenzhen"}
-            </p>
-            <p className="mt-1 text-[14px] font-semibold text-[var(--cc-text)]">{base?.name}</p>
-            <p className="mt-0.5 flex items-center gap-1.5 text-[11.5px] text-[var(--cc-text-3)]">
-              <MapPin className="size-3.5 shrink-0 text-[var(--cc-cyan)]" aria-hidden="true" />
-              {base?.addressLabel}
-            </p>
+            <span
+              className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-[var(--cc-cyan)] via-[var(--cc-cyan-line-soft)] to-transparent"
+              aria-hidden="true"
+            />
+            <div className="flex items-start gap-2.5">
+              <IconSquare icon={Bed} size="sm" />
+              <div className="min-w-0">
+                <p className="font-mono text-[9.5px] font-semibold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
+                  {index === 0 ? "Week 1 · Hong Kong" : "Weeks 2–4 · Shenzhen"}
+                </p>
+                <p className="mt-1 text-[14px] font-bold tracking-[-0.01em] text-[var(--cc-text)]">
+                  {base?.name}
+                </p>
+                <p className="mt-1 flex items-center gap-1.5 text-[11.5px] text-[var(--cc-text-3)]">
+                  <MapPin className="size-3.5 shrink-0 text-[var(--cc-cyan)]" aria-hidden="true" />
+                  <span className="min-w-0 truncate">{base?.addressLabel}</span>
+                </p>
+              </div>
+            </div>
           </div>
         ))}
-        <div className="flex items-center justify-center gap-2 py-1 sm:order-2 sm:flex-col">
-          <Waypoints className="size-4 text-[var(--cc-text-faint)]" aria-hidden="true" />
-          <span className="font-mono text-[9px] uppercase tracking-[0.1em] text-[var(--cc-text-dim)]">
+        <div className="flex items-center justify-center gap-2 py-1 sm:order-2 sm:flex-col sm:px-1">
+          <span
+            className="h-px flex-1 border-t border-dashed border-[var(--cc-cyan-line-soft)] sm:h-4 sm:w-px sm:flex-none sm:border-l sm:border-t-0"
+            aria-hidden="true"
+          />
+          <span
+            className="grid size-7 shrink-0 place-items-center rounded-full border border-[var(--cc-cyan-line-soft)] bg-[var(--cc-cyan-tint-2)] text-[var(--cc-cyan)]"
+            aria-hidden="true"
+          >
+            <Waypoints className="size-3.5" />
+          </span>
+          <span className="whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.1em] text-[var(--cc-text-dim)]">
             Jul 11–12 · border
           </span>
+          <span
+            className="h-px flex-1 border-t border-dashed border-[var(--cc-cyan-line-soft)] sm:h-4 sm:w-px sm:flex-none sm:border-l sm:border-t-0"
+            aria-hidden="true"
+          />
         </div>
       </section>
 
       <section aria-label="Target clusters" className="mt-6">
-        <div className="mb-2 flex items-center gap-2.5">
-          <Navigation className="size-4 text-[var(--cc-cyan)]" aria-hidden="true" />
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-            Target clusters
-          </span>
-          <span className="h-px flex-1 bg-[var(--cc-border)]" />
-        </div>
+        <SectionHeading icon={Navigation} title="Target clusters" />
         <div className="grid gap-2.5 sm:grid-cols-2">
           {clusters.map((cluster) => (
             <Link
               key={cluster.corridor}
               href={`/business-targets?corridor=${encodeURIComponent(cluster.corridor)}`}
-              className="block min-w-0 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)] active:translate-y-px"
+              className="cc-lift group block min-w-0 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]"
             >
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[13.5px] font-semibold text-[var(--cc-text)]">
+              <div className="flex items-baseline justify-between gap-2">
+                <span className="min-w-0 truncate text-[14px] font-bold tracking-[-0.01em] text-[var(--cc-text)]">
                   {cluster.corridor}
                 </span>
-                <span className="font-mono text-[11px] font-semibold text-[var(--cc-cyan)]">
-                  {cluster.count} targets
+                <span className="shrink-0 font-mono text-[16px] font-semibold leading-none text-[var(--cc-cyan)]">
+                  {cluster.count}
+                  <span className="ml-1 text-[9px] uppercase tracking-[0.08em] text-[var(--cc-text-faint)]">
+                    targets
+                  </span>
                 </span>
               </div>
-              <p className="mt-1 line-clamp-2 text-[11.5px] text-[var(--cc-text-3)]">
-                {cluster.topAreas.join(" · ")}
-              </p>
-              <span className="mt-2 inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--cc-cyan)]">
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {cluster.topAreas.map((area) => (
+                  <Chip key={area} tone="soft" className="max-w-[46%]">
+                    {area}
+                  </Chip>
+                ))}
+              </div>
+              <span className="mt-2.5 inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--cc-cyan)]">
                 View targets
-                <ArrowRight className="size-3.5" aria-hidden="true" />
+                <ArrowRight
+                  className="size-3.5 transition-transform duration-[var(--cc-dur-fast)] group-hover:translate-x-0.5 motion-reduce:transition-none"
+                  aria-hidden="true"
+                />
               </span>
             </Link>
           ))}
@@ -120,25 +149,16 @@ export default function MapPage() {
       </section>
 
       <section aria-label="Key venues" className="mt-6">
-        <div className="mb-2 flex items-center gap-2.5">
-          <Landmark className="size-4 text-[var(--cc-cyan)]" aria-hidden="true" />
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-            Program venues
-          </span>
-          <span className="h-px flex-1 bg-[var(--cc-border)]" />
-        </div>
+        <SectionHeading icon={Landmark} title="Program venues" />
         <div className="grid gap-2.5 sm:grid-cols-2">
           {venues.map((location) => {
             const meta = locationTypeMeta[location.locationType] ?? locationTypeMeta.venue;
-            const Icon = meta.icon;
             return (
               <div
                 key={location.id}
                 className="flex items-start gap-2.5 rounded-[var(--cc-r-row)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]"
               >
-                <span className="grid size-8 shrink-0 place-items-center rounded-[var(--cc-r-icon)] bg-[var(--cc-cyan-tint)] text-[var(--cc-cyan)]">
-                  <Icon className="size-4" aria-hidden="true" />
-                </span>
+                <IconSquare icon={meta.icon} size="sm" />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-[13px] font-semibold text-[var(--cc-text)]">
                     {location.name}
@@ -154,11 +174,11 @@ export default function MapPage() {
       </section>
 
       <Card className="mt-6">
-        <CardHeader className="flex items-center gap-2">
-          <Navigation className="size-4 text-[var(--cc-cyan)]" aria-hidden="true" />
+        <CardHeader className="flex flex-row items-center gap-2.5">
+          <IconSquare icon={Navigation} size="sm" />
           <CardTitle>China-first navigation</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2 text-[12px] leading-[1.5] text-[var(--cc-text-2)]">
+        <CardContent className="space-y-2 text-[12.5px] leading-[1.55] text-[var(--cc-text-2)]">
           <p>
             On the mainland, use <strong>Amap</strong> or <strong>Baidu Maps</strong> and hail with{" "}
             <strong>DiDi</strong>; Google Maps is unreliable across the border.
@@ -167,10 +187,10 @@ export default function MapPage() {
             Keep <strong>WeChat Pay</strong> and <strong>Alipay</strong> linked before Shenzhen, and
             carry the Chinese address for each stop for driver hand-off.
           </p>
-          <div className="flex flex-wrap gap-2 pt-1">
-            <Badge tone="cyan">Amap / Baidu</Badge>
-            <Badge tone="cyan">DiDi-ready</Badge>
-            <Badge tone="neutral">HK ↔ SZ border · Jul 11–12</Badge>
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            <Chip tone="cyanTint">Amap / Baidu</Chip>
+            <Chip tone="cyanTint">DiDi-ready</Chip>
+            <Chip tone="soft">HK ↔ SZ border · Jul 11–12</Chip>
           </div>
         </CardContent>
       </Card>

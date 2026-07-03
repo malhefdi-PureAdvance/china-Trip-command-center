@@ -1,7 +1,8 @@
 import { Building2, CalendarClock, UsersRound } from "lucide-react";
 
-import { Badge, Card, CardContent, CardHeader, CardTitle } from "@pure-advance/design-system";
+import { Card, CardContent, CardHeader, CardTitle } from "@pure-advance/design-system";
 
+import { Chip, SectionHeading } from "@/components/command-kit";
 import { PageHeader } from "@/components/page-header";
 import { activeTrip, demoData, getPersonById } from "@/lib/demo-data";
 
@@ -27,14 +28,14 @@ function MemberCard({
   const initial = (person?.displayName ?? "?").charAt(0).toUpperCase();
   const avatarClass =
     accent === "purple"
-      ? "bg-[var(--cc-purple-tint)] text-[var(--cc-purple)]"
-      : "bg-[var(--cc-cyan-tint)] text-[var(--cc-cyan)]";
+      ? "border-[var(--cc-purple-line)] bg-[var(--cc-purple-tint)] text-[var(--cc-purple-soft)]"
+      : "border-[var(--cc-cyan-line-soft)] bg-[var(--cc-cyan-tint)] text-[var(--cc-cyan)]";
 
   return (
     <Card className="min-w-0">
       <CardHeader className="flex flex-row items-center gap-3">
         <span
-          className={`grid size-9 shrink-0 place-items-center rounded-full font-mono text-[13px] font-bold ${avatarClass}`}
+          className={`grid size-9 shrink-0 place-items-center rounded-[var(--cc-r-icon)] border font-mono text-[13px] font-bold ${avatarClass}`}
           aria-hidden="true"
         >
           {initial}
@@ -45,7 +46,7 @@ function MemberCard({
             {person?.title ?? "Mission role"}
           </p>
         </div>
-        <Badge tone={accent === "purple" ? "neutral" : "cyan"}>{roleLabel[role] ?? role}</Badge>
+        <Chip tone={accent === "purple" ? "purple" : "cyanTint"}>{roleLabel[role] ?? role}</Chip>
       </CardHeader>
       <CardContent className="space-y-2">
         <p className="flex items-center gap-2 text-[12px] text-[var(--cc-text-3)]">
@@ -81,13 +82,7 @@ export default function TeamPage() {
       />
 
       <section aria-label="Pure Advance team">
-        <div className="mb-2 flex items-center gap-2.5">
-          <UsersRound className="size-4 text-[var(--cc-cyan)]" aria-hidden="true" />
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-            Pure Advance team
-          </span>
-          <span className="h-px flex-1 bg-[var(--cc-border)]" />
-        </div>
+        <SectionHeading icon={UsersRound} title="Pure Advance team" />
         <div className="grid gap-3 lg:grid-cols-2">
           {pureAdvance.map((member) => (
             <MemberCard
@@ -103,13 +98,7 @@ export default function TeamPage() {
 
       {program.length > 0 ? (
         <section aria-label="Program" className="mt-6">
-          <div className="mb-2 flex items-center gap-2.5">
-            <Building2 className="size-4 text-[var(--cc-purple)]" aria-hidden="true" />
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-purple)]">
-              Program
-            </span>
-            <span className="h-px flex-1 bg-[var(--cc-border)]" />
-          </div>
+          <SectionHeading icon={Building2} title="Program" tone="purple" />
           <div className="grid gap-3 lg:grid-cols-2">
             {program.map((member) => (
               <MemberCard

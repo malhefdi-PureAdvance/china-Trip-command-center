@@ -16,7 +16,7 @@ export function RelatedTargetChips({ targetIds }: Readonly<{ targetIds: string[]
 
   return (
     <div className="mt-2 flex min-w-0 flex-wrap items-center gap-1.5">
-      <span className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-[0.1em] text-[var(--cc-text-faint)]">
+      <span className="inline-flex items-center gap-1 font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--cc-text-faint)]">
         <BookOpenText className="size-3" aria-hidden="true" />
         Dossiers
       </span>
@@ -24,7 +24,7 @@ export function RelatedTargetChips({ targetIds }: Readonly<{ targetIds: string[]
         <Link
           key={target.id}
           href={`/business-targets/${target.id}`}
-          className="max-w-full truncate rounded-full border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] px-2 py-1 font-mono text-[10px] leading-none text-[var(--cc-cyan)] active:translate-y-px"
+          className="cc-lift inline-flex min-h-7 max-w-full items-center gap-1 truncate rounded-[var(--cc-r-chip)] border border-[var(--cc-cyan-line-soft)] bg-[var(--cc-cyan-tint-2)] px-2 font-mono text-[10px] leading-none text-[var(--cc-cyan)]"
         >
           {target.name}
         </Link>
