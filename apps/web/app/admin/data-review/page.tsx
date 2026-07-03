@@ -267,9 +267,9 @@ export default async function DataReviewPage() {
         {dryRunModel.summaryRows.map((row) => (
           <Card key={row.label} className="min-w-0">
             <CardContent className="p-3">
-              <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--cc-text-faint)]">
+              <h2 className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--cc-text-faint)]">
                 {row.label}
-              </p>
+              </h2>
               <div className="mt-2 flex items-end justify-between gap-3">
                 <p className="font-mono text-[26px] font-semibold leading-none text-[var(--cc-cyan)]">
                   {row.value}
