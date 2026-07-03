@@ -1,10 +1,24 @@
 import Link from "next/link";
-import { ArrowRight, Building2, CalendarDays, LayoutDashboard, Map, WifiOff } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  CalendarDays,
+  LayoutDashboard,
+  Map,
+  PlaneTakeoff,
+  WifiOff
+} from "lucide-react";
 
 import { Callout, IconSquare } from "@/components/command-kit";
 import { PageHeader } from "@/components/page-header";
 
 const cachedRoutes = [
+  {
+    href: "/flight-pack",
+    label: "Flight pack",
+    note: "Readiness cockpit · prepare while online",
+    icon: PlaneTakeoff
+  },
   {
     href: "/today",
     label: "Today",

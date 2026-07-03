@@ -7,6 +7,7 @@ const routes = [
   { path: "/map", heading: "Hong Kong ↔ Shenzhen Corridor" },
   { path: "/business-targets", heading: "Visit Targets" },
   { path: "/notes", heading: "Notes & Field Capture" },
+  { path: "/flight-pack", heading: "Ready for flight?" },
   { path: "/team", heading: "Mission Team" },
   { path: "/private", heading: "Private Tier" },
   { path: "/admin/data-review", heading: "Data Review" }

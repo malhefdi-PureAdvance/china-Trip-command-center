@@ -77,6 +77,7 @@ test.describe("iPhone-first command center shell", () => {
       "/map",
       "/business-targets",
       "/notes",
+      "/flight-pack",
       "/team",
       "/private",
       "/admin/data-review"
