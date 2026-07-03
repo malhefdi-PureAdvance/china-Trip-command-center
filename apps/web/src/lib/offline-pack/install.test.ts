@@ -44,10 +44,17 @@ describe("deriveStatus", () => {
     expect(status.documentCount).toBeGreaterThan(10);
   });
 
-  it("reports stale after the 72-hour window with an actionable message", () => {
-    const status = deriveStatus(meta, new Date("2026-07-08T12:00:01.000Z"));
-    expect(status.state).toBe("stale");
-    expect(status.message).toMatch(/refresh/i);
+  it("measures staleness from install time so reinstalling always clears it", () => {
+    // installedAt 2026-07-04T13:00Z + 72h = 2026-07-07T13:00Z.
+    expect(deriveStatus(meta, new Date("2026-07-07T12:59:00.000Z")).state).toBe("installed");
+    const stale = deriveStatus(meta, new Date("2026-07-07T13:00:01.000Z"));
+    expect(stale.state).toBe("stale");
+    expect(stale.message).toMatch(/update/i);
+
+    // A fresh reinstall of the same static artifact is not stale — the copy
+    // is new even when the generation timestamp is old.
+    const reinstalled = { ...meta, installedAt: "2026-07-20T08:00:00.000Z" };
+    expect(deriveStatus(reinstalled, new Date("2026-07-21T08:00:00.000Z")).state).toBe("installed");
   });
 });
 
@@ -70,5 +77,20 @@ describe("warmableUrls", () => {
     const urls = warmableUrls(tampered);
     expect(urls.some((url) => url.startsWith("/admin"))).toBe(false);
     expect(urls.some((url) => url.startsWith("/private"))).toBe(false);
+  });
+
+  it("refuses cross-origin escapes (protocol-relative, backslash, scheme)", () => {
+    const pack = buildOfflineFlightPack(FIXED);
+    const tampered = {
+      ...pack.manifest,
+      includedRoutes: [
+        "//evil.example/pwn",
+        "/\\evil.example/pwn",
+        "https://evil.example/pwn",
+        "javascript:alert(1)",
+        "/today"
+      ]
+    };
+    expect(warmableUrls(tampered)).toEqual(["/today", "/offline-pack/china-2026.v1.json"]);
   });
 });

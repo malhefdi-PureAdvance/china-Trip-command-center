@@ -340,13 +340,18 @@ export function auditPackSafety(pack: OfflineFlightPack): void {
     }
   }
 
+  // Normalize JSON-escaped whitespace (a newline inside a value stringifies
+  // as literal \n) so a forbidden phrase split across lines cannot evade the
+  // scan, then flatten all remaining whitespace runs.
   const scannable = JSON.stringify({
     trip: pack.trip,
     readiness: pack.readiness,
     briefing: pack.briefing,
     searchDocuments: pack.searchDocuments,
     exports: pack.exports
-  });
+  })
+    .replace(/\\[ntr]/gu, " ")
+    .replace(/\s+/gu, " ");
   const contentMatch = scannable.match(FORBIDDEN_CONTENT_PATTERN);
   if (contentMatch) {
     throw new Error(`offline pack contains forbidden content: "${contentMatch[0]}"`);
@@ -356,6 +361,36 @@ export function auditPackSafety(pack: OfflineFlightPack): void {
       throw new Error(`offline pack content references network-only route ${route}`);
     }
   }
+
+  // Field-name audit: no key anywhere in the pack may CONTAIN a Tier 3 field
+  // pattern (substring, so derived keys like "phoneNumber" or "visaStatus"
+  // are caught too). The schema's own privacy.excludedFields listing is
+  // exempt by construction — it is not walked here.
+  const forbiddenKey = new RegExp(FORBIDDEN_OFFLINE_FIELD_PATTERNS.join("|"), "iu");
+  const walk = (value: unknown, path: string): void => {
+    if (Array.isArray(value)) {
+      value.forEach((entry, index) => walk(entry, `${path}[${index}]`));
+      return;
+    }
+    if (typeof value === "object" && value !== null) {
+      for (const [key, child] of Object.entries(value)) {
+        if (forbiddenKey.test(key)) {
+          throw new Error(`offline pack contains forbidden field name "${key}" at ${path}`);
+        }
+        walk(child, `${path}.${key}`);
+      }
+    }
+  };
+  walk(
+    {
+      trip: pack.trip,
+      readiness: pack.readiness,
+      briefing: pack.briefing,
+      searchDocuments: pack.searchDocuments,
+      exports: pack.exports
+    },
+    "pack"
+  );
 }
 
 export function buildOfflineFlightPack(options: BuildPackOptions = {}): OfflineFlightPack {
@@ -383,6 +418,7 @@ export function buildOfflineFlightPack(options: BuildPackOptions = {}): OfflineF
         "/itinerary",
         "/business-targets",
         "/map",
+        "/notes",
         "/flight-pack"
       ],
       excludedRoutes: [...FORBIDDEN_OFFLINE_ROUTES],

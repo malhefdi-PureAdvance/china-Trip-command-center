@@ -16,7 +16,7 @@ const cachedRoutes = [
   {
     href: "/flight-pack",
     label: "Flight pack",
-    note: "Offline readiness · app-safe briefing pack",
+    note: "Readiness cockpit · prepare while online",
     icon: PlaneTakeoff
   },
   {

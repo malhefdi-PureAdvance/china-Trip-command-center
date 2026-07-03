@@ -3,6 +3,7 @@ import {
   OFFLINE_PACK_ARTIFACT_URL,
   OFFLINE_PACK_ID,
   OFFLINE_PACK_SCHEMA_VERSION,
+  OFFLINE_PACK_STALE_HOURS,
   type OfflineFlightPack,
   type OfflinePackManifest
 } from "./schema";
@@ -48,6 +49,8 @@ export function validatePackShape(candidate: unknown): candidate is OfflineFligh
     pack.manifest?.packId === OFFLINE_PACK_ID &&
     pack.manifest.schemaVersion === OFFLINE_PACK_SCHEMA_VERSION &&
     pack.manifest.dataTier === "tier1-public-safe" &&
+    Array.isArray(pack.manifest.includedRoutes) &&
+    pack.manifest.includedRoutes.every((route) => typeof route === "string") &&
     Array.isArray(pack.readiness) &&
     Array.isArray(pack.briefing) &&
     Array.isArray(pack.searchDocuments) &&
@@ -55,32 +58,45 @@ export function validatePackShape(candidate: unknown): candidate is OfflineFligh
   );
 }
 
-/** Pure status derivation — exported for unit tests. */
+/** Pure status derivation — exported for unit tests. Staleness is measured
+ *  from the INSTALL time, not the artifact's generation time: the artifact is
+ *  static per deploy, so "update flight pack" must always be able to clear a
+ *  stale state by refetching (and picking up any newer deploy). */
 export function deriveStatus(
   meta: PackMetaRecord | undefined,
   now: Date = new Date()
 ): OfflinePackStatus {
   if (!meta) return { state: "not-installed" };
-  const stale = now.getTime() > new Date(meta.manifest.staleAfter).getTime();
+  const staleAfterMs =
+    new Date(meta.installedAt).getTime() + OFFLINE_PACK_STALE_HOURS * 60 * 60 * 1000;
+  const stale = now.getTime() > staleAfterMs;
   return {
     state: stale ? "stale" : "installed",
     packVersion: meta.manifest.packVersion,
     generatedAt: meta.manifest.generatedAt,
-    staleAfter: meta.manifest.staleAfter,
+    staleAfter: new Date(staleAfterMs).toISOString(),
     installedAt: meta.installedAt,
     documentCount: meta.documentCount,
     ...(stale
-      ? { message: "Pack is older than 72 hours — refresh it while you have a connection." }
+      ? {
+          message:
+            "Your copy is older than 72 hours — update it while you have a connection to pick up the latest deploy."
+        }
       : {})
   };
 }
 
 /** Only same-origin public paths from the pack's own allowlist are ever
- *  warmed — exported for unit tests. */
+ *  warmed — exported for unit tests. Rejects protocol-relative ("//host"),
+ *  backslash, and scheme-bearing values so a tampered manifest can never
+ *  steer the hidden iframe off-origin. */
 export function warmableUrls(manifest: OfflinePackManifest): string[] {
   return [...manifest.includedRoutes, OFFLINE_PACK_ARTIFACT_URL].filter(
     (route) =>
-      route.startsWith("/") &&
+      typeof route === "string" &&
+      /^\/(?!\/)/.test(route) &&
+      !route.includes("\\") &&
+      !route.includes(":") &&
       !FORBIDDEN_OFFLINE_ROUTES.some((forbidden) => route.startsWith(forbidden))
   );
 }
@@ -93,7 +109,7 @@ function serviceWorkerControls(): boolean {
  *  service worker runtime-caches the page AND its script/style subresources.
  *  Caching only the HTML is not enough: offline hydration would crash on the
  *  missing chunks and React would unmount the perfectly good SSR content. */
-function warmRouteViaIframe(route: string, timeoutMs = 15000): Promise<boolean> {
+function warmRouteViaIframe(route: string, timeoutMs = 8000): Promise<boolean> {
   return new Promise((resolve) => {
     const iframe = document.createElement("iframe");
     let settled = false;

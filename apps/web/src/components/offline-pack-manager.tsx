@@ -23,7 +23,6 @@ import {
   type OfflineReadinessReport
 } from "@/lib/offline-pack/install";
 import type { OfflineReadinessItem } from "@/lib/offline-pack/schema";
-import { shortDate } from "@/lib/mission-timeline";
 
 const statusChip: Record<OfflinePackStatus["state"], { tone: ChipTone; label: string }> = {
   installed: { tone: "green", label: "Installed" },
@@ -36,9 +35,17 @@ const statusChip: Record<OfflinePackStatus["state"], { tone: ChipTone; label: st
 function formatTimestamp(iso: string | undefined): string | null {
   if (!iso) return null;
   try {
-    const date = new Date(iso);
-    const time = date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-    return `${shortDate(iso.slice(0, 10))} · ${time}`;
+    // Date and time must come from the same clock (the viewer's local one) —
+    // mixing the UTC calendar date with local time shows the wrong day near
+    // midnight.
+    return new Date(iso)
+      .toLocaleString("en-GB", {
+        day: "numeric",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit"
+      })
+      .replace(",", " ·");
   } catch {
     return null;
   }
@@ -70,9 +77,9 @@ function readinessItemState(
       ? { tone: "green", label: `${status.documentCount} documents` }
       : { tone: "neutral", label: "Installs with pack" };
   }
-  if (item.id === "notes-local") {
-    return { tone: "green", label: "Ready" };
-  }
+  // notes-local intentionally falls through to the route-cache check below:
+  // capture is localStorage-backed, but the /notes ROUTE still has to be
+  // cached for the capture screen to open in airplane mode.
   if (item.id === "app-shell") {
     return report?.serviceWorkerActive
       ? { tone: "green", label: "Worker active" }
@@ -142,14 +149,18 @@ export function OfflinePackManager({
     setBusy("install");
     setNotice(null);
     const result = await installOfflinePack();
-    setStatus(result.status);
     if (result.ok) {
+      const warmed = result.warmedRoutes
+        ? ` · ${result.warmedRoutes} pages cached for offline`
+        : "";
       setNotice(
-        `Flight pack installed — ${result.status.documentCount ?? 0} documents, v${result.status.packVersion ?? packVersion}.`
+        `Flight pack installed — ${result.status.documentCount ?? 0} documents, v${result.status.packVersion ?? packVersion}${warmed}.`
       );
-    }
-    await refresh().catch(() => undefined);
-    if (result.ok) {
+      await refresh().catch(() => undefined);
+      setStatus(result.status);
+    } else {
+      // Keep the actionable error on screen — a background refresh would
+      // overwrite it with a bland "not installed" a paint later.
       setStatus(result.status);
     }
     setBusy(null);
@@ -292,6 +303,14 @@ export function OfflinePackManager({
               <Trash2 className="size-4" aria-hidden="true" />
               Clear offline pack
             </Button>
+            {busy === "install" ? (
+              <p
+                className="w-full text-[11.5px] leading-[1.5] text-[var(--cc-text-3)]"
+                role="status"
+              >
+                Caching pages for offline use — this can take a minute on a slow connection.
+              </p>
+            ) : null}
           </div>
         </CardContent>
       </Card>

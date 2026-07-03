@@ -28,20 +28,33 @@ test.describe("offline flight pack readiness", () => {
     await expect(page.getByText("Network required").first()).toBeVisible();
     await expect(page.getByText("Private tier")).toBeVisible();
 
+    // The pack-data checklist row is state-dependent: it must flip through
+    // Not installed -> Installed -> Not installed across the flow.
+    const packRow = page.locator("li").filter({ hasText: "Flight pack data installed" });
+    await expect(packRow.getByText("Not installed")).toBeVisible();
+
     await page.getByRole("button", { name: /prepare for flight/i }).click();
     await expect(page.getByText(/Flight pack installed/i).first()).toBeVisible();
     await expect(page.getByRole("button", { name: /update flight pack/i })).toBeVisible();
+    await expect(packRow.getByText("Installed", { exact: true })).toBeVisible();
+    await expect(
+      page
+        .locator("li")
+        .filter({ hasText: "Offline search index installed" })
+        .getByText(/documents/)
+    ).toBeVisible();
 
     // Status survives a reload — it is read back from IndexedDB.
     await page.reload();
     await expect(page.getByText(/Flight pack installed/i).first()).toBeVisible();
 
     await page.getByRole("button", { name: /verify offline readiness/i }).click();
-    await expect(page.getByText("Offline readiness checklist")).toBeVisible();
+    await expect(packRow.getByText("Installed", { exact: true })).toBeVisible();
 
     await page.getByRole("button", { name: /clear offline pack/i }).click();
     await expect(page.getByText(/Offline pack cleared/i)).toBeVisible();
     await expect(page.getByRole("button", { name: /prepare for flight/i })).toBeVisible();
+    await expect(packRow.getByText("Not installed")).toBeVisible();
   });
 
   test("explains that offline is not private", async ({ page }) => {
