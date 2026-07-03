@@ -282,7 +282,7 @@ export function ExternalLinkCard({
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        "cc-lift group flex min-h-11 items-center gap-2.5 rounded-[var(--cc-r-tile)] border border-[var(--cc-border)] bg-[var(--cc-surface)] px-3 py-2 shadow-[var(--cc-elev-1)]",
+        "cc-lift group flex min-h-11 w-full min-w-0 max-w-full items-center gap-2.5 overflow-hidden rounded-[var(--cc-r-tile)] border border-[var(--cc-border)] bg-[var(--cc-surface)] px-3 py-2 shadow-[var(--cc-elev-1)]",
         className
       )}
     >
@@ -292,7 +292,7 @@ export function ExternalLinkCard({
       >
         <Globe className="size-3.5" />
       </span>
-      <span className="min-w-0 flex-1">
+      <span className="min-w-0 flex-1 basis-0">
         <span className="block truncate text-[12.5px] font-semibold leading-tight text-[var(--cc-text)]">
           {label ?? domain}
         </span>
