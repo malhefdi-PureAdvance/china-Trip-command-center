@@ -5,15 +5,9 @@ import type { Session } from "@supabase/supabase-js";
 import Link from "next/link";
 import { CloudUpload, KeyRound, NotebookPen, Plus, RefreshCw, Trash2 } from "lucide-react";
 
-import {
-  Badge,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle
-} from "@pure-advance/design-system";
+import { Button, Card, CardContent, CardHeader, CardTitle, cn } from "@pure-advance/design-system";
 
+import { Chip, EmptyState, IconSquare, type ChipTone } from "@/components/command-kit";
 import type { FieldNotePrompt } from "@/lib/mission-ops";
 import { getBrowserSupabase } from "@/lib/supabase-browser";
 import {
@@ -94,16 +88,35 @@ function formatTime(ts: number): string {
   }
 }
 
-const syncBadge: Record<SyncState, { text: string; tone: "neutral" | "cyan" | "green" | "amber" }> =
+const syncMeta: Record<SyncState, { text: string; dot: string; chip: ChipTone; pulse?: boolean }> =
   {
-    local_only: { text: "Local only", tone: "neutral" },
-    signed_out: { text: "Sign in to sync", tone: "neutral" },
-    idle: { text: "Signed in", tone: "cyan" },
-    syncing: { text: "Syncing…", tone: "cyan" },
-    synced: { text: "Synced", tone: "green" },
-    offline: { text: "Offline", tone: "amber" },
-    error: { text: "Sync failed", tone: "amber" }
+    local_only: { text: "Local only", dot: "bg-[var(--cc-text-disabled)]", chip: "neutral" },
+    signed_out: { text: "Sign in to sync", dot: "bg-[var(--cc-cyan)]", chip: "cyanTint" },
+    idle: { text: "Signed in", dot: "bg-[var(--cc-cyan)]", chip: "cyanTint" },
+    syncing: { text: "Syncing…", dot: "bg-[var(--cc-cyan)]", chip: "cyanTint", pulse: true },
+    synced: { text: "Synced", dot: "bg-[var(--cc-green)]", chip: "green" },
+    offline: { text: "Offline", dot: "bg-[var(--cc-amber)]", chip: "amber" },
+    error: { text: "Sync failed", dot: "bg-[var(--cc-amber)]", chip: "amber" }
   };
+
+/** Sync state as an instrument light: colored dot + mono label. */
+function SyncChip({ state }: Readonly<{ state: SyncState }>) {
+  const meta = syncMeta[state];
+
+  return (
+    <Chip tone={meta.chip}>
+      <span
+        className={cn(
+          "mr-1 inline-block size-[6px] rounded-full align-middle",
+          meta.dot,
+          meta.pulse && "mission-live-dot"
+        )}
+        aria-hidden="true"
+      />
+      {meta.text}
+    </Chip>
+  );
+}
 
 export function FieldNotes({
   prompts = [],
@@ -192,56 +205,60 @@ export function FieldNotes({
     writeNotes(readNotes().filter((candidate) => candidate.id !== note.id));
   }
 
-  function noteBadge(note: FieldNote): { text: string; tone: "neutral" | "cyan" | "green" } {
-    if (note.origin === "remote" && !note.mine) return { text: "Team", tone: "cyan" };
+  function noteBadge(note: FieldNote): { text: string; tone: ChipTone } {
+    if (note.origin === "remote" && !note.mine) return { text: "Team", tone: "cyanTint" };
     if (note.remoteId) return { text: "Synced", tone: "green" };
     return { text: "Local", tone: "neutral" };
   }
 
-  const badge = syncBadge[syncState];
   const inputClass =
-    "w-full rounded-[var(--cc-r-icon)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] px-3 py-2 text-[13px] text-[var(--cc-text)] outline-none placeholder:text-[var(--cc-text-dim)] focus:border-[var(--cc-cyan-line)]";
+    "w-full rounded-[var(--cc-r-icon)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] px-3 py-2 text-[13px] text-[var(--cc-text)] outline-none transition-colors placeholder:text-[var(--cc-text-dim)] focus:border-[var(--cc-cyan-line)]";
 
   return (
     <section aria-label="Field capture" className="mt-6">
-      <div className="mb-2 flex items-center gap-2.5">
-        <NotebookPen className="size-4 text-[var(--cc-cyan)]" aria-hidden="true" />
-        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
+      <div className="mb-2 flex min-w-0 items-center gap-2.5">
+        <NotebookPen className="size-4 shrink-0 text-[var(--cc-cyan)]" aria-hidden="true" />
+        <span className="shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
           Field capture
         </span>
-        <span className="h-px flex-1 bg-[var(--cc-border)]" />
+        <span className="h-px min-w-3 flex-1 bg-[var(--cc-border)]" aria-hidden="true" />
         {syncState === "signed_out" ? (
           <Link
             href="/private"
-            className="inline-flex items-center gap-1 rounded-full border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.06em] text-[var(--cc-cyan)]"
+            className="cc-lift inline-flex min-h-7 items-center gap-1 rounded-[var(--cc-r-chip)] border border-[var(--cc-cyan-line-soft)] bg-[var(--cc-cyan-tint-2)] px-2 font-mono text-[9.5px] uppercase leading-none tracking-[0.07em] text-[var(--cc-cyan)]"
           >
             <KeyRound className="size-3" aria-hidden="true" />
-            {badge.text}
+            {syncMeta.signed_out.text}
           </Link>
         ) : (
-          <Badge tone={badge.tone}>{badge.text}</Badge>
+          <SyncChip state={syncState} />
         )}
       </div>
 
       {session ? (
         <div className="mb-3 flex items-start justify-between gap-3 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]">
-          <div className="min-w-0">
-            <p className="text-[12px] font-semibold text-[var(--cc-text)]">Team sync · signed in</p>
-            <p className="mt-1 text-[11px] leading-[1.5] text-[var(--cc-text-3)]">
-              Syncing shares a note with Pure Advance team members. Meeting and debrief text only —
-              never booking references, IDs, payments, or private contacts.
-            </p>
-            {syncMessage ? (
-              <p
-                className={`mt-1.5 text-[11.5px] ${
-                  syncState === "error" || syncState === "offline"
-                    ? "text-[var(--cc-amber-text)]"
-                    : "text-[var(--cc-green)]"
-                }`}
-              >
-                {syncMessage}
+          <div className="flex min-w-0 items-start gap-2.5">
+            <IconSquare icon={CloudUpload} size="sm" />
+            <div className="min-w-0">
+              <p className="text-[12px] font-semibold text-[var(--cc-text)]">
+                Team sync · signed in
               </p>
-            ) : null}
+              <p className="mt-1 text-[11px] leading-[1.5] text-[var(--cc-text-3)]">
+                Syncing shares a note with Pure Advance team members. Meeting and debrief text only
+                — never booking references, IDs, payments, or private contacts.
+              </p>
+              {syncMessage ? (
+                <p
+                  className={`mt-1.5 text-[11.5px] ${
+                    syncState === "error" || syncState === "offline"
+                      ? "text-[var(--cc-amber-text)]"
+                      : "text-[var(--cc-green)]"
+                  }`}
+                >
+                  {syncMessage}
+                </p>
+              ) : null}
+            </div>
           </div>
           <Button
             type="button"
@@ -267,12 +284,12 @@ export function FieldNotes({
               key={prompt.id}
               type="button"
               onClick={() => applyPrompt(prompt)}
-              className="min-w-0 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 text-left shadow-[var(--cc-elev-1)] active:translate-y-px"
+              className="cc-lift min-w-0 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 text-left shadow-[var(--cc-elev-1)]"
             >
               <span className="font-mono text-[9.5px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
                 {prompt.label}
               </span>
-              <span className="mt-1 block truncate text-[12.5px] font-semibold text-[var(--cc-text)]">
+              <span className="mt-1 block truncate text-[13px] font-bold tracking-[-0.01em] text-[var(--cc-text)]">
                 {prompt.title}
               </span>
               <span className="mt-1 line-clamp-2 text-[11.5px] leading-[1.45] text-[var(--cc-text-3)]">
@@ -292,11 +309,12 @@ export function FieldNotes({
                 key={key}
                 type="button"
                 onClick={() => pickTemplate(key)}
-                className={`shrink-0 rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.06em] transition-colors ${
+                className={cn(
+                  "cc-lift inline-flex min-h-9 shrink-0 items-center rounded-[var(--cc-r-icon)] border px-3 font-mono text-[10px] uppercase tracking-[0.06em] transition-colors",
                   template === key
-                    ? "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint)] text-[var(--cc-cyan)]"
+                    ? "border-[var(--cc-cyan)] bg-[var(--cc-cyan)] font-semibold text-[var(--cc-cyan-ink)] shadow-[var(--cc-shadow-cta)]"
                     : "border-[var(--cc-border)] bg-[var(--cc-surface-inset)] text-[var(--cc-text-3)]"
-                }`}
+                )}
               >
                 {templates[key].label}
               </button>
@@ -336,24 +354,24 @@ export function FieldNotes({
                 <CardHeader className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <CardTitle className="truncate">{note.title}</CardTitle>
-                    <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--cc-text-faint)]">
+                    <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--cc-text-faint)]">
                       {templates[note.template]?.label ?? "Note"} · {formatTime(note.createdAt)}
                     </p>
                   </div>
                   <div className="flex shrink-0 items-center gap-1.5">
-                    <Badge tone={label.tone}>{label.text}</Badge>
+                    <Chip tone={label.tone}>{label.text}</Chip>
                     <button
                       type="button"
                       onClick={() => removeNote(note)}
                       aria-label={`Delete ${note.title}`}
-                      className="rounded-[var(--cc-r-icon)] p-1.5 text-[var(--cc-text-faint)] active:translate-y-px"
+                      className="grid size-9 place-items-center rounded-[var(--cc-r-icon)] text-[var(--cc-text-faint)] transition-colors hover:bg-[var(--cc-surface-inset)] hover:text-[var(--cc-amber-text)] active:translate-y-px"
                     >
                       <Trash2 className="size-4" aria-hidden="true" />
                     </button>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="whitespace-pre-wrap font-mono text-[12px] leading-[1.5] text-[var(--cc-text-2)]">
+                  <p className="whitespace-pre-wrap font-mono text-[12px] leading-[1.55] text-[var(--cc-text-2)]">
                     {note.body}
                   </p>
                 </CardContent>
@@ -361,7 +379,14 @@ export function FieldNotes({
             );
           })}
         </div>
-      ) : null}
+      ) : (
+        <EmptyState
+          className="mt-3"
+          icon={NotebookPen}
+          title="No field notes yet"
+          body="Notes stay on this device until you choose to sync. Capture the first meeting note or daily debrief above."
+        />
+      )}
     </section>
   );
 }

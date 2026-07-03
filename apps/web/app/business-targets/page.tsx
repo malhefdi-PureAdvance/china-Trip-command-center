@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { CalendarClock, SearchX } from "lucide-react";
 
 import { cn } from "@pure-advance/design-system";
 
+import { EmptyState } from "@/components/command-kit";
 import { PageHeader } from "@/components/page-header";
 import { TargetCard } from "@/components/target-card";
 import { TargetSearch } from "@/components/target-search";
@@ -12,7 +14,8 @@ import {
   corridorsPresent,
   filterTargets,
   groupByCorridor,
-  sortTargets
+  sortTargets,
+  visitWindowHint
 } from "@/lib/targets";
 
 type Search = { corridor?: string; category?: string; q?: string };
@@ -26,7 +29,7 @@ function chipHref(next: Search): string {
   return q ? `/business-targets?${q}` : "/business-targets";
 }
 
-function Chip({
+function FilterChip({
   href,
   active,
   children
@@ -35,14 +38,40 @@ function Chip({
     <Link
       href={href}
       className={cn(
-        "shrink-0 rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.06em] transition-colors",
+        "cc-lift inline-flex min-h-9 shrink-0 items-center rounded-[var(--cc-r-icon)] border px-3 font-mono text-[10px] uppercase tracking-[0.06em] transition-colors",
         active
-          ? "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint)] text-[var(--cc-cyan)]"
+          ? "border-[var(--cc-cyan)] bg-[var(--cc-cyan)] font-semibold text-[var(--cc-cyan-ink)] shadow-[var(--cc-shadow-cta)]"
           : "border-[var(--cc-border)] bg-[var(--cc-surface-inset)] text-[var(--cc-text-3)]"
       )}
     >
       {children}
     </Link>
+  );
+}
+
+function CorridorHeader({
+  corridor,
+  count,
+  windowHint
+}: Readonly<{ corridor: string; count: number; windowHint: string | null }>) {
+  return (
+    <div className="mb-2.5">
+      <div className="flex items-baseline gap-2.5">
+        <h2 className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
+          {corridor}
+        </h2>
+        <span className="h-px flex-1 self-center bg-[var(--cc-border)]" aria-hidden="true" />
+        <span className="font-mono text-[10px] text-[var(--cc-text-dim)]">
+          {count} {count === 1 ? "target" : "targets"}
+        </span>
+      </div>
+      {windowHint ? (
+        <p className="mt-1 flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-[0.05em] text-[var(--cc-amber-text)]">
+          <CalendarClock className="size-3 shrink-0" aria-hidden="true" />
+          <span className="min-w-0 truncate">{windowHint}</span>
+        </p>
+      ) : null}
+    </div>
   );
 }
 
@@ -67,51 +96,58 @@ export default async function BusinessTargetsPage({
       />
 
       <TargetSearch />
-      <div className="mb-2 flex gap-1.5 overflow-x-auto pb-1">
-        <Chip href={chipHref({ category, q })} active={!corridor}>
+      <div
+        role="group"
+        aria-label="Filter by corridor"
+        className="mb-2 flex gap-1.5 overflow-x-auto pb-1"
+      >
+        <FilterChip href={chipHref({ category, q })} active={!corridor}>
           All corridors
-        </Chip>
+        </FilterChip>
         {corridors.map((c) => (
-          <Chip key={c} href={chipHref({ corridor: c, category, q })} active={corridor === c}>
+          <FilterChip key={c} href={chipHref({ corridor: c, category, q })} active={corridor === c}>
             {c}
-          </Chip>
+          </FilterChip>
         ))}
       </div>
-      <div className="mb-4 flex gap-1.5 overflow-x-auto pb-1">
-        <Chip href={chipHref({ corridor, q })} active={!category}>
+      <div
+        role="group"
+        aria-label="Filter by type"
+        className="mb-4 flex gap-1.5 overflow-x-auto pb-1"
+      >
+        <FilterChip href={chipHref({ corridor, q })} active={!category}>
           All types
-        </Chip>
+        </FilterChip>
         {categories.map((c) => (
-          <Chip key={c} href={chipHref({ corridor, category: c, q })} active={category === c}>
+          <FilterChip key={c} href={chipHref({ corridor, category: c, q })} active={category === c}>
             {categoryMeta[c].label}
-          </Chip>
+          </FilterChip>
         ))}
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-6 text-center">
-          <p className="text-[13px] font-semibold text-[var(--cc-text)]">No targets match</p>
-          <p className="mt-1 text-[12px] text-[var(--cc-text-3)]">
-            Try a different corridor or type, or{" "}
-            <Link href="/business-targets" className="text-[var(--cc-cyan)]">
-              clear filters
+        <EmptyState
+          icon={SearchX}
+          title="No targets match"
+          body="Try a different corridor or type, or clear the filters to see the full target book."
+          action={
+            <Link
+              href="/business-targets"
+              className="cc-lift inline-flex min-h-9 items-center rounded-[var(--cc-r-icon)] border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] px-3 font-mono text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--cc-cyan)]"
+            >
+              Clear filters
             </Link>
-            .
-          </p>
-        </div>
+          }
+        />
       ) : grouped ? (
-        <div className="space-y-5">
+        <div className="space-y-6">
           {grouped.map(({ corridor: c, targets }) => (
             <section key={c} aria-label={c}>
-              <div className="mb-2 flex items-center gap-2.5">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-                  {c}
-                </span>
-                <span className="h-px flex-1 bg-[var(--cc-border)]" />
-                <span className="font-mono text-[10px] text-[var(--cc-text-dim)]">
-                  {targets.length}
-                </span>
-              </div>
+              <CorridorHeader
+                corridor={c}
+                count={targets.length}
+                windowHint={visitWindowHint(targets[0])}
+              />
               <div className="grid gap-2.5 sm:grid-cols-2">
                 {targets.map((target) => (
                   <TargetCard key={target.id} target={target} />

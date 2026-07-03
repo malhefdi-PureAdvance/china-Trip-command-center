@@ -1,17 +1,17 @@
-import { Badge, type BadgeProps } from "@pure-advance/design-system";
+import { Chip, type ChipTone } from "@/components/command-kit";
 
-const toneByStatus: Record<string, BadgeProps["tone"]> = {
+const toneByStatus: Record<string, ChipTone> = {
   confirmed: "green",
-  profiled: "cyan",
+  profiled: "cyanTint",
   proposed: "amber",
   source_needed: "amber",
   draft: "neutral",
-  open: "coral",
+  open: "amber",
   qualified: "green"
 };
 
 export function StatusPill({ status }: Readonly<{ status: string }>) {
   const label = status.replaceAll("_", " ");
 
-  return <Badge tone={toneByStatus[status] ?? "neutral"}>{label}</Badge>;
+  return <Chip tone={toneByStatus[status] ?? "neutral"}>{label}</Chip>;
 }

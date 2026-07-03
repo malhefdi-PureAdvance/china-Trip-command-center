@@ -1,8 +1,7 @@
 import { KeyRound, Lock, ShieldCheck, Users } from "lucide-react";
 
-import { Badge } from "@pure-advance/design-system";
-
 import { AuthPanel } from "@/components/auth-panel";
+import { Callout, Chip, SectionHeading } from "@/components/command-kit";
 import { PageHeader } from "@/components/page-header";
 import { getPrivateTierState, privateTierCopy } from "@/lib/private-tier";
 
@@ -33,58 +32,50 @@ export default function PrivatePage() {
         badge="Tier 2 · shell"
       />
 
-      <section aria-label="Tier status" className="mb-4">
-        <div className="mb-2 flex items-center gap-2.5">
-          <KeyRound className="size-4 text-[var(--cc-cyan)]" aria-hidden="true" />
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-            Tier status
-          </span>
-          <span className="h-px flex-1 bg-[var(--cc-border)]" />
-          <Badge tone={tier === "enabled" ? "amber" : "neutral"}>{copy.label}</Badge>
-        </div>
-        <p className="mb-3 text-[12.5px] leading-[1.5] text-[var(--cc-text-2)]">{copy.detail}</p>
+      <section aria-label="Tier status" className="mb-5">
+        <SectionHeading
+          icon={KeyRound}
+          title="Tier status"
+          trailing={<Chip tone={tier === "enabled" ? "amber" : "neutral"}>{copy.label}</Chip>}
+        />
+        <p className="mb-3 max-w-2xl text-[12.5px] leading-[1.55] text-[var(--cc-text-2)]">
+          {copy.detail}
+        </p>
         <AuthPanel />
       </section>
 
-      <section aria-label="Role model" className="mb-4">
-        <div className="mb-2 flex items-center gap-2.5">
-          <Users className="size-4 text-[var(--cc-cyan)]" aria-hidden="true" />
-          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-            Role model
-          </span>
-          <span className="h-px flex-1 bg-[var(--cc-border)]" />
-        </div>
+      <section aria-label="Role model" className="mb-5">
+        <SectionHeading icon={Users} title="Role model" />
         <div className="space-y-2">
           {roleRows.map((row) => (
             <div
               key={row.role}
               className="flex items-start gap-3 rounded-[var(--cc-r-row)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]"
             >
-              <code className="shrink-0 rounded-[var(--cc-r-chip)] bg-[var(--cc-cyan-tint)] px-2 py-1 font-mono text-[10px] font-semibold text-[var(--cc-cyan)]">
+              <code className="shrink-0 rounded-[var(--cc-r-chip)] border border-[var(--cc-cyan-line-soft)] bg-[var(--cc-cyan-tint)] px-2 py-1 font-mono text-[10px] font-semibold text-[var(--cc-cyan)]">
                 {row.role}
               </code>
               <div className="min-w-0">
                 <p className="text-[12.5px] font-semibold text-[var(--cc-text)]">{row.who}</p>
-                <p className="text-[11.5px] text-[var(--cc-text-3)]">{row.access}</p>
+                <p className="mt-0.5 text-[11.5px] leading-[1.45] text-[var(--cc-text-3)]">
+                  {row.access}
+                </p>
               </div>
             </div>
           ))}
         </div>
-        <p className="mt-2 flex items-start gap-2 text-[11.5px] leading-[1.5] text-[var(--cc-text-faint)]">
+        <p className="mt-2.5 flex items-start gap-2 text-[11.5px] leading-[1.5] text-[var(--cc-text-faint)]">
           <ShieldCheck className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
           Row-level security is fail-closed: a signed-in user without a provisioned membership row
           sees nothing. Membership is granted only via the service role.
         </p>
       </section>
 
-      <div className="flex items-start gap-2 rounded-[var(--cc-r-tile)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] p-3">
-        <Lock className="mt-0.5 size-4 shrink-0 text-[var(--cc-text-faint)]" aria-hidden="true" />
-        <p className="text-[11.5px] leading-[1.5] text-[var(--cc-text-3)]">
-          Booking references, gate passes, IDs, payment data, and private contacts never enter this
-          app — even behind auth they stay in the private pack (Tier 3). This page is not cached by
-          the offline service worker and requires a connection.
-        </p>
-      </div>
+      <Callout tone="quiet" icon={Lock} eyebrow="Tier-3 boundary">
+        Booking references, gate passes, IDs, payment data, and private contacts never enter this
+        app — even behind auth they stay in the private pack (Tier 3). This page is not cached by
+        the offline service worker and requires a connection.
+      </Callout>
     </>
   );
 }

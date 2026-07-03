@@ -2,21 +2,28 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   ArrowLeft,
+  ArrowRight,
   CalendarClock,
   CheckCircle2,
-  CircleHelp,
-  ExternalLink,
-  Lightbulb,
+  FileCheck2,
   Lock,
   MapPin,
   Route,
-  Target,
-  TriangleAlert
+  ShieldCheck
 } from "lucide-react";
 
-import { cn } from "@pure-advance/design-system";
-
+import {
+  Callout,
+  Chip,
+  ExternalChip,
+  ExternalLinkCard,
+  FitGauge,
+  IconSquare,
+  KeyFacts,
+  MarkerList
+} from "@/components/command-kit";
 import { SourceConfidenceBadge } from "@/components/source-confidence-badge";
+import { categoryIcons } from "@/components/target-card";
 import { getCurrentMissionNow } from "@/lib/clock";
 import { buildMissionOps, relevanceForTarget } from "@/lib/mission-ops";
 import {
@@ -33,42 +40,36 @@ export function generateStaticParams() {
 
 export const dynamic = "force-dynamic";
 
-const priorityToneClass: Record<string, string> = {
-  cyan: "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint)] text-[var(--cc-cyan)]",
-  green: "border-transparent bg-[var(--cc-green-tint)] text-[var(--cc-green)]",
-  amber: "border-[var(--cc-amber-line)] bg-[var(--cc-amber-tint)] text-[var(--cc-amber-text)]",
-  neutral: "border-[var(--cc-border-strong)] bg-transparent text-[var(--cc-text-3)]"
-};
+const priorityChipTone = {
+  cyan: "cyan",
+  green: "green",
+  amber: "amber",
+  coral: "amber",
+  neutral: "neutral"
+} as const;
 
-function Section({
-  icon: Icon,
+/** Numbered reading section — mono index + real title + hairline rule. */
+function DossierSection({
+  index,
   title,
   children
-}: Readonly<{ icon: typeof Target; title: string; children: React.ReactNode }>) {
+}: Readonly<{ index: number; title: string; children: React.ReactNode }>) {
   return (
-    <section className="mt-5">
-      <h2 className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-        <Icon className="size-3.5" aria-hidden="true" />
-        {title}
-      </h2>
-      <div className="mt-2 text-[13px] leading-[1.5] text-[var(--cc-text-2)]">{children}</div>
+    <section className="mt-6">
+      <header className="flex items-center gap-2.5">
+        <span
+          className="font-mono text-[10.5px] font-bold leading-none text-[var(--cc-cyan)]"
+          aria-hidden="true"
+        >
+          {String(index).padStart(2, "0")}
+        </span>
+        <h2 className="min-w-0 text-[15px] font-bold leading-tight tracking-[-0.01em] text-[var(--cc-text)]">
+          {title}
+        </h2>
+        <span className="h-px min-w-4 flex-1 bg-[var(--cc-border)]" aria-hidden="true" />
+      </header>
+      <div className="mt-2.5">{children}</div>
     </section>
-  );
-}
-
-function Bullets({ items }: Readonly<{ items: string[] }>) {
-  return (
-    <ul className="space-y-1.5">
-      {items.map((item, index) => (
-        <li key={index} className="flex gap-2">
-          <span
-            className="mt-1.5 size-1 shrink-0 rounded-full bg-[var(--cc-cyan)]"
-            aria-hidden="true"
-          />
-          <span>{item}</span>
-        </li>
-      ))}
-    </ul>
   );
 }
 
@@ -80,148 +81,186 @@ export default async function TargetDossierPage({
   if (!target) notFound();
 
   const priority = priorityMeta[target.priority];
+  const category = categoryMeta[target.category];
+  const CategoryIcon = categoryIcons[target.category];
   const relevance = relevanceForTarget(buildMissionOps(getCurrentMissionNow()), target);
+  const visitWindow = visitWindowHint(target);
+
+  const sections: { title: string; body: React.ReactNode }[] = [
+    {
+      title: "What they do",
+      body: <div className="cc-prose">{target.whatTheyDo}</div>
+    },
+    {
+      title: "Why it matters",
+      body: <div className="cc-prose">{target.whyItMatters}</div>
+    },
+    {
+      title: "Visit objective & route",
+      body: (
+        <>
+          <div className="cc-prose">{target.visitObjective}</div>
+          <div className="mt-3 flex max-w-[64ch] items-start gap-2.5 rounded-[var(--cc-r-tile)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] p-2.5">
+            <IconSquare icon={Route} size="sm" />
+            <div className="min-w-0">
+              <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.13em] text-[var(--cc-text-faint)]">
+                Approach route
+              </p>
+              <p className="mt-1 text-[12.5px] leading-[1.5] text-[var(--cc-text-2)]">
+                {target.route}
+              </p>
+            </div>
+          </div>
+        </>
+      )
+    }
+  ];
+
+  if (target.talkingPoints.length > 0) {
+    sections.push({
+      title: "Talking points",
+      body: <MarkerList items={target.talkingPoints} marker="tick" className="max-w-[64ch]" />
+    });
+  }
+
+  if (target.openQuestions.length > 0) {
+    sections.push({
+      title: "Open questions",
+      body: <MarkerList items={target.openQuestions} marker="question" className="max-w-[64ch]" />
+    });
+  }
+
+  if (target.risks.length > 0) {
+    sections.push({
+      title: "Risks & unknowns",
+      body: (
+        <Callout tone="warn" className="max-w-[64ch]">
+          <MarkerList items={target.risks} marker="risk" />
+        </Callout>
+      )
+    });
+  }
+
+  if (target.publicSources.length > 0) {
+    sections.push({
+      title: "Public sources",
+      body: (
+        <div className="grid max-w-[64ch] gap-2 sm:grid-cols-2">
+          {target.publicSources.map((url) => (
+            <ExternalLinkCard key={url} href={url} />
+          ))}
+        </div>
+      )
+    });
+  }
 
   return (
     <>
       <Link
         href="/business-targets"
-        className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--cc-text-3)]"
+        className="inline-flex min-h-9 items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--cc-text-3)] transition-colors hover:text-[var(--cc-text)]"
       >
         <ArrowLeft className="size-4" aria-hidden="true" />
-        Targets
+        All targets
       </Link>
 
-      <header className="mt-3 border-b border-[var(--cc-border)] pb-4">
-        <div className="flex flex-wrap items-center gap-2">
-          <span
-            className={cn(
-              "rounded-full border px-2 py-1 font-mono text-[9px] font-semibold uppercase leading-none tracking-[0.08em]",
-              priorityToneClass[priority.tone]
-            )}
-          >
-            {priority.label}
-          </span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--cc-text-faint)]">
-            {categoryMeta[target.category].label}
-          </span>
-          {typeof target.fitScore === "number" ? (
-            <span className="font-mono text-[10px] font-semibold text-[var(--cc-cyan)]">
-              FIT {target.fitScore}
-            </span>
+      {/* Masthead — the inspect surface */}
+      <header className="relative mt-2 overflow-hidden rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] shadow-[var(--cc-elev-2)]">
+        <span
+          className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-[var(--cc-cyan)] via-[var(--cc-cyan-line-soft)] to-transparent"
+          aria-hidden="true"
+        />
+        <div className="p-4">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Chip tone={priorityChipTone[priority.tone]}>{priority.label}</Chip>
+            <Chip tone="soft" icon={CategoryIcon}>
+              {category.label}
+            </Chip>
+            {typeof target.fitScore === "number" ? (
+              <FitGauge score={target.fitScore} className="ml-auto" />
+            ) : null}
+          </div>
+          <h1 className="mt-3 text-balance text-[23px] font-[var(--cc-fw-x)] leading-[1.08] tracking-[var(--cc-ls-display)] text-[var(--cc-text)]">
+            {target.name}
+          </h1>
+          {target.nameLocal ? (
+            <p className="mt-1 font-mono text-[11.5px] text-[var(--cc-text-faint)]">
+              {target.nameLocal}
+            </p>
           ) : null}
+          <p className="mt-2.5 max-w-[62ch] text-[13.5px] leading-[1.55] text-[var(--cc-text-2)]">
+            {target.oneLiner}
+          </p>
         </div>
-        <h1 className="mt-2 text-balance text-[22px] font-[var(--cc-fw-x)] leading-tight tracking-[var(--cc-ls-display)] text-[var(--cc-text)]">
-          {target.name}
-        </h1>
-        {target.nameLocal ? (
-          <p className="mt-0.5 font-mono text-[12px] text-[var(--cc-text-faint)]">
-            {target.nameLocal}
-          </p>
-        ) : null}
-        <p className="mt-2 flex items-center gap-1.5 text-[12px] text-[var(--cc-text-3)]">
-          <MapPin className="size-3.5 shrink-0 text-[var(--cc-cyan)]" aria-hidden="true" />
-          {target.area} · {target.corridor}
-        </p>
-        {visitWindowHint(target) ? (
-          <p className="mt-1.5 flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.05em] text-[var(--cc-amber-text)]">
-            <CalendarClock className="size-3.5 shrink-0" aria-hidden="true" />
-            {visitWindowHint(target)}
-          </p>
-        ) : null}
-        <p className="mt-3 text-[13.5px] leading-[1.5] text-[var(--cc-text)]">{target.oneLiner}</p>
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <SourceConfidenceBadge confidence={target.confidence} />
+        <div className="border-t border-[var(--cc-border-faint)] p-4 pt-3">
+          <KeyFacts
+            items={[
+              {
+                label: "Location",
+                value: `${target.area} · ${target.corridor}`,
+                icon: MapPin,
+                span: true
+              },
+              visitWindow
+                ? {
+                    label: "Visit window",
+                    value: visitWindow,
+                    icon: CalendarClock,
+                    span: visitWindow.length > 30
+                  }
+                : null,
+              {
+                label: "Source status",
+                value: (
+                  <span className="flex flex-wrap items-center gap-1.5">
+                    <SourceConfidenceBadge confidence={target.confidence} />
+                    <Chip tone="soft" icon={FileCheck2}>
+                      {target.status.replaceAll("_", " ")}
+                    </Chip>
+                  </span>
+                ),
+                icon: ShieldCheck,
+                span: !visitWindow || visitWindow.length > 30
+              }
+            ]}
+          />
           {target.website ? (
-            <a
-              href={target.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 font-mono text-[11px] text-[var(--cc-cyan)]"
-            >
-              <ExternalLink className="size-3.5" aria-hidden="true" />
-              Website
-            </a>
+            <div className="mt-3.5 flex flex-wrap gap-2">
+              <ExternalChip href={target.website}>Website</ExternalChip>
+            </div>
           ) : null}
         </div>
       </header>
 
-      <section className="mt-4 rounded-[var(--cc-r-card)] border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] p-3">
-        <p className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-          <CheckCircle2 className="size-3.5" aria-hidden="true" />
-          Next action
-        </p>
-        <p className="mt-2 text-[13px] leading-[1.5] text-[var(--cc-text)]">
+      {/* Command panel — what to do, and why now */}
+      <Callout tone="action" rail icon={CheckCircle2} eyebrow="Next action" className="mt-3">
+        <p className="text-[13.5px] font-medium leading-[1.5] text-[var(--cc-text)]">
           {relevance.nextAction}
         </p>
-        <p className="mt-2 text-[12px] leading-[1.5] text-[var(--cc-text-3)]">
+        <p className="mt-2 border-t border-[var(--cc-cyan-line-soft)] pt-2 text-[12.5px] leading-[1.5] text-[var(--cc-text-3)]">
           <span className="font-semibold text-[var(--cc-text-2)]">Why now:</span> {relevance.whyNow}
         </p>
         {relevance.relatedEvent ? (
           <Link
             href="/itinerary"
-            className="mt-3 inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--cc-cyan)]"
+            className="mt-2.5 inline-flex min-h-9 items-center gap-1.5 rounded-[var(--cc-r-icon)] border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] px-3 font-mono text-[10px] font-semibold uppercase tracking-[0.06em] text-[var(--cc-cyan)] cc-lift"
           >
             View related timeline block
-            <Route className="size-3.5" aria-hidden="true" />
+            <ArrowRight className="size-3.5" aria-hidden="true" />
           </Link>
         ) : null}
-      </section>
+      </Callout>
 
-      <Section icon={Target} title="What they do">
-        <p>{target.whatTheyDo}</p>
-      </Section>
-      <Section icon={Lightbulb} title="Why it matters">
-        <p>{target.whyItMatters}</p>
-      </Section>
-      <Section icon={Route} title="Visit objective & route">
-        <p>{target.visitObjective}</p>
-        <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.06em] text-[var(--cc-text-faint)]">
-          Route · {target.route}
-        </p>
-      </Section>
-      {target.talkingPoints.length > 0 ? (
-        <Section icon={Lightbulb} title="Talking points">
-          <Bullets items={target.talkingPoints} />
-        </Section>
-      ) : null}
-      {target.openQuestions.length > 0 ? (
-        <Section icon={CircleHelp} title="Open questions">
-          <Bullets items={target.openQuestions} />
-        </Section>
-      ) : null}
-      {target.risks.length > 0 ? (
-        <Section icon={TriangleAlert} title="Risks & unknowns">
-          <Bullets items={target.risks} />
-        </Section>
-      ) : null}
+      {sections.map((section, index) => (
+        <DossierSection key={section.title} index={index + 1} title={section.title}>
+          {section.body}
+        </DossierSection>
+      ))}
 
-      <div className="mt-6 flex items-start gap-2 rounded-[var(--cc-r-tile)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] p-3">
-        <Lock className="mt-0.5 size-4 shrink-0 text-[var(--cc-text-faint)]" aria-hidden="true" />
-        <p className="text-[11.5px] leading-[1.5] text-[var(--cc-text-3)]">
-          Contact details, exact address, and appointment logistics are kept in your private pack —
-          verify privately before outreach. This dossier holds public, app-safe intelligence only.
-        </p>
-      </div>
-
-      {target.publicSources.length > 0 ? (
-        <Section icon={ExternalLink} title="Public sources">
-          <ul className="space-y-1.5">
-            {target.publicSources.map((url) => (
-              <li key={url} className="min-w-0">
-                <a
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block truncate font-mono text-[11px] text-[var(--cc-cyan)]"
-                >
-                  {url}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </Section>
-      ) : null}
+      <Callout tone="quiet" icon={Lock} eyebrow="Private-pack boundary" className="mt-6">
+        Contact details, exact address, and appointment logistics are kept in your private pack —
+        verify privately before outreach. This dossier holds public, app-safe intelligence only.
+      </Callout>
     </>
   );
 }

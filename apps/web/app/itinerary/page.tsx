@@ -46,13 +46,20 @@ export default function ItineraryPage() {
             <div
               key={phase.id}
               className={cn(
-                "min-w-0 flex-1 rounded-[var(--cc-r-icon)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] px-2 py-1.5 text-center",
-                isActive && "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)]"
+                "relative min-w-0 flex-1 overflow-hidden rounded-[var(--cc-r-icon)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] px-2 py-2 text-center",
+                isActive &&
+                  "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] shadow-[var(--cc-elev-1)]"
               )}
             >
+              {isActive ? (
+                <span
+                  className="absolute inset-x-0 top-0 h-[2px] bg-[var(--cc-cyan)]"
+                  aria-hidden="true"
+                />
+              ) : null}
               <div
                 className={cn(
-                  "font-mono text-[9px] tracking-[0.1em]",
+                  "font-mono text-[9px] font-semibold tracking-[0.1em]",
                   isActive ? "text-[var(--cc-cyan)]" : "text-[var(--cc-text-faint)]"
                 )}
               >
@@ -60,7 +67,7 @@ export default function ItineraryPage() {
               </div>
               <div
                 className={cn(
-                  "mt-0.5 truncate text-[11px] font-semibold",
+                  "mt-1 truncate text-[11px] font-semibold",
                   isActive ? "text-[var(--cc-text)]" : "text-[var(--cc-text-2)]"
                 )}
               >

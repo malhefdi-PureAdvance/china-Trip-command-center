@@ -112,7 +112,12 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
           })}
         </nav>
       </header>
-      <main className="pb-[calc(88px+env(safe-area-inset-bottom))] md:pb-0">{children}</main>
+      <main
+        key={pathname}
+        className="cc-route-enter pb-[calc(88px+env(safe-area-inset-bottom))] md:pb-0"
+      >
+        {children}
+      </main>
       <nav
         aria-label="Primary"
         className="fixed inset-x-3 bottom-[calc(0.5rem+env(safe-area-inset-bottom))] z-50 grid grid-cols-5 gap-1 rounded-[20px] border border-[var(--cc-border)] bg-[color-mix(in_srgb,var(--cc-surface)_94%,transparent)] p-1 shadow-[0_16px_38px_rgba(0,0,0,0.24)] backdrop-blur md:hidden"

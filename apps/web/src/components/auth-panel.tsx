@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { LogIn, LogOut, MailCheck, ShieldAlert } from "lucide-react";
 
-import { Badge, Button } from "@pure-advance/design-system";
+import { Button } from "@pure-advance/design-system";
 
 import { getBrowserSupabase } from "@/lib/supabase-browser";
 
@@ -30,12 +30,14 @@ export function AuthPanel() {
 
   if (!supabase) {
     return (
-      <div className="flex items-start gap-2.5 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] p-3">
-        <ShieldAlert
-          className="mt-0.5 size-4 shrink-0 text-[var(--cc-text-faint)]"
+      <div className="flex items-start gap-2.5 rounded-[var(--cc-r-card)] border border-dashed border-[var(--cc-border-strong)] bg-[var(--cc-surface-inset)] p-3">
+        <span
+          className="grid size-7 shrink-0 place-items-center rounded-[8px] bg-[var(--cc-surface-raised)] text-[var(--cc-text-3)]"
           aria-hidden="true"
-        />
-        <p className="text-[12px] leading-[1.5] text-[var(--cc-text-3)]">
+        >
+          <ShieldAlert className="size-3.5" />
+        </span>
+        <p className="text-[12px] leading-[1.55] text-[var(--cc-text-3)]">
           Sign-in is disabled. The auth shell activates only after Mohammed verifies row-level
           security and redirect URLs, then enables the private-tier flag.
         </p>
@@ -45,10 +47,14 @@ export function AuthPanel() {
 
   if (session) {
     return (
-      <div className="rounded-[var(--cc-r-card)] border border-[var(--cc-cyan-line)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]">
+      <div className="relative overflow-hidden rounded-[var(--cc-r-card)] border border-[var(--cc-cyan-line)] bg-[var(--cc-surface)] p-3 pl-[15px] shadow-[var(--cc-elev-1)]">
+        <span
+          className="absolute inset-y-0 left-0 w-[3px] bg-[var(--cc-cyan)]"
+          aria-hidden="true"
+        />
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
-            <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--cc-cyan)]">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
               Signed in
             </p>
             <p className="mt-1 truncate text-[13px] font-semibold text-[var(--cc-text)]">
@@ -115,8 +121,11 @@ export function AuthPanel() {
           Sign-in link could not be sent — verify auth settings and redirect URLs.
         </p>
       ) : null}
-      <div className="mt-2">
-        <Badge tone="amber">Enabled · not verified</Badge>
+      <div className="mt-2.5">
+        <span className="inline-flex items-center gap-1.5 rounded-[var(--cc-r-chip)] border border-[var(--cc-amber-line)] bg-[var(--cc-amber-tint)] px-[8px] py-[4px] font-mono text-[9.5px] uppercase leading-none tracking-[0.07em] text-[var(--cc-amber-text)]">
+          <span className="size-[6px] rounded-full bg-[var(--cc-amber)]" aria-hidden="true" />
+          Enabled · not verified
+        </span>
       </div>
     </form>
   );
