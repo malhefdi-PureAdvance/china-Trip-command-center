@@ -12,6 +12,8 @@ import {
   ShieldCheck
 } from "lucide-react";
 
+import { cn } from "@pure-advance/design-system";
+
 import {
   Callout,
   Chip,
@@ -49,26 +51,58 @@ const priorityChipTone = {
 } as const;
 
 /** Numbered reading section — mono index + real title + hairline rule. */
+const dossierTone = [
+  {
+    index: "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] text-[var(--cc-cyan)]",
+    rail: "from-[var(--cc-cyan)]"
+  },
+  {
+    index: "border-[var(--cc-purple-line)] bg-[var(--cc-purple-tint)] text-[var(--cc-purple-soft)]",
+    rail: "from-[var(--cc-purple)]"
+  },
+  {
+    index: "border-[var(--cc-amber-line)] bg-[var(--cc-amber-tint)] text-[var(--cc-amber-text)]",
+    rail: "from-[var(--cc-amber)]"
+  }
+] as const;
+
 function DossierSection({
   index,
   title,
   children
 }: Readonly<{ index: number; title: string; children: React.ReactNode }>) {
+  const tone = dossierTone[(index - 1) % dossierTone.length];
+
   return (
-    <section className="mt-6">
-      <header className="flex items-center gap-2.5">
-        <span
-          className="font-mono text-[10.5px] font-bold leading-none text-[var(--cc-cyan)]"
-          aria-hidden="true"
-        >
-          {String(index).padStart(2, "0")}
-        </span>
-        <h2 className="min-w-0 text-[15px] font-bold leading-tight tracking-[-0.01em] text-[var(--cc-text)]">
-          {title}
-        </h2>
-        <span className="h-px min-w-4 flex-1 bg-[var(--cc-border)]" aria-hidden="true" />
-      </header>
-      <div className="mt-2.5">{children}</div>
+    <section className="group relative mt-4 overflow-hidden rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] shadow-[var(--cc-elev-1)]">
+      <span
+        className={cn(
+          "absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r to-transparent",
+          tone.rail
+        )}
+        aria-hidden="true"
+      />
+      <div className="p-4">
+        <header className="flex items-start gap-3">
+          <span
+            className={cn(
+              "grid size-8 shrink-0 place-items-center rounded-[10px] border font-mono text-[10px] font-black leading-none shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]",
+              tone.index
+            )}
+            aria-hidden="true"
+          >
+            {String(index).padStart(2, "0")}
+          </span>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-[19px] font-[var(--cc-fw-x)] leading-[1.08] tracking-[-0.02em] text-[var(--cc-text)] sm:text-[21px]">
+              {title}
+            </h2>
+          </div>
+        </header>
+        <div className="mt-3 rounded-[var(--cc-r-tile)] border border-[var(--cc-border-faint)] bg-[var(--cc-surface-inset)] p-3.5 sm:p-4">
+          {children}
+        </div>
+      </div>
     </section>
   );
 }

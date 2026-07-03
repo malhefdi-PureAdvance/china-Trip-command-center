@@ -34,4 +34,21 @@ test.describe("real mission timeline", () => {
     await expect(body).not.toContainText("April");
     await expect(body).not.toContainText("2026-04");
   });
+
+  test("Itinerary week tabs and day filters are tappable", async ({ page }) => {
+    await page.goto("/itinerary");
+
+    await page.getByRole("tab", { name: /WK 2/i }).click();
+    await expect(page.getByRole("tab", { name: /WK 2/i })).toHaveAttribute("aria-selected", "true");
+    await expect(
+      page.getByText("Week 2 kickoff · InnoX mentors & KAUST Shenzhen Hub")
+    ).toBeVisible();
+    await expect(page.getByText(/LEAP East at HKCEC/)).toHaveCount(0);
+
+    await page.getByRole("button", { name: /JUL 13/i }).click();
+    await expect(
+      page.getByText("Week 2 kickoff · InnoX mentors & KAUST Shenzhen Hub")
+    ).toBeVisible();
+    await expect(page.getByRole("button", { name: "All days" })).toBeVisible();
+  });
 });
