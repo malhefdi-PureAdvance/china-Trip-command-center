@@ -6,3 +6,9 @@ pnpm-lock.yaml
 **/.next/
 **/playwright-report/
 **/test-results/
+
+# Generated offline flight pack artifact (see apps/web/scripts/generate-offline-pack.ts)
+apps/web/public/offline-pack/
+
+# Hermes planning workspace
+.hermes/

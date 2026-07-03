@@ -86,8 +86,14 @@ export function warmableUrls(manifest: OfflinePackManifest): string[] {
 }
 
 /** Best-effort: fetching each public route lets the active service worker
- *  runtime-cache it (network-first handler). No worker → no-op. */
+ *  runtime-cache it (network-first handler). Warming only makes sense when a
+ *  worker actually controls the page — without one (dev, first visit before
+ *  activation) the fetches cache nothing, so skip them entirely. */
 async function warmRouteCache(manifest: OfflinePackManifest): Promise<number> {
+  const workerActive =
+    typeof navigator !== "undefined" && Boolean(navigator.serviceWorker?.controller);
+  if (!workerActive) return 0;
+
   let warmed = 0;
   for (const route of warmableUrls(manifest)) {
     try {
