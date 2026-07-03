@@ -357,10 +357,13 @@ export function MarkerList({
   return (
     <ul className={cn("space-y-2", className)}>
       {items.map((item, index) => (
-        <li key={index} className="flex gap-2.5">
+        <li
+          key={index}
+          className="flex gap-2.5 rounded-[var(--cc-r-tile)] border border-[var(--cc-border-faint)] bg-[var(--cc-surface)] px-3 py-2.5 shadow-[0_1px_0_rgba(0,0,0,0.02)]"
+        >
           {marker === "point" ? (
             <span
-              className="mt-[7px] size-1 shrink-0 rounded-full bg-[var(--cc-cyan)]"
+              className="mt-[7px] size-1.5 shrink-0 rounded-full bg-[var(--cc-cyan)]"
               aria-hidden="true"
             />
           ) : (
@@ -369,13 +372,15 @@ export function MarkerList({
               const Icon = meta.icon;
               return (
                 <Icon
-                  className={cn("mt-[2px] size-3.5 shrink-0", meta.className)}
+                  className={cn("mt-[2px] size-4 shrink-0", meta.className)}
                   aria-hidden="true"
                 />
               );
             })()
           )}
-          <span className="min-w-0 text-[13px] leading-[1.55] text-[var(--cc-text-2)]">{item}</span>
+          <span className="min-w-0 text-[13.5px] leading-[1.5] text-[var(--cc-text-2)]">
+            {item}
+          </span>
         </li>
       ))}
     </ul>

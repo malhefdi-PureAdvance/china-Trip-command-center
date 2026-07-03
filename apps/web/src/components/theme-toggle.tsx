@@ -84,7 +84,7 @@ export function ThemeToggle() {
 
   return (
     <div
-      className="inline-flex rounded-[9px] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] p-[3px]"
+      className="inline-flex rounded-full border border-[var(--cc-border-faint)] bg-[var(--cc-surface-inset)] p-[2px] opacity-80"
       role="group"
       aria-label="Theme preference"
     >
@@ -101,15 +101,16 @@ export function ThemeToggle() {
             aria-pressed={isActive}
             aria-label={`${item.label} theme`}
             className={cn(
-              "h-8 rounded-[6px] border-0 px-2.5 font-mono uppercase tracking-[0.06em]",
-              isActive && "bg-[var(--cc-cyan)] text-[var(--cc-cyan-ink)]"
+              "h-8 rounded-full border-0 px-2 font-mono uppercase tracking-[0.06em]",
+              isActive &&
+                "bg-[var(--cc-cyan)] text-[var(--cc-cyan-ink)] shadow-[var(--cc-shadow-cta)]"
             )}
             onClick={() => {
               setPreference(item.value);
             }}
           >
             <Icon className="size-4" aria-hidden="true" />
-            <span className="sr-only sm:not-sr-only sm:text-[var(--cc-fs-caption)]">
+            <span className="sr-only xl:not-sr-only xl:text-[var(--cc-fs-caption)]">
               {item.label}
             </span>
           </Button>

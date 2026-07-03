@@ -1,6 +1,4 @@
-import { cn } from "@pure-advance/design-system";
-
-import { MissionTimelineView } from "@/components/mission-timeline";
+import { ItineraryExplorer } from "@/components/itinerary-explorer";
 import { PageHeader } from "@/components/page-header";
 import { getCurrentMissionNow } from "@/lib/clock";
 import { demoData, getMissionTimeline, missionPhases } from "@/lib/demo-data";
@@ -38,46 +36,7 @@ export default function ItineraryPage() {
         summary={`${shortDate(firstKey)} – ${shortDate(lastKey)} · Hong Kong → Shenzhen · Tech Founders program`}
         badge={`${timeline.totalEvents} events`}
       />
-      <section aria-label="Program weeks" className="mb-2 flex gap-1.5">
-        {weeks.map((phase) => {
-          const isActive = phase.id === currentWeek;
-
-          return (
-            <div
-              key={phase.id}
-              className={cn(
-                "relative min-w-0 flex-1 overflow-hidden rounded-[var(--cc-r-icon)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] px-2 py-2 text-center",
-                isActive &&
-                  "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] shadow-[var(--cc-elev-1)]"
-              )}
-            >
-              {isActive ? (
-                <span
-                  className="absolute inset-x-0 top-0 h-[2px] bg-[var(--cc-cyan)]"
-                  aria-hidden="true"
-                />
-              ) : null}
-              <div
-                className={cn(
-                  "font-mono text-[9px] font-semibold tracking-[0.1em]",
-                  isActive ? "text-[var(--cc-cyan)]" : "text-[var(--cc-text-faint)]"
-                )}
-              >
-                {phase.label.replace("Week ", "WK ")} · {phase.weekTag}
-              </div>
-              <div
-                className={cn(
-                  "mt-1 truncate text-[11px] font-semibold",
-                  isActive ? "text-[var(--cc-text)]" : "text-[var(--cc-text-2)]"
-                )}
-              >
-                {phase.name}
-              </div>
-            </div>
-          );
-        })}
-      </section>
-      <MissionTimelineView timeline={timeline} />
+      <ItineraryExplorer timeline={timeline} weeks={weeks} currentWeekId={currentWeek} />
     </>
   );
 }

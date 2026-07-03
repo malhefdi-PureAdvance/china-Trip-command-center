@@ -120,9 +120,10 @@ a {
 /* Reading typography for dossier prose — the one place body copy is meant
    to be read end-to-end, so it gets more size, leading, and measure. */
 .cc-prose {
-  max-width: 64ch;
-  font-size: 13.5px;
-  line-height: 1.62;
+  max-width: 62ch;
+  font-size: clamp(14.5px, 1.15vw, 16px);
+  line-height: 1.72;
+  letter-spacing: -0.005em;
   color: var(--cc-text-2);
 }
 
