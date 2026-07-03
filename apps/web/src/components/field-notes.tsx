@@ -7,7 +7,13 @@ import { CloudUpload, KeyRound, NotebookPen, Plus, RefreshCw, Trash2 } from "luc
 
 import { Button, Card, CardContent, CardHeader, CardTitle, cn } from "@pure-advance/design-system";
 
-import { Chip, EmptyState, IconSquare, type ChipTone } from "@/components/command-kit";
+import {
+  Chip,
+  EmptyState,
+  IconSquare,
+  SectionHeading,
+  type ChipTone
+} from "@/components/command-kit";
 import type { FieldNotePrompt } from "@/lib/mission-ops";
 import { getBrowserSupabase } from "@/lib/supabase-browser";
 import {
@@ -216,24 +222,23 @@ export function FieldNotes({
 
   return (
     <section aria-label="Field capture" className="mt-6">
-      <div className="mb-2 flex min-w-0 items-center gap-2.5">
-        <NotebookPen className="size-4 shrink-0 text-[var(--cc-cyan)]" aria-hidden="true" />
-        <span className="shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-          Field capture
-        </span>
-        <span className="h-px min-w-3 flex-1 bg-[var(--cc-border)]" aria-hidden="true" />
-        {syncState === "signed_out" ? (
-          <Link
-            href="/private"
-            className="cc-lift inline-flex min-h-7 items-center gap-1 rounded-[var(--cc-r-chip)] border border-[var(--cc-cyan-line-soft)] bg-[var(--cc-cyan-tint-2)] px-2 font-mono text-[9.5px] uppercase leading-none tracking-[0.07em] text-[var(--cc-cyan)]"
-          >
-            <KeyRound className="size-3" aria-hidden="true" />
-            {syncMeta.signed_out.text}
-          </Link>
-        ) : (
-          <SyncChip state={syncState} />
-        )}
-      </div>
+      <SectionHeading
+        icon={NotebookPen}
+        title="Field capture"
+        trailing={
+          syncState === "signed_out" ? (
+            <Link
+              href="/private"
+              className="cc-lift cc-press inline-flex min-h-9 items-center gap-1 rounded-[var(--cc-r-chip)] border border-[var(--cc-cyan-line-soft)] bg-[var(--cc-cyan-tint-2)] px-2.5 font-mono text-[9.5px] uppercase leading-none tracking-[0.07em] text-[var(--cc-cyan)]"
+            >
+              <KeyRound className="size-3" aria-hidden="true" />
+              {syncMeta.signed_out.text}
+            </Link>
+          ) : (
+            <SyncChip state={syncState} />
+          )
+        }
+      />
 
       {session ? (
         <div className="mb-3 flex items-start justify-between gap-3 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]">
@@ -278,27 +283,26 @@ export function FieldNotes({
       ) : null}
 
       {prompts.length > 0 ? (
-        <div className="mb-3 grid gap-2.5 lg:grid-cols-2">
-          {prompts.map((prompt) => (
-            <button
-              key={prompt.id}
-              type="button"
-              onClick={() => applyPrompt(prompt)}
-              className="cc-lift min-w-0 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 text-left shadow-[var(--cc-elev-1)]"
-            >
-              <span className="font-mono text-[9.5px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
-                {prompt.label}
-              </span>
-              <span className="mt-1 block truncate text-[13px] font-bold tracking-[-0.01em] text-[var(--cc-text)]">
-                {prompt.title}
-              </span>
-              <span className="mt-1 line-clamp-2 text-[11.5px] leading-[1.45] text-[var(--cc-text-3)]">
-                Use this app-safe template for the current mission context. Do not add IDs, booking
-                references, payment data, or private contacts.
-              </span>
-            </button>
-          ))}
-        </div>
+        <>
+          <div className="mb-1.5 grid gap-2.5 lg:grid-cols-2">
+            {prompts.map((prompt) => (
+              <button
+                key={prompt.id}
+                type="button"
+                onClick={() => applyPrompt(prompt)}
+                className="cc-lift cc-press min-w-0 rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 text-left shadow-[var(--cc-elev-1)]"
+              >
+                <span className="cc-eyebrow text-[var(--cc-cyan)]">{prompt.label}</span>
+                <span className="mt-1 block truncate text-[13px] font-bold tracking-[-0.01em] text-[var(--cc-text)]">
+                  {prompt.title}
+                </span>
+              </button>
+            ))}
+          </div>
+          <p className="mb-3 text-[11px] leading-[1.5] text-[var(--cc-text-faint)]">
+            App-safe templates — no IDs, booking references, payment data, or private contacts.
+          </p>
+        </>
       ) : null}
 
       <Card className="min-w-0">

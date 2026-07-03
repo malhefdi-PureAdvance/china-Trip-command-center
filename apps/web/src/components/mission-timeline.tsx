@@ -53,6 +53,26 @@ function EventCard({
   const kind = itineraryKindMeta[item.kind];
   const KindIcon = kind.icon;
   const movement = movementKinds.has(item.kind);
+  const accented = glow || key || finale;
+
+  // Movement legs are connective tissue, not destinations: render them as a
+  // slim one-line row so meetings and visits carry the visual mass.
+  if (movement && !finale && !glow && !(intel && intel.subSessions.length > 0)) {
+    return (
+      <article className="flex min-w-0 items-center gap-2 rounded-[var(--cc-r-row)] border border-dashed border-[var(--cc-border)] px-3 py-2">
+        <KindIcon className="size-3.5 shrink-0 text-[var(--cc-text-3)]" aria-hidden="true" />
+        <span className="shrink-0 font-mono text-[11px] font-medium text-[var(--cc-text-3)]">
+          {event.timeLabel}
+        </span>
+        <span className="min-w-0 flex-1 truncate text-[12.5px] font-medium text-[var(--cc-text-2)]">
+          {item.title}
+        </span>
+        <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.08em] text-[var(--cc-text-faint)]">
+          {kind.label}
+        </span>
+      </article>
+    );
+  }
 
   return (
     <article
@@ -69,7 +89,11 @@ function EventCard({
         <span
           className={cn(
             "inline-flex min-w-0 items-center gap-1.5 font-mono text-[11px] font-medium tracking-[0.02em]",
-            finale ? "text-[var(--cc-finale-date)]" : "text-[var(--cc-cyan)]"
+            finale
+              ? "text-[var(--cc-finale-date)]"
+              : accented
+                ? "text-[var(--cc-cyan)]"
+                : "text-[var(--cc-text-3)]"
           )}
         >
           <KindIcon
@@ -112,7 +136,11 @@ function EventCard({
             <MapPin
               className={cn(
                 "size-3.5",
-                finale ? "text-[var(--cc-finale-date)]" : "text-[var(--cc-cyan)]"
+                finale
+                  ? "text-[var(--cc-finale-date)]"
+                  : accented
+                    ? "text-[var(--cc-cyan)]"
+                    : "text-[var(--cc-text-faint)]"
               )}
               aria-hidden="true"
             />
@@ -143,7 +171,11 @@ function EventCard({
               <span
                 className={cn(
                   "w-11 shrink-0 text-right font-mono text-[9.5px] font-semibold uppercase leading-[1.7] tracking-[0.04em]",
-                  finale ? "text-[var(--cc-finale-date)]" : "text-[var(--cc-cyan)]"
+                  finale
+                    ? "text-[var(--cc-finale-date)]"
+                    : accented
+                      ? "text-[var(--cc-cyan)]"
+                      : "text-[var(--cc-text-faint)]"
                 )}
               >
                 {session.time}
@@ -170,7 +202,7 @@ export function MissionTimelineView({ timeline }: Readonly<{ timeline: MissionTi
     <div className="space-y-1">
       {timeline.phases.map(({ phase, days }) => (
         <section key={phase.id} aria-label={`${phase.label} — ${phase.name}`}>
-          <div className="sticky top-0 z-10 -mx-1 mt-4 bg-[color-mix(in_srgb,var(--cc-bg)_92%,transparent)] px-1 py-2 backdrop-blur-sm">
+          <div className="sticky top-0 z-10 -mx-1 mt-4 border-b border-[var(--cc-border-faint)] bg-[color-mix(in_srgb,var(--cc-bg)_92%,transparent)] px-1 py-2 backdrop-blur-sm">
             <div className="flex items-baseline gap-2">
               <span className="shrink-0 rounded-[var(--cc-r-chip)] border border-[var(--cc-cyan-line-soft)] bg-[var(--cc-cyan-tint-2)] px-[8px] py-[4px] font-mono text-[9.5px] font-bold uppercase leading-none tracking-[0.1em] text-[var(--cc-cyan)]">
                 {phase.label} · {phase.weekTag}
@@ -193,7 +225,7 @@ export function MissionTimelineView({ timeline }: Readonly<{ timeline: MissionTi
                   <div className="mission-date font-mono">
                     <div
                       className={cn(
-                        "text-[14px] font-semibold leading-none",
+                        "text-[17px] font-semibold leading-none tracking-[-0.01em]",
                         day.state === "now" ? "text-[var(--cc-cyan)]" : "text-[var(--cc-text-2)]"
                       )}
                     >

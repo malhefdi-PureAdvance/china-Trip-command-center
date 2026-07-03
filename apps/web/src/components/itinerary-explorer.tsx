@@ -53,14 +53,7 @@ export function ItineraryExplorer({ timeline, weeks, currentWeekId }: ItineraryE
     <section className="space-y-3" aria-label="Interactive itinerary planner">
       <div className="rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]">
         <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <p className="font-mono text-[9.5px] font-bold uppercase tracking-[0.13em] text-[var(--cc-cyan)]">
-              Filter timeline
-            </p>
-            <p className="mt-1 text-[12.5px] leading-[1.45] text-[var(--cc-text-3)]">
-              Tap a week, then narrow to a day when you only need the next block.
-            </p>
-          </div>
+          <p className="cc-eyebrow text-[var(--cc-text-3)]">Filter timeline</p>
           <span className="shrink-0 rounded-[var(--cc-r-chip)] border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] px-2.5 py-1 font-mono text-[10px] font-bold text-[var(--cc-cyan)]">
             {filteredTimeline.totalEvents} events
           </span>
@@ -85,12 +78,18 @@ export function ItineraryExplorer({ timeline, weeks, currentWeekId }: ItineraryE
                   setSelectedDay("all");
                 }}
                 className={cn(
-                  "min-h-14 rounded-[var(--cc-r-icon)] border px-3 py-2 text-left transition-[border-color,background-color,box-shadow,transform] active:translate-y-px",
+                  "cc-press relative min-h-14 overflow-hidden rounded-[var(--cc-r-icon)] border px-3 py-2 text-left transition-[border-color,background-color,box-shadow,transform] active:translate-y-px",
                   isActive
-                    ? "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] shadow-[var(--cc-elev-1)]"
+                    ? "border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] pl-[14px] shadow-[var(--cc-elev-1)]"
                     : "border-[var(--cc-border)] bg-[var(--cc-surface-inset)] hover:border-[var(--cc-border-strong)]"
                 )}
               >
+                {isActive ? (
+                  <span
+                    className="absolute inset-y-0 left-0 w-[3px] bg-[var(--cc-cyan)]"
+                    aria-hidden="true"
+                  />
+                ) : null}
                 <span
                   className={cn(
                     "block font-mono text-[9px] font-bold uppercase tracking-[0.12em]",
@@ -107,12 +106,16 @@ export function ItineraryExplorer({ timeline, weeks, currentWeekId }: ItineraryE
           })}
         </div>
 
-        <div className="mt-3 flex gap-2 overflow-x-auto pb-1" aria-label="Day filter">
+        <div
+          className="cc-fade-x mt-3 flex gap-2 overflow-x-auto pb-1 pr-7"
+          aria-label="Day filter"
+        >
           <button
             type="button"
+            aria-pressed={selectedDay === "all"}
             onClick={() => setSelectedDay("all")}
             className={cn(
-              "min-h-10 shrink-0 rounded-[var(--cc-r-chip)] border px-3 font-mono text-[10px] font-bold uppercase tracking-[0.08em]",
+              "cc-press min-h-11 shrink-0 rounded-[var(--cc-r-chip)] border px-3.5 font-mono text-[10px] font-bold uppercase tracking-[0.08em] transition-[border-color,background-color,transform] active:translate-y-px",
               selectedDay === "all"
                 ? "border-[var(--cc-cyan)] bg-[var(--cc-cyan)] text-[var(--cc-cyan-ink)]"
                 : "border-[var(--cc-border)] bg-[var(--cc-surface-inset)] text-[var(--cc-text-3)]"
@@ -124,9 +127,10 @@ export function ItineraryExplorer({ timeline, weeks, currentWeekId }: ItineraryE
             <button
               key={day.date}
               type="button"
+              aria-pressed={selectedDay === day.date}
               onClick={() => setSelectedDay(day.date)}
               className={cn(
-                "min-h-10 shrink-0 rounded-[var(--cc-r-chip)] border px-3 font-mono text-[10px] font-bold uppercase tracking-[0.08em]",
+                "cc-press min-h-11 shrink-0 rounded-[var(--cc-r-chip)] border px-3.5 font-mono text-[10px] font-bold uppercase tracking-[0.08em] transition-[border-color,background-color,transform] active:translate-y-px",
                 selectedDay === day.date
                   ? "border-[var(--cc-cyan)] bg-[var(--cc-cyan)] text-[var(--cc-cyan-ink)]"
                   : "border-[var(--cc-border)] bg-[var(--cc-surface-inset)] text-[var(--cc-text-3)]"

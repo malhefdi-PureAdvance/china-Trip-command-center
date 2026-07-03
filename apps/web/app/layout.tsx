@@ -68,7 +68,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
         <ServiceWorkerRegister />
         <div className="min-h-screen">
-          <div className="border-b border-[var(--cc-border-faint)] bg-[var(--cc-surface-inset)]">
+          <div className="border-b border-[var(--cc-border-faint)]">
             <div className="mx-auto flex max-w-5xl items-center gap-2 px-[var(--cc-pad-screen)] py-1.5 font-mono text-[10px] leading-4 text-[var(--cc-text-faint)] sm:gap-3 sm:py-2 sm:text-[var(--cc-fs-caption)]">
               <ShieldCheck
                 className="size-3.5 shrink-0 text-[var(--cc-green)] sm:size-4"

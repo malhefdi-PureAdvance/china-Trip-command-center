@@ -84,7 +84,7 @@ export function ThemeToggle() {
 
   return (
     <div
-      className="inline-flex rounded-full border border-[var(--cc-border-faint)] bg-[var(--cc-surface-inset)] p-[2px] opacity-80"
+      className="inline-flex rounded-full border border-[var(--cc-border-faint)] bg-[var(--cc-surface-inset)] p-[2px]"
       role="group"
       aria-label="Theme preference"
     >
@@ -96,23 +96,21 @@ export function ThemeToggle() {
           <Button
             key={item.value}
             type="button"
-            variant={isActive ? "secondary" : "ghost"}
+            variant="ghost"
             size="sm"
             aria-pressed={isActive}
             aria-label={`${item.label} theme`}
             className={cn(
-              "h-8 rounded-full border-0 px-2 font-mono uppercase tracking-[0.06em]",
+              "h-9 rounded-full border-0 px-2.5 text-[var(--cc-text-faint)]",
               isActive &&
-                "bg-[var(--cc-cyan)] text-[var(--cc-cyan-ink)] shadow-[var(--cc-shadow-cta)]"
+                "bg-[var(--cc-surface-raised)] text-[var(--cc-text)] shadow-[var(--cc-elev-1)]"
             )}
             onClick={() => {
               setPreference(item.value);
             }}
           >
             <Icon className="size-4" aria-hidden="true" />
-            <span className="sr-only xl:not-sr-only xl:text-[var(--cc-fs-caption)]">
-              {item.label}
-            </span>
+            <span className="sr-only">{item.label}</span>
           </Button>
         );
       })}

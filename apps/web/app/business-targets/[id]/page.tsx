@@ -25,7 +25,7 @@ import {
   MarkerList
 } from "@/components/command-kit";
 import { SourceConfidenceBadge } from "@/components/source-confidence-badge";
-import { categoryIcons } from "@/components/target-card";
+import { categoryIcons, categoryIconTone } from "@/components/target-card";
 import { getCurrentMissionNow } from "@/lib/clock";
 import { buildMissionOps, relevanceForTarget } from "@/lib/mission-ops";
 import {
@@ -49,6 +49,33 @@ const priorityChipTone = {
   coral: "amber",
   neutral: "neutral"
 } as const;
+
+/** Editorial prose: split flowing dossier text into short paragraphs on
+ *  sentence boundaries (~2 per paragraph) and step the opening paragraph up
+ *  as a lede, so briefs scan instead of reading as a wall. Presentation only —
+ *  the underlying dossier strings are untouched. */
+function Prose({ text }: Readonly<{ text: string }>) {
+  const sentences = text.split(/(?<=[.!?])\s+(?=[A-Z0-9"'(])/u);
+  const paragraphs: string[] = [];
+  for (let i = 0; i < sentences.length; i += 2) {
+    paragraphs.push(
+      sentences
+        .slice(i, i + 2)
+        .join(" ")
+        .trim()
+    );
+  }
+
+  return (
+    <div className="cc-prose">
+      {paragraphs.map((paragraph, index) => (
+        <p key={index} className={index === 0 ? "cc-lede" : undefined}>
+          {paragraph}
+        </p>
+      ))}
+    </div>
+  );
+}
 
 /** Numbered reading section — mono index + real title + hairline rule. */
 const dossierTone = [
@@ -83,10 +110,10 @@ function DossierSection({
         aria-hidden="true"
       />
       <div className="p-4">
-        <header className="flex items-start gap-3">
+        <header className="flex items-center gap-3">
           <span
             className={cn(
-              "grid size-8 shrink-0 place-items-center rounded-[10px] border font-mono text-[10px] font-black leading-none shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]",
+              "grid size-7 shrink-0 place-items-center rounded-[9px] border font-mono text-[10px] font-black leading-none shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]",
               tone.index
             )}
             aria-hidden="true"
@@ -94,14 +121,12 @@ function DossierSection({
             {String(index).padStart(2, "0")}
           </span>
           <div className="min-w-0 flex-1">
-            <h2 className="text-[19px] font-[var(--cc-fw-x)] leading-[1.08] tracking-[-0.02em] text-[var(--cc-text)] sm:text-[21px]">
+            <h2 className="text-[16px] font-[var(--cc-fw-x)] leading-[1.15] tracking-[-0.015em] text-[var(--cc-text)] sm:text-[17px]">
               {title}
             </h2>
           </div>
         </header>
-        <div className="mt-3 rounded-[var(--cc-r-tile)] border border-[var(--cc-border-faint)] bg-[var(--cc-surface-inset)] p-3.5 sm:p-4">
-          {children}
-        </div>
+        <div className="mt-3">{children}</div>
       </div>
     </section>
   );
@@ -123,17 +148,17 @@ export default async function TargetDossierPage({
   const sections: { title: string; body: React.ReactNode }[] = [
     {
       title: "What they do",
-      body: <div className="cc-prose">{target.whatTheyDo}</div>
+      body: <Prose text={target.whatTheyDo} />
     },
     {
       title: "Why it matters",
-      body: <div className="cc-prose">{target.whyItMatters}</div>
+      body: <Prose text={target.whyItMatters} />
     },
     {
       title: "Visit objective & route",
       body: (
         <>
-          <div className="cc-prose">{target.visitObjective}</div>
+          <Prose text={target.visitObjective} />
           <div className="mt-3 flex max-w-[64ch] items-start gap-2.5 rounded-[var(--cc-r-tile)] border border-[var(--cc-border)] bg-[var(--cc-surface-inset)] p-2.5">
             <IconSquare icon={Route} size="sm" />
             <div className="min-w-0">
@@ -207,14 +232,14 @@ export default async function TargetDossierPage({
         <div className="p-4">
           <div className="flex flex-wrap items-center gap-1.5">
             <Chip tone={priorityChipTone[priority.tone]}>{priority.label}</Chip>
-            <Chip tone="soft" icon={CategoryIcon}>
+            <Chip tone="soft" icon={CategoryIcon} iconClassName={categoryIconTone[target.category]}>
               {category.label}
             </Chip>
             {typeof target.fitScore === "number" ? (
               <FitGauge score={target.fitScore} className="ml-auto" />
             ) : null}
           </div>
-          <h1 className="mt-3 text-balance text-[23px] font-[var(--cc-fw-x)] leading-[1.08] tracking-[var(--cc-ls-display)] text-[var(--cc-text)]">
+          <h1 className="mt-3 text-balance text-[26px] font-[var(--cc-fw-x)] leading-[1.06] tracking-[var(--cc-ls-display)] text-[var(--cc-text)] sm:text-[30px]">
             {target.name}
           </h1>
           {target.nameLocal ? (

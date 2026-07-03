@@ -38,9 +38,9 @@ function FilterChip({
     <Link
       href={href}
       className={cn(
-        "cc-lift inline-flex min-h-9 shrink-0 items-center rounded-[var(--cc-r-icon)] border px-3 font-mono text-[10px] uppercase tracking-[0.06em] transition-colors",
+        "cc-lift cc-press inline-flex min-h-10 shrink-0 items-center rounded-[var(--cc-r-icon)] border px-3 font-mono text-[10px] uppercase tracking-[0.06em] transition-colors",
         active
-          ? "border-[var(--cc-cyan)] bg-[var(--cc-cyan)] font-semibold text-[var(--cc-cyan-ink)] shadow-[var(--cc-shadow-cta)]"
+          ? "border-[var(--cc-cyan)] bg-[var(--cc-cyan)] font-semibold text-[var(--cc-cyan-ink)]"
           : "border-[var(--cc-border)] bg-[var(--cc-surface-inset)] text-[var(--cc-text-3)]"
       )}
     >
@@ -57,7 +57,7 @@ function CorridorHeader({
   return (
     <div className="mb-2.5">
       <div className="flex items-baseline gap-2.5">
-        <h2 className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--cc-cyan)]">
+        <h2 className="text-[16px] font-[var(--cc-fw-x)] leading-tight tracking-[-0.015em] text-[var(--cc-text)]">
           {corridor}
         </h2>
         <span className="h-px flex-1 self-center bg-[var(--cc-border)]" aria-hidden="true" />
@@ -93,36 +93,51 @@ export default async function BusinessTargetsPage({
         title="Visit Targets"
         summary={`${businessTargets.length} source-backed visit targets across the Hong Kong / Shenzhen corridor and Greater Bay Area. Contact routes stay in your private pack.`}
         badge="App-safe intel"
+        tone="purple"
       />
 
       <TargetSearch />
-      <div
-        role="group"
-        aria-label="Filter by corridor"
-        className="mb-2 flex gap-1.5 overflow-x-auto pb-1"
-      >
-        <FilterChip href={chipHref({ category, q })} active={!corridor}>
-          All corridors
-        </FilterChip>
-        {corridors.map((c) => (
-          <FilterChip key={c} href={chipHref({ corridor: c, category, q })} active={corridor === c}>
-            {c}
+      <div className="mb-2 flex items-center gap-2">
+        <span className="cc-eyebrow-faint w-14 shrink-0">Corridor</span>
+        <div
+          role="group"
+          aria-label="Filter by corridor"
+          className="cc-fade-x flex min-w-0 flex-1 gap-1.5 overflow-x-auto pb-1 pr-7"
+        >
+          <FilterChip href={chipHref({ category, q })} active={!corridor}>
+            All corridors
           </FilterChip>
-        ))}
+          {corridors.map((c) => (
+            <FilterChip
+              key={c}
+              href={chipHref({ corridor: c, category, q })}
+              active={corridor === c}
+            >
+              {c}
+            </FilterChip>
+          ))}
+        </div>
       </div>
-      <div
-        role="group"
-        aria-label="Filter by type"
-        className="mb-4 flex gap-1.5 overflow-x-auto pb-1"
-      >
-        <FilterChip href={chipHref({ corridor, q })} active={!category}>
-          All types
-        </FilterChip>
-        {categories.map((c) => (
-          <FilterChip key={c} href={chipHref({ corridor, category: c, q })} active={category === c}>
-            {categoryMeta[c].label}
+      <div className="mb-4 flex items-center gap-2">
+        <span className="cc-eyebrow-faint w-14 shrink-0">Type</span>
+        <div
+          role="group"
+          aria-label="Filter by type"
+          className="cc-fade-x flex min-w-0 flex-1 gap-1.5 overflow-x-auto pb-1 pr-7"
+        >
+          <FilterChip href={chipHref({ corridor, q })} active={!category}>
+            All types
           </FilterChip>
-        ))}
+          {categories.map((c) => (
+            <FilterChip
+              key={c}
+              href={chipHref({ corridor, category: c, q })}
+              active={category === c}
+            >
+              {categoryMeta[c].label}
+            </FilterChip>
+          ))}
+        </div>
       </div>
 
       {filtered.length === 0 ? (

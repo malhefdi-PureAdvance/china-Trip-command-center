@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CalendarClock, CheckCircle2, MapPin } from "lucide-react";
+import { ArrowRight, CalendarClock, CheckCircle2 } from "lucide-react";
 
 import { cn } from "@pure-advance/design-system";
 
@@ -46,21 +46,21 @@ export function NextActionCard({ relevance }: Readonly<{ relevance: TargetReleva
           <FitGauge score={target.fitScore} className="ml-auto" />
         ) : null}
       </div>
-      <h3 className="mt-2 flex items-center gap-1.5 text-[14px] font-bold leading-tight tracking-[-0.01em] text-[var(--cc-text)]">
+      <h3 className="mt-2 flex items-baseline gap-1.5 text-[14px] font-bold leading-tight tracking-[-0.01em] text-[var(--cc-text)]">
         <span className="min-w-0 truncate">{target.name}</span>
         <ArrowRight
-          className="ml-auto size-3.5 shrink-0 text-[var(--cc-cyan)] transition-transform duration-[var(--cc-dur-fast)] group-hover:translate-x-0.5 motion-reduce:transition-none"
+          className="ml-auto size-3.5 shrink-0 self-center text-[var(--cc-cyan)] transition-transform duration-[var(--cc-dur-fast)] group-hover:translate-x-0.5 motion-reduce:transition-none"
           aria-hidden="true"
         />
       </h3>
-      <p className="mt-1 flex items-center gap-1.5 text-[11px] text-[var(--cc-text-faint)]">
-        <MapPin className="size-3.5 shrink-0 text-[var(--cc-cyan)]" aria-hidden="true" />
-        <span className="min-w-0 truncate">
-          {target.area} · {target.corridor}
-        </span>
+      <p className="mt-0.5 truncate text-[11px] text-[var(--cc-text-faint)]">
+        {target.area} · {target.corridor}
       </p>
-      <p className="mt-2 flex items-start gap-1.5 font-mono text-[10px] uppercase leading-[1.5] tracking-[0.05em] text-[var(--cc-amber-text)]">
-        <CalendarClock className="mt-[1px] size-3.5 shrink-0" aria-hidden="true" />
+      <p className="mt-2 flex items-start gap-1.5 text-[11.5px] leading-[1.5] text-[var(--cc-text-2)]">
+        <CalendarClock
+          className="mt-[2px] size-3.5 shrink-0 text-[var(--cc-amber-text)]"
+          aria-hidden="true"
+        />
         <span className="line-clamp-2 min-w-0">{relevance.whyNow}</span>
       </p>
       <p className="mt-2 flex items-start gap-1.5 border-t border-[var(--cc-border-faint)] pt-2 text-[12px] leading-[1.5] text-[var(--cc-text-2)]">
