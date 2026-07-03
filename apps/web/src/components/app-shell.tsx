@@ -32,8 +32,6 @@ const secondaryNavItems = [
   { href: "/admin/data-review", label: "Data Review", icon: DatabaseZap }
 ];
 
-const desktopNavItems = [...primaryNavItems, ...secondaryNavItems];
-
 export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
 
@@ -52,7 +50,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
               <span className="hidden truncate text-[var(--cc-fs-title)] font-[var(--cc-fw-x)] leading-tight tracking-[var(--cc-ls-title)] text-[var(--cc-text)] sm:block">
                 China 2026 Command Center
               </span>
-              <span className="mt-0.5 block truncate font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--cc-text-faint)] sm:mt-1 sm:text-[var(--cc-fs-caption)]">
+              <span className="mt-0.5 block truncate text-[10.5px] font-[var(--cc-fw-med)] text-[var(--cc-text-3)] sm:mt-1 sm:text-[var(--cc-fs-caption)]">
                 <span className="sm:hidden">HK / Shenzhen ops</span>
                 <span className="hidden sm:inline">Hong Kong / Shenzhen mission operations</span>
               </span>
@@ -62,7 +60,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
             <ThemeToggle />
           </div>
         </div>
-        <nav aria-label="Secondary" className="flex gap-2 md:hidden">
+        <nav aria-label="Secondary" className="flex gap-1.5 md:hidden">
           {secondaryNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href || pathname.startsWith(item.href);
@@ -71,11 +69,12 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
               <Button
                 key={item.href}
                 asChild
-                variant={isActive ? "secondary" : "ghost"}
+                variant="ghost"
                 size="sm"
                 className={cn(
-                  "min-h-10 flex-1 rounded-[10px] px-2 font-mono text-[10px] uppercase tracking-[0.05em]",
-                  isActive && "border-[var(--cc-cyan-line)] text-[var(--cc-cyan)]"
+                  "cc-press min-h-10 flex-1 rounded-[10px] border-transparent px-2 font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--cc-text-faint)]",
+                  isActive &&
+                    "border-transparent bg-[var(--cc-cyan-tint)] font-bold text-[var(--cc-cyan)]"
                 )}
               >
                 <Link href={item.href} aria-current={isActive ? "page" : undefined}>
@@ -86,8 +85,8 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
             );
           })}
         </nav>
-        <nav aria-label="Primary" className="hidden gap-2 md:flex md:flex-wrap">
-          {desktopNavItems.map((item) => {
+        <nav aria-label="Primary" className="hidden items-center gap-1.5 md:flex md:flex-wrap">
+          {primaryNavItems.map((item) => {
             const Icon = item.icon;
             const isActive =
               pathname === item.href || (item.href !== "/today" && pathname.startsWith(item.href));
@@ -96,11 +95,36 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
               <Button
                 key={item.href}
                 asChild
-                variant={isActive ? "secondary" : "ghost"}
+                variant="ghost"
                 size="sm"
                 className={cn(
-                  "shrink-0 font-mono uppercase tracking-[0.06em]",
-                  isActive && "border-[var(--cc-cyan-line)] text-[var(--cc-cyan)]"
+                  "cc-press shrink-0 border-transparent font-mono uppercase tracking-[0.06em]",
+                  isActive &&
+                    "border-transparent bg-[var(--cc-cyan-tint)] font-bold text-[var(--cc-cyan)]"
+                )}
+              >
+                <Link href={item.href} aria-current={isActive ? "page" : undefined}>
+                  <Icon className="size-4" aria-hidden="true" />
+                  <span>{item.label}</span>
+                </Link>
+              </Button>
+            );
+          })}
+          <span aria-hidden="true" className="mx-1 h-5 w-px shrink-0 bg-[var(--cc-border)]" />
+          {secondaryNavItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.href || pathname.startsWith(item.href);
+
+            return (
+              <Button
+                key={item.href}
+                asChild
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  "cc-press shrink-0 border-transparent px-2.5 font-mono text-[10px] uppercase tracking-[0.06em] text-[var(--cc-text-faint)]",
+                  isActive &&
+                    "border-transparent bg-[var(--cc-cyan-tint)] font-bold text-[var(--cc-cyan)]"
                 )}
               >
                 <Link href={item.href} aria-current={isActive ? "page" : undefined}>
@@ -133,9 +157,8 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
               href={item.href}
               aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex min-h-12 min-w-0 flex-col items-center justify-center gap-0.5 rounded-[15px] px-1 text-center font-mono text-[9.5px] font-semibold uppercase tracking-[0.035em] text-[var(--cc-text-3)] transition-[background,color,transform] active:translate-y-px",
-                isActive &&
-                  "bg-[var(--cc-cyan)] text-[var(--cc-cyan-ink)] shadow-[var(--cc-shadow-cta)]"
+                "cc-press flex min-h-12 min-w-0 flex-col items-center justify-center gap-0.5 rounded-[15px] px-1 text-center font-mono text-[10px] font-semibold uppercase tracking-[0.035em] text-[var(--cc-text-3)] transition-[background,color,transform] active:translate-y-px",
+                isActive && "bg-[var(--cc-cyan)] text-[var(--cc-cyan-ink)]"
               )}
             >
               <Icon className="size-4" aria-hidden="true" />

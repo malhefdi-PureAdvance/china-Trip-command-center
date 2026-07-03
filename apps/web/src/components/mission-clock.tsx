@@ -22,27 +22,20 @@ export function MissionClockHero({
       aria-label="Mission clock"
     >
       <span className="absolute inset-y-0 left-0 w-[3px] bg-[var(--cc-cyan)]" aria-hidden="true" />
-      <div className="flex items-center justify-between gap-3">
-        <p className="flex items-center gap-2 font-mono text-[9.5px] font-bold uppercase tracking-[0.14em] text-[var(--cc-cyan)]">
-          {clock.state === "active" ? (
-            <span
-              className="mission-live-dot inline-block size-[7px] rounded-full bg-[var(--cc-cyan)] shadow-[var(--cc-glow-cyan-dot)]"
-              aria-hidden="true"
-            />
-          ) : null}
-          Mission Clock · {stateLabel[clock.state]}
-        </p>
-        {progress ? (
-          <p className="shrink-0 font-mono text-[10px] tracking-[0.05em] text-[var(--cc-text-faint)]">
-            Day {progress.done} of {progress.total}
-          </p>
+      <p className="flex items-center gap-2 font-mono text-[9.5px] font-bold uppercase tracking-[0.14em] text-[var(--cc-cyan)]">
+        {clock.state === "active" ? (
+          <span
+            className="mission-live-dot inline-block size-[7px] rounded-full bg-[var(--cc-cyan)] shadow-[var(--cc-glow-cyan-dot)]"
+            aria-hidden="true"
+          />
         ) : null}
-      </div>
+        Mission Clock · {stateLabel[clock.state]}
+      </p>
       <div className="mt-2.5 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
         <span className="font-mono text-[40px] font-semibold leading-none tracking-[-0.02em] text-[var(--cc-cyan)]">
           {clock.countdown}
         </span>
-        <span className="text-[13.5px] font-bold tracking-[-0.01em] text-[var(--cc-text)]">
+        <span className="text-[16px] font-bold tracking-[-0.01em] text-[var(--cc-text)]">
           {clock.headline}
         </span>
       </div>
@@ -57,18 +50,23 @@ export function MissionClockHero({
         )}
       </p>
       {progress ? (
-        <div
-          className="mt-3 h-[4px] overflow-hidden rounded-full bg-[var(--cc-border-strong)]"
-          role="progressbar"
-          aria-label="Mission days elapsed"
-          aria-valuemin={0}
-          aria-valuemax={progress.total}
-          aria-valuenow={progress.done}
-        >
+        <div className="mt-3 flex items-center gap-2.5">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-[var(--cc-cyan)] to-[var(--cc-cyan-line)]"
-            style={{ width: `${percent}%` }}
-          />
+            className="h-[4px] flex-1 overflow-hidden rounded-full bg-[var(--cc-border-strong)]"
+            role="progressbar"
+            aria-label="Mission days elapsed"
+            aria-valuemin={0}
+            aria-valuemax={progress.total}
+            aria-valuenow={progress.done}
+          >
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-[var(--cc-cyan)] to-[var(--cc-cyan-line)]"
+              style={{ width: `${percent}%` }}
+            />
+          </div>
+          <p className="shrink-0 font-mono text-[10px] tracking-[0.05em] text-[var(--cc-text-faint)]">
+            Day {progress.done} of {progress.total}
+          </p>
         </div>
       ) : null}
     </section>

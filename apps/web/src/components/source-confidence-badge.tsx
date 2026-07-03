@@ -14,7 +14,7 @@ const confidenceMeta: Record<Confidence, { chip: string; dot: string }> = {
   },
   medium: {
     chip: "border-[var(--cc-border)] bg-[var(--cc-surface-inset)] text-[var(--cc-text-2)]",
-    dot: "bg-[var(--cc-cyan)]"
+    dot: "bg-[var(--cc-text-dim)]"
   },
   low: {
     chip: "border-[var(--cc-amber-line)] bg-[var(--cc-amber-tint)] text-[var(--cc-amber-text)]",
@@ -26,15 +26,19 @@ const confidenceMeta: Record<Confidence, { chip: string; dot: string }> = {
   }
 };
 
-/** Source-confidence as a dot-status chip: instrument light + mono label. */
+/** Source-confidence as a dot-status chip: instrument light + mono label.
+ *  `compact` drops the "confidence" suffix for tight card footers; the full
+ *  wording stays available to screen readers either way. */
 export function SourceConfidenceBadge({
   confidence,
+  compact = false,
   className
-}: Readonly<{ confidence: Confidence; className?: string }>) {
+}: Readonly<{ confidence: Confidence; compact?: boolean; className?: string }>) {
   const meta = confidenceMeta[confidence];
 
   return (
     <span
+      aria-label={`${confidence} confidence`}
       className={cn(
         "inline-flex shrink-0 items-center gap-1.5 rounded-[var(--cc-r-chip)] border px-[8px] py-[4px] font-mono text-[9.5px] uppercase leading-none tracking-[0.07em]",
         meta.chip,
@@ -42,7 +46,7 @@ export function SourceConfidenceBadge({
       )}
     >
       <span className={cn("size-[6px] rounded-full", meta.dot)} aria-hidden="true" />
-      {confidence} confidence
+      {compact ? confidence : `${confidence} confidence`}
     </span>
   );
 }

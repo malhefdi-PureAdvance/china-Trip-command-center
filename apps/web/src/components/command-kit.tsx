@@ -13,11 +13,13 @@ type IconType = typeof MapPin;
 
 /* ---------- Metadata chip (cc-chip) ---------- */
 
-export type ChipTone = "neutral" | "soft" | "cyan" | "cyanTint" | "green" | "amber" | "purple";
+export type ChipTone =
+  "neutral" | "soft" | "ghost" | "cyan" | "cyanTint" | "green" | "amber" | "purple";
 
 const chipToneClass: Record<ChipTone, string> = {
   neutral: "border-[var(--cc-border-strong)] bg-transparent text-[var(--cc-text-3)]",
   soft: "border-[var(--cc-border)] bg-[var(--cc-surface-inset)] text-[var(--cc-text-2)]",
+  ghost: "border-transparent bg-transparent px-0 text-[var(--cc-text-3)]",
   cyan: "border-[var(--cc-cyan)] bg-[var(--cc-cyan)] font-semibold text-[var(--cc-cyan-ink)]",
   cyanTint: "border-[var(--cc-cyan-line-soft)] bg-[var(--cc-cyan-tint-2)] text-[var(--cc-cyan)]",
   green: "border-transparent bg-[var(--cc-green-tint)] text-[var(--cc-green)]",
@@ -38,6 +40,7 @@ export const chipToneFromBadge: Record<"neutral" | "cyan" | "green" | "amber" | 
 export function Chip({
   tone = "neutral",
   icon: Icon,
+  iconClassName,
   className,
   children,
   ...props
@@ -45,6 +48,7 @@ export function Chip({
   React.HTMLAttributes<HTMLSpanElement> & {
     tone?: ChipTone;
     icon?: IconType;
+    iconClassName?: string;
   }
 >) {
   return (
@@ -56,7 +60,7 @@ export function Chip({
       )}
       {...props}
     >
-      {Icon ? <Icon className="size-3 shrink-0" aria-hidden="true" /> : null}
+      {Icon ? <Icon className={cn("size-3 shrink-0", iconClassName)} aria-hidden="true" /> : null}
       <span className="truncate">{children}</span>
     </span>
   );
@@ -74,7 +78,7 @@ const sectionToneClass: Record<"cyan" | "purple" | "amber" | "neutral", string> 
 export function SectionHeading({
   icon: Icon,
   title,
-  tone = "cyan",
+  tone = "neutral",
   trailing,
   className
 }: Readonly<{
@@ -89,14 +93,7 @@ export function SectionHeading({
       {Icon ? (
         <Icon className={cn("size-4 shrink-0", sectionToneClass[tone])} aria-hidden="true" />
       ) : null}
-      <span
-        className={cn(
-          "shrink-0 font-mono text-[10px] font-bold uppercase tracking-[0.12em]",
-          sectionToneClass[tone]
-        )}
-      >
-        {title}
-      </span>
+      <span className={cn("cc-eyebrow shrink-0", sectionToneClass[tone])}>{title}</span>
       <span className="h-px min-w-3 flex-1 bg-[var(--cc-border)]" aria-hidden="true" />
       {trailing ? (
         <span className="flex min-w-0 shrink-0 items-center gap-1.5">{trailing}</span>
@@ -174,12 +171,7 @@ export function Callout({
         <span className={cn("absolute inset-y-0 left-0 w-[3px]", styles.rail)} aria-hidden="true" />
       ) : null}
       {eyebrow ? (
-        <p
-          className={cn(
-            "flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.12em]",
-            styles.eyebrow
-          )}
-        >
+        <p className={cn("cc-eyebrow flex items-center gap-2", styles.eyebrow)}>
           {Icon ? <Icon className="size-3.5 shrink-0" aria-hidden="true" /> : null}
           {eyebrow}
         </p>
@@ -212,10 +204,8 @@ export function KeyFacts({
     <dl className={cn("grid grid-cols-2 gap-x-3 gap-y-3", className)}>
       {facts.map((fact) => (
         <div key={fact.label} className={cn("min-w-0", fact.span && "col-span-2")}>
-          <dt className="flex items-center gap-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.13em] text-[var(--cc-text-faint)]">
-            {fact.icon ? (
-              <fact.icon className="size-3 shrink-0 text-[var(--cc-cyan)]" aria-hidden="true" />
-            ) : null}
+          <dt className="cc-eyebrow-faint flex items-center gap-1.5">
+            {fact.icon ? <fact.icon className="size-3 shrink-0" aria-hidden="true" /> : null}
             {fact.label}
           </dt>
           <dd className="mt-1 text-[12.5px] font-semibold leading-[1.4] text-[var(--cc-text)]">
@@ -282,7 +272,7 @@ export function ExternalLinkCard({
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        "cc-lift group flex min-h-11 w-full min-w-0 max-w-full items-center gap-2.5 overflow-hidden rounded-[var(--cc-r-tile)] border border-[var(--cc-border)] bg-[var(--cc-surface)] px-3 py-2 shadow-[var(--cc-elev-1)]",
+        "cc-lift cc-press group flex min-h-11 w-full min-w-0 max-w-full items-center gap-2.5 overflow-hidden rounded-[var(--cc-r-tile)] border border-[var(--cc-border)] bg-[var(--cc-surface)] px-3 py-2 shadow-[var(--cc-elev-1)]",
         className
       )}
     >
@@ -328,7 +318,7 @@ export function ExternalChip({
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        "cc-lift group inline-flex min-h-9 items-center gap-1.5 rounded-[var(--cc-r-icon)] border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] px-3 font-mono text-[10.5px] font-semibold uppercase tracking-[0.05em] text-[var(--cc-cyan)]",
+        "cc-lift cc-press group inline-flex min-h-11 items-center gap-1.5 rounded-[var(--cc-r-icon)] border border-[var(--cc-cyan-line)] bg-[var(--cc-cyan-tint-2)] px-3 font-mono text-[10.5px] font-semibold uppercase tracking-[0.05em] text-[var(--cc-cyan)]",
         className
       )}
     >
@@ -355,15 +345,12 @@ export function MarkerList({
   className
 }: Readonly<{ items: string[]; marker?: MarkerKind; className?: string }>) {
   return (
-    <ul className={cn("space-y-2", className)}>
+    <ul className={cn("divide-y divide-[var(--cc-border-faint)]", className)}>
       {items.map((item, index) => (
-        <li
-          key={index}
-          className="flex gap-2.5 rounded-[var(--cc-r-tile)] border border-[var(--cc-border-faint)] bg-[var(--cc-surface)] px-3 py-2.5 shadow-[0_1px_0_rgba(0,0,0,0.02)]"
-        >
+        <li key={index} className="flex gap-2.5 py-2.5 first:pt-0 last:pb-0">
           {marker === "point" ? (
             <span
-              className="mt-[7px] size-1.5 shrink-0 rounded-full bg-[var(--cc-cyan)]"
+              className="mt-[7px] size-1.5 shrink-0 rounded-full bg-[var(--cc-text-dim)]"
               aria-hidden="true"
             />
           ) : (
@@ -399,7 +386,7 @@ const iconSquareToneClass: Record<"cyan" | "green" | "amber" | "purple" | "neutr
 
 export function IconSquare({
   icon: Icon,
-  tone = "cyan",
+  tone = "neutral",
   size = "md",
   className
 }: Readonly<{
@@ -462,7 +449,7 @@ export function EmptyState({
 export function StatTile({
   value,
   label,
-  tone = "cyan",
+  tone = "neutral",
   className
 }: Readonly<{
   value: React.ReactNode;

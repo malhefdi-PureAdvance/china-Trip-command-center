@@ -36,3 +36,6 @@ test-results/
 .idea/
 .vscode/
 .vercel
+
+# Local design-verification screenshots (scripts/design-screenshots.mjs output)
+.design-audit/

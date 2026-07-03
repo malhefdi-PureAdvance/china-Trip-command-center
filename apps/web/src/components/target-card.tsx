@@ -26,6 +26,16 @@ export const categoryIcons: Record<TargetCategory, typeof Brain> = {
   ecosystem: Network
 };
 
+/** Category identity rides on the icon hue only — the chip itself stays a
+ *  quiet surface so the priority chip remains the sole toned box per card. */
+export const categoryIconTone: Record<TargetCategory, string> = {
+  "ai-biotech": "text-[var(--cc-purple-soft)]",
+  biomanufacturing: "text-[var(--cc-green)]",
+  "coolvex-sourcing": "text-[var(--cc-amber-text)]",
+  "corporate-visit": "text-[var(--cc-cyan)]",
+  ecosystem: "text-[var(--cc-text-3)]"
+};
+
 const priorityChipTone = {
   cyan: "cyan",
   green: "green",
@@ -46,7 +56,7 @@ export function TargetCard({ target }: Readonly<{ target: BusinessTargetDossier 
     <Link
       href={`/business-targets/${target.id}`}
       className={cn(
-        "cc-lift group relative block min-w-0 overflow-hidden rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]",
+        "cc-lift cc-press group relative block min-w-0 overflow-hidden rounded-[var(--cc-r-card)] border border-[var(--cc-border)] bg-[var(--cc-surface)] p-3 shadow-[var(--cc-elev-1)]",
         mustContact && "border-[var(--cc-cyan-line-soft)] pl-[15px]",
         watchlist && "bg-[var(--cc-surface-inset)] shadow-none"
       )}
@@ -59,7 +69,12 @@ export function TargetCard({ target }: Readonly<{ target: BusinessTargetDossier 
       ) : null}
       <div className="flex items-center gap-1.5">
         <Chip tone={priorityChipTone[priority.tone]}>{priority.label}</Chip>
-        <Chip tone="soft" icon={CategoryIcon} className="min-w-0">
+        <Chip
+          tone="soft"
+          icon={CategoryIcon}
+          iconClassName={categoryIconTone[target.category]}
+          className="min-w-0"
+        >
           {category.short}
         </Chip>
         {typeof target.fitScore === "number" ? (
@@ -77,23 +92,25 @@ export function TargetCard({ target }: Readonly<{ target: BusinessTargetDossier 
       <p className="mt-1 line-clamp-2 text-[12px] leading-[1.5] text-[var(--cc-text-3)]">
         {target.oneLiner}
       </p>
-      <p className="mt-2 flex items-start gap-1.5 text-[12px] leading-[1.5] text-[var(--cc-text-2)]">
-        <CheckCircle2
-          className="mt-[2px] size-3.5 shrink-0 text-[var(--cc-green)]"
-          aria-hidden="true"
-        />
-        <span className="line-clamp-2 min-w-0">
-          <span className="font-semibold text-[var(--cc-text)]">Next action:</span>{" "}
-          {relevance.nextAction}
-        </span>
-      </p>
+      {mustContact ? (
+        <p className="mt-2 flex items-start gap-1.5 text-[12px] leading-[1.5] text-[var(--cc-text-2)]">
+          <CheckCircle2
+            className="mt-[2px] size-3.5 shrink-0 text-[var(--cc-green)]"
+            aria-hidden="true"
+          />
+          <span className="line-clamp-2 min-w-0">
+            <span className="font-semibold text-[var(--cc-text)]">Next action:</span>{" "}
+            {relevance.nextAction}
+          </span>
+        </p>
+      ) : null}
       <div className="mt-2.5 flex items-center gap-1.5 border-t border-[var(--cc-border-faint)] pt-2.5">
-        <MapPin className="size-3.5 shrink-0 text-[var(--cc-cyan)]" aria-hidden="true" />
+        <MapPin className="size-3.5 shrink-0 text-[var(--cc-text-faint)]" aria-hidden="true" />
         <span className="min-w-0 truncate text-[11px] text-[var(--cc-text-faint)]">
           {target.area} · {target.corridor}
         </span>
         <span className="ml-auto shrink-0">
-          <SourceConfidenceBadge confidence={target.confidence} />
+          <SourceConfidenceBadge confidence={target.confidence} compact />
         </span>
         <ChevronRight
           className="size-4 shrink-0 text-[var(--cc-text-dim)] transition-[color,transform] duration-[var(--cc-dur-fast)] group-hover:translate-x-0.5 group-hover:text-[var(--cc-cyan)] motion-reduce:transition-none"
