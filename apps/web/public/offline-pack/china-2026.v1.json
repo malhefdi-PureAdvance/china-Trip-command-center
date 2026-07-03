@@ -1,0 +1,1336 @@
+{
+  "manifest": {
+    "packId": "china-2026",
+    "schemaVersion": 1,
+    "packVersion": "1.0.0",
+    "generatedAt": "2026-07-03T22:33:49.460Z",
+    "sourceCommit": "af4e2cc",
+    "dataTier": "tier1-public-safe",
+    "staleAfter": "2026-07-06T22:33:49.460Z",
+    "includedRoutes": [
+      "/offline",
+      "/today",
+      "/itinerary",
+      "/business-targets",
+      "/map",
+      "/flight-pack"
+    ],
+    "excludedRoutes": [
+      "/admin",
+      "/private",
+      "/auth"
+    ],
+    "includedDatasets": [
+      "trip-overview",
+      "mission-phases",
+      "itinerary-timeline",
+      "itinerary-intel",
+      "business-targets",
+      "route-locations"
+    ],
+    "excludedDatasets": [
+      "team-notes",
+      "supabase-status",
+      "private-tier",
+      "admin-readiness"
+    ],
+    "redactionPolicyVersion": "2026-07-04.1"
+  },
+  "trip": {
+    "name": "China 2026 · Tech Founders",
+    "corridor": "Hong Kong / Shenzhen Greater Bay Area",
+    "primaryPurpose": "Hong Kong Week 1 (Go Global from GBA) with LEAP East at HKCEC Jul 8-10, then the Shenzhen Tech Founders program through Demo Day on Jul 31.",
+    "startsAt": "2026-07-04",
+    "endsAt": "2026-08-02"
+  },
+  "readiness": [
+    {
+      "id": "app-shell",
+      "label": "App shell cached",
+      "description": "Core interface, icons, and styles served by the offline shell worker.",
+      "status": "required"
+    },
+    {
+      "id": "route-today",
+      "label": "Today cockpit available",
+      "description": "Mission clock, operating blocks, and target focus.",
+      "status": "required",
+      "href": "/today"
+    },
+    {
+      "id": "route-itinerary",
+      "label": "Itinerary available",
+      "description": "Full mission timeline with week and day filters.",
+      "status": "required",
+      "href": "/itinerary"
+    },
+    {
+      "id": "route-targets",
+      "label": "Business targets available",
+      "description": "Target book and dossiers you have opened.",
+      "status": "required",
+      "href": "/business-targets"
+    },
+    {
+      "id": "route-map",
+      "label": "Corridor map available",
+      "description": "Bases, target clusters, and China-first navigation notes.",
+      "status": "required",
+      "href": "/map"
+    },
+    {
+      "id": "pack-data",
+      "label": "Flight pack data installed",
+      "description": "Briefing, readiness, and search index stored on this device.",
+      "status": "required",
+      "href": "/flight-pack"
+    },
+    {
+      "id": "search-index",
+      "label": "Offline search index installed",
+      "description": "Ships inside the pack; the search screen arrives in a later update.",
+      "status": "recommended"
+    },
+    {
+      "id": "notes-local",
+      "label": "Notes capture is local-first",
+      "description": "Meeting notes and debriefs save on-device without a connection.",
+      "status": "required",
+      "href": "/notes"
+    },
+    {
+      "id": "network-admin",
+      "label": "Admin data review",
+      "description": "Live readiness checks are never cached — network required.",
+      "status": "network-only"
+    },
+    {
+      "id": "network-private",
+      "label": "Private tier",
+      "description": "Sign-in and private surfaces are never cached — network required.",
+      "status": "network-only"
+    },
+    {
+      "id": "network-team-sync",
+      "label": "Team note sync",
+      "description": "Supabase sync is authenticated and network-only; local notes still save.",
+      "status": "network-only"
+    }
+  ],
+  "briefing": [
+    {
+      "id": "trip-at-a-glance",
+      "title": "Trip at a glance",
+      "summary": "Hong Kong Week 1 (Go Global from GBA) with LEAP East at HKCEC Jul 8-10, then the Shenzhen Tech Founders program through Demo Day on Jul 31.",
+      "bullets": [
+        "China 2026 · Tech Founders · Hong Kong / Shenzhen Greater Bay Area",
+        "JUL 4 – AUG 2",
+        "Week 1 · HK — Go Global from GBA (JUL 6 – JUL 12)",
+        "Week 2 · SZ — Innovation Growth Engine (JUL 13 – JUL 17)",
+        "Week 3 · GBA — Supply Chain & Industrialization (JUL 20 – JUL 24)",
+        "Week 4 · SZ — Integration & Demo Day (JUL 27 – JUL 31)"
+      ],
+      "relatedHref": "/today"
+    },
+    {
+      "id": "next-72-hours",
+      "title": "Next 72 hours after landing",
+      "summary": "The first three mission days, JUL 5 onward — work them in order.",
+      "bullets": [
+        "JUL 5 · 09:00–12:00 — Arrival & Hong Kong base setup (The Hari Hong Kong · Hong Kong)",
+        "JUL 6 · 10:00–12:00 — PolyU — tech-transfer & entrepreneurship sharing (Hong Kong Polytechnic University · Hong Kong)",
+        "JUL 6 · 13:00–16:00 — LEAP East prep · badge & exhibitor setup (HKCEC — LEAP East · Hong Kong)",
+        "JUL 6 · 16:00–18:00 — Networking mixer at Alibaba (Hong Kong)",
+        "JUL 7 · 10:30–18:00 — Hong Kong Science Park — visit & founder mixer (Hong Kong Science Park · Hong Kong)"
+      ],
+      "relatedHref": "/itinerary"
+    },
+    {
+      "id": "leap-east-priorities",
+      "title": "LEAP East priorities",
+      "summary": "The HKCEC program block is the week-one anchor — badge first, then work the floor.",
+      "bullets": [
+        "JUL 6 · LEAP East prep · badge & exhibitor setup — Badge & Customer Center registration; Exhibitor app access · lead capture ready",
+        "JUL 8 · LEAP East at HKCEC — Day 1 — Show open · booths & matchmaking; Ecosystem Xchange · First Money In",
+        "JUL 9 · LEAP East at HKCEC — Day 2 — Show open · investor matchmaking; Xchange · capital-efficient cross-border",
+        "JUL 10 · LEAP East — Day 3 & Rocket Fuel Grand Finale — Final day · close out matchmaking; Rocket Fuel Grand Finale · Main Stage"
+      ],
+      "relatedHref": "/itinerary"
+    },
+    {
+      "id": "top-targets",
+      "title": "Top business targets",
+      "summary": "Highest-priority visit targets to rehearse before landing.",
+      "bullets": [
+        "Synceres Biosciences — Must contact · Biomfg · Yinxing Synthetic Biology Industrial Park, Guangming District · From the Nanshan base · Jul 13–31",
+        "National Biomanufacturing Industry Innovation Center (+ Xinmei / Yinxing Synthetic Biology Industrial Park) — Must contact · Biomfg · Guangming Science City, Yinxing Synthetic Biology Industrial Park · From the Nanshan base · Jul 13–31",
+        "SIAT / iSynBio — Shenzhen Institute of Synthetic Biology & Synthetic Biology Infrastructure — Must contact · Biomfg · Guangming Science City, Guangming District · From the Nanshan base · Jul 13–31",
+        "Gene-Biocon — Must contact · Biomfg · Xinqing Sci-Tech Industrial Park · GBA day-trip · Weeks 2–4",
+        "Great Bay Bio — Must contact · AI/Bio · Hong Kong Science Park, Pak Shek Kok · Best Jul 6–7 or Jul 11 · avoid Jul 8–10 (LEAP East)"
+      ],
+      "relatedHref": "/business-targets"
+    },
+    {
+      "id": "planning-gaps",
+      "title": "Planning gaps to verify after landing",
+      "summary": "Unconfirmed blocks and open questions — resolve these once online.",
+      "bullets": [
+        "Confirm: LEAP East prep · badge & exhibitor setup (JUL 6 · proposed)",
+        "Confirm: Networking mixer at Alibaba (JUL 6 · proposed)",
+        "Confirm: Free day · Kowloon & Bruce Lee trail (JUL 11 · proposed)",
+        "Confirm: Hong Kong → Shenzhen · border crossing & base move (JUL 12 · proposed)",
+        "Confirm: Week 2 kickoff · InnoX mentors & KAUST Shenzhen Hub (JUL 13 · proposed)",
+        "Confirm: Week 3 · Enterprise & supply-chain visits (JUL 20 · proposed)",
+        "Synceres Biosciences: 5 open questions to resolve before outreach",
+        "National Biomanufacturing Industry Innovation Center (+ Xinmei / Yinxing Synthetic Biology Industrial Park): 4 open questions to resolve before outreach",
+        "SIAT / iSynBio — Shenzhen Institute of Synthetic Biology & Synthetic Biology Infrastructure: 4 open questions to resolve before outreach",
+        "Gene-Biocon: 5 open questions to resolve before outreach"
+      ],
+      "relatedHref": "/itinerary"
+    },
+    {
+      "id": "landing-checklist",
+      "title": "Landing checklist",
+      "summary": "First moves on the ground, in order.",
+      "bullets": [
+        "09:00–12:00 — Arrival & Hong Kong base setup",
+        "Reconnect and refresh the app — this pack goes stale 72 hours after generation.",
+        "Re-check the next operating block on /today before acting on cached times."
+      ],
+      "relatedHref": "/today"
+    }
+  ],
+  "searchDocuments": [
+    {
+      "id": "trip-overview",
+      "type": "trip",
+      "title": "China 2026 · Tech Founders",
+      "subtitle": "JUL 4 – AUG 2",
+      "body": "Hong Kong Week 1 (Go Global from GBA) with LEAP East at HKCEC Jul 8-10, then the Shenzhen Tech Founders program through Demo Day on Jul 31. Hong Kong / Shenzhen Greater Bay Area",
+      "tags": [
+        "trip",
+        "Hong Kong / Shenzhen Greater Bay Area"
+      ],
+      "href": "/today"
+    },
+    {
+      "id": "itinerary-00000000-0000-4000-8000-000000000901",
+      "type": "itinerary",
+      "title": "Arrival & Hong Kong base setup",
+      "subtitle": "JUL 5 · 09:00–12:00",
+      "body": "The Hari Hong Kong · Hong Kong · Arrive HKG and settle the Hong Kong base. Payments, eSIM/VPN, and maps readiness. · Land HKG · Airport Express to Wan Chai · Octopus card · eSIM/VPN · payments check · Check-in · light recovery, no over-scheduling",
+      "tags": [
+        "admin",
+        "confirmed",
+        "Hong Kong"
+      ],
+      "href": "/itinerary",
+      "dateKey": "2026-07-05",
+      "city": "Hong Kong"
+    },
+    {
+      "id": "itinerary-00000000-0000-4000-8000-000000000902",
+      "type": "itinerary",
+      "title": "PolyU — tech-transfer & entrepreneurship sharing",
+      "subtitle": "JUL 6 · 10:00–12:00",
+      "body": "Hong Kong Polytechnic University · Hong Kong · PolyU-hosted sharing on technology transfer and entrepreneurship & innovation.",
+      "tags": [
+        "meeting",
+        "confirmed",
+        "Hong Kong"
+      ],
+      "href": "/itinerary",
+      "dateKey": "2026-07-06",
+      "city": "Hong Kong"
+    },
+    {
+      "id": "itinerary-00000000-0000-4000-8000-000000000913",
+      "type": "itinerary",
+      "title": "LEAP East prep · badge & exhibitor setup",
+      "subtitle": "JUL 6 · 13:00–16:00",
+      "body": "HKCEC — LEAP East · Hong Kong · Priority 0 before the show: badge registration, exhibitor app access, and booth readiness ahead of the Jul 7 setup deadline. · Badge & Customer Center registration · Exhibitor app access · lead capture ready · Booth setup deadline · Jul 7 evening",
+      "tags": [
+        "admin",
+        "proposed",
+        "Hong Kong"
+      ],
+      "href": "/itinerary",
+      "dateKey": "2026-07-06",
+      "city": "Hong Kong"
+    },
+    {
+      "id": "itinerary-00000000-0000-4000-8000-000000000903",
+      "type": "itinerary",
+      "title": "Networking mixer at Alibaba",
+      "subtitle": "JUL 6 · 16:00–18:00",
+      "body": "Hong Kong · Early networking / market-expansion mixer. Exact venue and routing to confirm.",
+      "tags": [
+        "meeting",
+        "proposed",
+        "Hong Kong"
+      ],
+      "href": "/itinerary",
+      "dateKey": "2026-07-06",
+      "city": "Hong Kong"
+    },
+    {
+      "id": "itinerary-00000000-0000-4000-8000-000000000904",
+      "type": "itinerary",
+      "title": "Hong Kong Science Park — visit & founder mixer",
+      "subtitle": "JUL 7 · 10:30–18:00",
+      "body": "Hong Kong Science Park · Hong Kong · HKSTP morning visit plus the organiser afternoon agenda and founder mixer. Gate pass required. · Science Park tour · showcase & Q&A · Why Hong Kong is Asia's tech launchpad · Keynote · agentic AI + startup demo day · Networking reception",
+      "tags": [
+        "site_visit",
+        "confirmed",
+        "Hong Kong"
+      ],
+      "href": "/itinerary",
+      "dateKey": "2026-07-07",
+      "city": "Hong Kong"
+    },
+    {
+      "id": "itinerary-00000000-0000-4000-8000-000000000905",
+      "type": "itinerary",
+      "title": "LEAP East at HKCEC — Day 1",
+      "subtitle": "JUL 8 · 09:00–17:00",
+      "body": "HKCEC — LEAP East · Hong Kong · LEAP East exhibition booths plus Rocket Fuel East semi-finals on the DeepFest stage. · Show open · booths & matchmaking · Ecosystem Xchange · First Money In · Rocket Fuel East · semi-finals round 1",
+      "tags": [
+        "site_visit",
+        "confirmed",
+        "Hong Kong"
+      ],
+      "href": "/itinerary",
+      "dateKey": "2026-07-08",
+      "city": "Hong Kong"
+    },
+    {
+      "id": "itinerary-00000000-0000-4000-8000-000000000906",
+      "type": "itinerary",
+      "title": "LEAP East at HKCEC — Day 2",
+      "subtitle": "JUL 9 · 09:00–17:00",
+      "body": "HKCEC — LEAP East · Hong Kong · LEAP East Day 2. Abdulrahman arrives HKG in the evening for handoff. · Show open · investor matchmaking · Xchange · capital-efficient cross-border · Rocket Fuel East · semi-finals round 2 · Abdulrahman lands · evening handoff",
+      "tags": [
+        "site_visit",
+        "confirmed",
+        "Hong Kong"
+      ],
+      "href": "/itinerary",
+      "dateKey": "2026-07-09",
+      "city": "Hong Kong"
+    },
+    {
+      "id": "itinerary-00000000-0000-4000-8000-000000000907",
+      "type": "itinerary",
+      "title": "LEAP East — Day 3 & Rocket Fuel Grand Finale",
+      "subtitle": "JUL 10 · 09:00–17:00",
+      "body": "HKCEC — LEAP East · Hong Kong · LEAP East Day 3 and the Grand Finale. Abdulrahman leads BD triage and investor follow-up. · Final day · close out matchmaking · Rocket Fuel Grand Finale · Main Stage · Winners announced · Lead triage · owner assignment",
+      "tags": [
+        "site_visit",
+        "confirmed",
+        "Hong Kong"
+      ],
+      "href": "/itinerary",
+      "dateKey": "2026-07-10",
+      "city": "Hong Kong"
+    },
+    {
+      "id": "itinerary-00000000-0000-4000-8000-000000000914",
+      "type": "itinerary",
+      "title": "Free day · Kowloon & Bruce Lee trail",
+      "subtitle": "JUL 11 · 10:00–20:00",
+      "body": "Hong Kong · The one open Hong Kong day: Heritage Museum, Avenue of Stars, Kowloon. Also the fallback window for a Science Park business visit. · Heritage Museum · Bruce Lee exhibition · Avenue of Stars · TST waterfront · Fallback window · Science Park visit",
+      "tags": [
+        "buffer",
+        "proposed",
+        "Hong Kong"
+      ],
+      "href": "/itinerary",
+      "dateKey": "2026-07-11",
+      "city": "Hong Kong"
+    },
+    {
+      "id": "itinerary-00000000-0000-4000-8000-000000000908",
+      "type": "itinerary",
+      "title": "Hong Kong → Shenzhen · border crossing & base move",
+      "subtitle": "JUL 12 · 12:00–15:00",
+      "body": "Ascott Raffles City Shenzhen · Shenzhen · Check out of the Hong Kong base by 12:00, then Wan Chai to Nanshan. Confirm the border plan and Shenzhen check-in before moving. · Check out · Hong Kong base · Border crossing → Nanshan · Ascott check-in · confirm key collection",
+      "tags": [
+        "transfer",
+        "proposed",
+        "Shenzhen"
+      ],
+      "href": "/itinerary",
+      "dateKey": "2026-07-12",
+      "city": "Shenzhen"
+    },
+    {
+      "id": "itinerary-00000000-0000-4000-8000-000000000909",
+      "type": "itinerary",
+      "title": "Week 2 kickoff · InnoX mentors & KAUST Shenzhen Hub",
+      "subtitle": "JUL 13 · 10:00–12:00",
+      "body": "InnoX · KAUST Shenzhen Hub · Shenzhen · 1:1 mentor support and tailored plan. Prepare Pure Advance intro asks before this week. · Mentor intro requests · partner asks ready",
+      "tags": [
+        "meeting",
+        "proposed",
+        "Shenzhen"
+      ],
+      "href": "/itinerary",
+      "dateKey": "2026-07-13",
+      "city": "Shenzhen"
+    },
+    {
+      "id": "itinerary-00000000-0000-4000-8000-000000000910",
+      "type": "itinerary",
+      "title": "Week 3 · Enterprise & supply-chain visits",
+      "subtitle": "JUL 20 · 10:00–16:00",
+      "body": "Shenzhen / GBA · Enterprise visits and 1:1 supply-chain matching across the Greater Bay Area. · Enterprise visits · 1:1 supply-chain matching",
+      "tags": [
+        "site_visit",
+        "proposed",
+        "Shenzhen / GBA"
+      ],
+      "href": "/itinerary",
+      "dateKey": "2026-07-20",
+      "city": "Shenzhen / GBA"
+    },
+    {
+      "id": "itinerary-00000000-0000-4000-8000-000000000911",
+      "type": "itinerary",
+      "title": "Demo Day — final pitch before investors & delegation",
+      "subtitle": "JUL 31 · 14:00–17:00",
+      "body": "Shenzhen / GBA · Demo Day in Shenzhen — pitch, validation checklist, and 90-day plan before investors and the delegation.",
+      "tags": [
+        "meeting",
+        "confirmed",
+        "Shenzhen / GBA"
+      ],
+      "href": "/itinerary",
+      "dateKey": "2026-07-31",
+      "city": "Shenzhen / GBA"
+    },
+    {
+      "id": "itinerary-00000000-0000-4000-8000-000000000912",
+      "type": "itinerary",
+      "title": "Checkout & return · Hong Kong → Riyadh",
+      "subtitle": "AUG 1 · 15:00–20:10",
+      "body": "Ascott Raffles City Shenzhen · Shenzhen · Shenzhen checkout and cross-border transfer to HKG for the evening return; arrives Riyadh Aug 2.",
+      "tags": [
+        "transfer",
+        "confirmed",
+        "Shenzhen"
+      ],
+      "href": "/itinerary",
+      "dateKey": "2026-08-01",
+      "city": "Shenzhen"
+    },
+    {
+      "id": "target-cn-bluepha",
+      "type": "target",
+      "title": "Bluepha",
+      "subtitle": "Watchlist · Biomfg",
+      "body": "蓝晶微生物（北京蓝晶微生物科技有限公司） · A leading Chinese synthetic-biology / PHA-biopolymer company with large-scale fermentation — a sector benchmark for ultra-high-density fermentation, but not a Shenzhen/GBA visit target. · Beijing (HQ); Yancheng, Jiangsu (production) · Other",
+      "tags": [
+        "watchlist",
+        "biomanufacturing",
+        "Other"
+      ],
+      "href": "/business-targets/cn-bluepha",
+      "city": "Beijing (HQ); Yancheng, Jiangsu (production)",
+      "priority": "watchlist"
+    },
+    {
+      "id": "target-cn-megarobo",
+      "type": "target",
+      "title": "MegaRobo",
+      "subtitle": "Watchlist · AI/Bio",
+      "body": "镁伽 · A Beijing-headquartered embodied-AI-for-the-lab company fusing robotics automation and AI to build intelligent, self-running biological laboratories (MEGALAB) — the infrastructure layer under AI drug discovery, synthetic biology and bioprocess; included as a benchmark/ecosystem reference, with HQ in Beijing rather than the GBA. · Shenzhen branch (HQ Beijing) · Shenzhen",
+      "tags": [
+        "watchlist",
+        "ai-biotech",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/cn-megarobo",
+      "city": "Shenzhen branch (HQ Beijing)",
+      "priority": "watchlist"
+    },
+    {
+      "id": "target-dg-oppo",
+      "type": "target",
+      "title": "OPPO",
+      "subtitle": "Medium · Corp",
+      "body": "广东欧珀移动通信有限公司 · One of the world's largest smartphone makers, founded and still headquartered in Dongguan, with its core R&D, advanced testing and smart manufacturing concentrated in Chang'an Town. · Chang'an Town, Dongguan (Binhaiwan Bay) · Dongguan",
+      "tags": [
+        "medium",
+        "corporate-visit",
+        "Dongguan"
+      ],
+      "href": "/business-targets/dg-oppo",
+      "city": "Chang'an Town, Dongguan (Binhaiwan Bay)",
+      "priority": "medium"
+    },
+    {
+      "id": "target-dg-vivo",
+      "type": "target",
+      "title": "vivo",
+      "subtitle": "Medium · Corp",
+      "body": "维沃移动通信有限公司 · A top-tier global smartphone maker headquartered in Chang'an Town, Dongguan, running one of the region's largest integrated phone manufacturing complexes. · Chang'an Town, Dongguan (Binhai New Area) · Dongguan",
+      "tags": [
+        "medium",
+        "corporate-visit",
+        "Dongguan"
+      ],
+      "href": "/business-targets/dg-vivo",
+      "city": "Chang'an Town, Dongguan (Binhai New Area)",
+      "priority": "medium"
+    },
+    {
+      "id": "target-dg-xbotpark",
+      "type": "target",
+      "title": "XbotPark (Songshan Lake Robotics Base)",
+      "subtitle": "High · Ecosystem",
+      "body": "松山湖国际机器人产业基地 · A hardware-first startup incubator beside Songshan Lake that turns Dongguan's dense supply chain into a fast, cheap path from prototype to product — with a track record of producing robotics unicorns. · Songshan Lake, Dongguan · Dongguan",
+      "tags": [
+        "high",
+        "ecosystem",
+        "Dongguan"
+      ],
+      "href": "/business-targets/dg-xbotpark",
+      "city": "Songshan Lake, Dongguan",
+      "priority": "high"
+    },
+    {
+      "id": "target-fs-victory-biotech",
+      "type": "target",
+      "title": "Guangdong Victory Biotech",
+      "subtitle": "Medium · Biomfg",
+      "body": "广东冠昊生物科技有限公司 · A Foshan medical-grade collagen biomaterials manufacturer making atelocollagen, cross-linked collagen hydrogels and collagen wound dressings — a strong fit for Coolvex's skin-repair / barrier / retention biomaterials angle. · Nanhai District, Foshan · Foshan",
+      "tags": [
+        "medium",
+        "biomanufacturing",
+        "Foshan"
+      ],
+      "href": "/business-targets/fs-victory-biotech",
+      "city": "Nanhai District, Foshan",
+      "priority": "medium"
+    },
+    {
+      "id": "target-gz-ausmetics",
+      "type": "target",
+      "title": "Ausmetics Daily Chemicals",
+      "subtitle": "High · Sourcing",
+      "body": "澳斯曼 · An export-oriented, audit-heavy cosmetic OEM/ODM (since 1998; 600+ brands; bases in Guangzhou/Dongguan/Zengcheng) with sensitive-skin and natural collections — a partner to turn a chosen Coolvex active into a compliant finished ointment. · Guangzhou Economic & Technological Development District · Guangzhou",
+      "tags": [
+        "high",
+        "coolvex-sourcing",
+        "Guangzhou"
+      ],
+      "href": "/business-targets/gz-ausmetics",
+      "city": "Guangzhou Economic & Technological Development District",
+      "priority": "high"
+    },
+    {
+      "id": "target-gz-cantonbio",
+      "type": "target",
+      "title": "Canton Biologics (Hanten Biotech)",
+      "subtitle": "Medium · Biomfg",
+      "body": "广州汉腾生物科技有限公司 · South China's largest large-molecule biologics CDMO — antibody/recombinant-protein focused, with strong process development and downstream and ~13,000 L GMP capacity across two GBA bases. A credible recombinant-protein and (smaller) microbial-fermentation partner, with the caveat that the core is mammalian CHO antibody work. · Guangzhou (HQ); Foshan Kunlun & Guangzhou Penglai GMP bases · Guangzhou",
+      "tags": [
+        "medium",
+        "biomanufacturing",
+        "Guangzhou"
+      ],
+      "href": "/business-targets/gz-cantonbio",
+      "city": "Guangzhou (HQ); Foshan Kunlun & Guangzhou Penglai GMP bases",
+      "priority": "medium"
+    },
+    {
+      "id": "target-gz-kingfa",
+      "type": "target",
+      "title": "Kingfa Science & Technology",
+      "subtitle": "Watchlist · Biomfg",
+      "body": "金发科技股份有限公司 · A large listed advanced-materials maker (modified plastics, biodegradable plastics, bio-based materials) growing a green-biomanufacturing arm — relevant for materials/packaging adjacency, not active-ingredient fermentation. · Guangzhou Science City, Huangpu · Guangzhou",
+      "tags": [
+        "watchlist",
+        "biomanufacturing",
+        "Guangzhou"
+      ],
+      "href": "/business-targets/gz-kingfa",
+      "city": "Guangzhou Science City, Huangpu",
+      "priority": "watchlist"
+    },
+    {
+      "id": "target-gz-marubi-biotech",
+      "type": "target",
+      "title": "Marubi Biotech",
+      "subtitle": "Medium · Biomfg",
+      "body": "丸美生物技术股份有限公司 · A listed Guangzhou skincare company that has built real recombinant-collagen and fermentation R&D (500+ patents) around barrier repair and anti-ageing — a science-led GBA player to learn from, though access for a small partner may be harder. · Guangzhou Science City, Huangpu · Guangzhou",
+      "tags": [
+        "medium",
+        "biomanufacturing",
+        "Guangzhou"
+      ],
+      "href": "/business-targets/gz-marubi-biotech",
+      "city": "Guangzhou Science City, Huangpu",
+      "priority": "medium"
+    },
+    {
+      "id": "target-gz-microbiology-institute",
+      "type": "target",
+      "title": "Guangzhou Institute of Microbiology Group",
+      "subtitle": "Medium · Biomfg",
+      "body": "广州市微生物研究所集团股份有限公司（广微集团） · A 50-year-old Guangzhou-municipal microbiology institute (now a state-controlled joint-stock group) that operates the Guangdong Provincial Microbial Germplasm Resource Bank and does microbial fermentation, biopharma and bio-product R&D — an institutional microbial-strain resource with deep collections and screening capability. · Huangpu District, Science City · Guangzhou",
+      "tags": [
+        "medium",
+        "biomanufacturing",
+        "Guangzhou"
+      ],
+      "href": "/business-targets/gz-microbiology-institute",
+      "city": "Huangpu District, Science City",
+      "priority": "medium"
+    },
+    {
+      "id": "target-gz-moonbio",
+      "type": "target",
+      "title": "MoonBio (Moon Guangzhou Biotech)",
+      "subtitle": "Must contact · Biomfg",
+      "body": "慕恩（广州）生物科技有限公司 · Guangzhou's strongest pilot-fermentation lead — a microbial-resource-and-biomanufacturing platform selected onto China's first national biomanufacturing pilot-platform list, with a very large proprietary strain library and a full-chain discovery-to-scale-up process. · Huangpu District, Science City (Guangzhou High-tech Zone) · Guangzhou",
+      "tags": [
+        "must_contact",
+        "biomanufacturing",
+        "Guangzhou"
+      ],
+      "href": "/business-targets/gz-moonbio",
+      "city": "Huangpu District, Science City (Guangzhou High-tech Zone)",
+      "priority": "must_contact"
+    },
+    {
+      "id": "target-gz-nikoo-chemical",
+      "type": "target",
+      "title": "NIKOO Chemical",
+      "subtitle": "High · Sourcing",
+      "body": "广州尼酷化工有限公司 · A Guangzhou skincare-raw-material supplier and custom-solution house with an unusually Coolvex-relevant catalogue — recombinant collagens, repair/anti-sensitisation peptides, bio-fermented filtrates, and a recombinant mussel adhesive protein (a bioadhesive skin-barrier active). · Baiyun District · Guangzhou",
+      "tags": [
+        "high",
+        "coolvex-sourcing",
+        "Guangzhou"
+      ],
+      "href": "/business-targets/gz-nikoo-chemical",
+      "city": "Baiyun District",
+      "priority": "high"
+    },
+    {
+      "id": "target-gz-scsio-marine",
+      "type": "target",
+      "title": "SCSIO — Marine Materia Medica (CAS)",
+      "subtitle": "High · Ecosystem",
+      "body": "中国科学院南海海洋研究所 · The CAS South China Sea Institute of Oceanology's Guangdong Key Lab of Marine Materia Medica — China's best-placed marine-microbial natural-products lab for antimicrobial/antioxidant actives, and the most travel-accessible marine institute (in Guangzhou). · Haizhu District · Guangzhou",
+      "tags": [
+        "high",
+        "ecosystem",
+        "Guangzhou"
+      ],
+      "href": "/business-targets/gz-scsio-marine",
+      "city": "Haizhu District",
+      "priority": "high"
+    },
+    {
+      "id": "target-gz-tidetron",
+      "type": "target",
+      "title": "Tidetron Bioworks (Taichuang)",
+      "subtitle": "Medium · Biomfg",
+      "body": "态创生物（Tidetron） · A fast-funded Guangzhou synthetic-biology multi-substance mass-production platform built on an intelligent fermentation system — peptides and small molecules at a claimed 10,000-tonne-plus annual capacity. A credible GBA fermentation-platform lead, with several specifics still to confirm. · Haizhu District · Guangzhou",
+      "tags": [
+        "medium",
+        "biomanufacturing",
+        "Guangzhou"
+      ],
+      "href": "/business-targets/gz-tidetron",
+      "city": "Haizhu District",
+      "priority": "medium"
+    },
+    {
+      "id": "target-gz-tinci",
+      "type": "target",
+      "title": "Guangzhou Tinci Materials",
+      "subtitle": "High · Sourcing",
+      "body": "广州天赐高新材料股份有限公司 · A leading manufacturer of functional personal-care ingredients (SZSE-listed, stock code 002709) — the mild surfactant/emulsifier/stabiliser backbone for a sensitive-area topical, complementing whatever hero active is chosen. · Guangzhou Economic & Technological Development District · Guangzhou",
+      "tags": [
+        "high",
+        "coolvex-sourcing",
+        "Guangzhou"
+      ],
+      "href": "/business-targets/gz-tinci",
+      "city": "Guangzhou Economic & Technological Development District",
+      "priority": "high"
+    },
+    {
+      "id": "target-gz-yikewei",
+      "type": "target",
+      "title": "Yikewei Bio",
+      "subtitle": "High · Biomfg",
+      "body": "广东益可维生物技术有限公司 · A Guangzhou probiotics company built around a proprietary 'native Chinese' probiotic strain resource library — it isolates, banks and commercialises functional strains and supplies strains plus whole-process technical solutions across dairy, functional food, pharma, agriculture and daily-chemicals. · Guangzhou Development Zone / Sino-Singapore Guangzhou Knowledge City (中新广州知识城) · Guangzhou",
+      "tags": [
+        "high",
+        "biomanufacturing",
+        "Guangzhou"
+      ],
+      "href": "/business-targets/gz-yikewei",
+      "city": "Guangzhou Development Zone / Sino-Singapore Guangzhou Knowledge City (中新广州知识城)",
+      "priority": "high"
+    },
+    {
+      "id": "target-hk-ailsynbio",
+      "type": "target",
+      "title": "AilsynBio",
+      "subtitle": "Medium · AI/Bio",
+      "body": "HKU-spun-out, Science Park-based AI drug-design startup that fuses generative AI with physics-based modelling — and has signed a deal applying AI to traditional Chinese medicine. · Hong Kong Science Park, Pak Shek Kok · Hong Kong",
+      "tags": [
+        "medium",
+        "ai-biotech",
+        "Hong Kong"
+      ],
+      "href": "/business-targets/hk-ailsynbio",
+      "city": "Hong Kong Science Park, Pak Shek Kok",
+      "priority": "medium"
+    },
+    {
+      "id": "target-hk-biomap",
+      "type": "target",
+      "title": "BioMap",
+      "subtitle": "Medium · AI/Bio",
+      "body": "百图生科 · Baidu-backed 'large biology model' company whose 100B+-parameter life-science foundation model xTrimo powers an AI-Generated Protein (AIGP) platform — now standing up its first international innovation center, BioMap InnoHub, in Hong Kong with HK government (HKIC) backing. · BioMap InnoHub, Hong Kong (specific HKSTP/Cyberport site to be confirmed) · Hong Kong",
+      "tags": [
+        "medium",
+        "ai-biotech",
+        "Hong Kong"
+      ],
+      "href": "/business-targets/hk-biomap",
+      "city": "BioMap InnoHub, Hong Kong (specific HKSTP/Cyberport site to be confirmed)",
+      "priority": "medium"
+    },
+    {
+      "id": "target-hk-biomed-technology",
+      "type": "target",
+      "title": "BioMed Technology Holdings",
+      "subtitle": "High · AI/Bio",
+      "body": "Hong Kong microbiome startup and HKSTP partner offering precision microbiome testing and probiotic products — and expanding into oral and skin microbiomes, the axis closest to Coolvex's topical-care focus. · Hong Kong Science Park, Pak Shek Kok · Hong Kong",
+      "tags": [
+        "high",
+        "ai-biotech",
+        "Hong Kong"
+      ],
+      "href": "/business-targets/hk-biomed-technology",
+      "city": "Hong Kong Science Park, Pak Shek Kok",
+      "priority": "high"
+    },
+    {
+      "id": "target-hk-geniebiome",
+      "type": "target",
+      "title": "GenieBiome (G-NiiB)",
+      "subtitle": "High · AI/Bio",
+      "body": "CUHK clinician-scientist microbiome spinout behind the consumer G-NiiB probiotic brand — Hong Kong's most consumer-facing, clinically-credentialed microbiome company and the closest peer to a Coolvex-style functional-health play. · Wan Chai / Hong Kong Science Park, Pak Shek Kok · Hong Kong",
+      "tags": [
+        "high",
+        "ai-biotech",
+        "Hong Kong"
+      ],
+      "href": "/business-targets/hk-geniebiome",
+      "city": "Wan Chai / Hong Kong Science Park, Pak Shek Kok",
+      "priority": "high"
+    },
+    {
+      "id": "target-hk-great-bay-bio",
+      "type": "target",
+      "title": "Great Bay Bio",
+      "subtitle": "Must contact · AI/Bio",
+      "body": "大湾生物 · HKSTP-based 'AI + bioprocessing' company that applies AI to the manufacturing/CMC side of biologics — antibody design, cell-line development, culture-media optimization and sequence/expression optimization — i.e. the AI-in-biomanufacturing layer, not just AI drug discovery. · Hong Kong Science Park, Pak Shek Kok · Hong Kong",
+      "tags": [
+        "must_contact",
+        "ai-biotech",
+        "Hong Kong"
+      ],
+      "href": "/business-targets/hk-great-bay-bio",
+      "city": "Hong Kong Science Park, Pak Shek Kok",
+      "priority": "must_contact"
+    },
+    {
+      "id": "target-hk-gutolution",
+      "type": "target",
+      "title": "GUTolution",
+      "subtitle": "Medium · AI/Bio",
+      "body": "A Hong Kong Science Park microbiome health-tech startup that runs an in-house sequencing lab, tests 5,000+ gut bacteria, and uses an AI engine to tailor-make and GMP-manufacture personalised probiotic formulas — the most relevant HK-based, consumer-facing precision-probiotic platform for a Week-1 Hong Kong meeting. · Hong Kong Science Park, Pak Shek Kok · Hong Kong",
+      "tags": [
+        "medium",
+        "ai-biotech",
+        "Hong Kong"
+      ],
+      "href": "/business-targets/hk-gutolution",
+      "city": "Hong Kong Science Park, Pak Shek Kok",
+      "priority": "medium"
+    },
+    {
+      "id": "target-hk-insilico-medicine",
+      "type": "target",
+      "title": "Insilico Medicine",
+      "subtitle": "Medium · AI/Bio",
+      "body": "英矽智能 · End-to-end generative-AI drug discovery company, newly listed on HKEX, that both discovered and designed an oral IPF drug now heading to Phase III — with a parallel longevity/aging research agenda and an existing Gulf footprint. · Hong Kong Science Park, Pak Shek Kok · Hong Kong",
+      "tags": [
+        "medium",
+        "ai-biotech",
+        "Hong Kong"
+      ],
+      "href": "/business-targets/hk-insilico-medicine",
+      "city": "Hong Kong Science Park, Pak Shek Kok",
+      "priority": "medium"
+    },
+    {
+      "id": "target-hk-pinnacle-bioboost",
+      "type": "target",
+      "title": "Pinnacle Food Group / Bioboost (HK precision-fermentation lab)",
+      "subtitle": "Watchlist · Biomfg",
+      "body": "The most concrete Hong Kong precision-fermentation node found: a Pichia-yeast recombinant-protein lab (human lactoferrin) run via a Bioboost Synbio collaboration, with a proposed open-yeast-platform hub at the HK–Shenzhen I&T Park. Early-stage R&D, not a turnkey CDMO — a relationship/ecosystem lead, not a manufacturing vendor yet. · Hong Kong (lab location to verify); proposed hub at HK–Shenzhen Innovation & Technology Park, Lok Ma Chau Loop · Hong Kong",
+      "tags": [
+        "watchlist",
+        "biomanufacturing",
+        "Hong Kong"
+      ],
+      "href": "/business-targets/hk-pinnacle-bioboost",
+      "city": "Hong Kong (lab location to verify); proposed hub at HK–Shenzhen Innovation & Technology Park, Lok Ma Chau Loop",
+      "priority": "watchlist"
+    },
+    {
+      "id": "target-hk-zellulin",
+      "type": "target",
+      "title": "Avant — Zellulin (HK Science Park)",
+      "subtitle": "High · Sourcing",
+      "body": "A Hong Kong Science Park biotech (founded 2018) whose Zellulin / ZelluGEN is a cell-cultivated marine-protein peptide complex for skincare — a differentiated, sustainable marine-repair active reachable during the Hong Kong leg. · Hong Kong Science Park, Pak Shek Kok · Hong Kong",
+      "tags": [
+        "high",
+        "coolvex-sourcing",
+        "Hong Kong"
+      ],
+      "href": "/business-targets/hk-zellulin",
+      "city": "Hong Kong Science Park, Pak Shek Kok",
+      "priority": "high"
+    },
+    {
+      "id": "target-sz-angelo-biotech",
+      "type": "target",
+      "title": "Angelo Biotech",
+      "subtitle": "Medium · Biomfg",
+      "body": "安各洛（深圳）生物科技有限公司 · A Guangming synthetic-biology company specialised in functional proteins/enzymes (SOD, NAMPT) made via novel bioreactors and plant/insect cell factories — a possible antioxidant-active niche, but unproven as an external fermentation service provider. · Guangming District (Industrial Innovation Center for Engineering Biology) · Shenzhen",
+      "tags": [
+        "medium",
+        "biomanufacturing",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-angelo-biotech",
+      "city": "Guangming District (Industrial Innovation Center for Engineering Biology)",
+      "priority": "medium"
+    },
+    {
+      "id": "target-sz-bgi-genot",
+      "type": "target",
+      "title": "BGI Genomics (GeneT / GBI ALL)",
+      "subtitle": "High · AI/Bio",
+      "body": "华大基因（GeneT / 生成式生物智能） · Shenzhen-headquartered genomics giant whose GeneT (Genetic Transformer) multimodal genomic foundation model anchors its 'Generative Bio-Intelligence (GBI ALL)' paradigm — and which already runs a large AI-genomics operation inside Saudi Arabia (Genalive, Riyadh), making it the most Saudi-relevant company in this AI-biotech batch. · Yantian District (BGI HQ) · Shenzhen",
+      "tags": [
+        "high",
+        "ai-biotech",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-bgi-genot",
+      "city": "Yantian District (BGI HQ)",
+      "priority": "high"
+    },
+    {
+      "id": "target-sz-bgi-precision-nutrition",
+      "type": "target",
+      "title": "BGI Precision Nutrition (Umeta)",
+      "subtitle": "High · Biomfg",
+      "body": "华大营养 / 华大精准营养（深圳）科技有限公司（优美达） · BGI's (华大) precision-nutrition arm sits on one of the largest human-commensal microbial strain libraries in China — 50,000–60,000+ gut/commensal strains built on BGI's sequencing scale — and runs a full 'test → functional probiotic → nutrition' chain; it is the single biggest microbial-resource-discovery asset in the GBA and a credible strain / data / co-research partner. · Yantian District (BGI Center) · Shenzhen",
+      "tags": [
+        "high",
+        "biomanufacturing",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-bgi-precision-nutrition",
+      "city": "Yantian District (BGI Center)",
+      "priority": "high"
+    },
+    {
+      "id": "target-sz-biosysen",
+      "type": "target",
+      "title": "Biosysen",
+      "subtitle": "Must contact · Biomfg",
+      "body": "倍生生物科技（深圳）有限公司 · A Shenzhen (Guangming Science City) 'software-defined' synthetic-biology house that designs and licenses engineered industrial microbial strains — it explicitly runs a strain library (ArchiCel®) and a strain-licensing business plus a daily-chemicals (日化) pipeline, so it maps directly onto Pure Advance's microbial-cell-factory + bio-derived-actives priority. · Guangming District (Fenghuang Subdistrict) · Shenzhen",
+      "tags": [
+        "must_contact",
+        "biomanufacturing",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-biosysen",
+      "city": "Guangming District (Fenghuang Subdistrict)",
+      "priority": "must_contact"
+    },
+    {
+      "id": "target-sz-bloomage-tangan",
+      "type": "target",
+      "title": "Bloomage TangAn",
+      "subtitle": "Medium · Biomfg",
+      "body": "华熙唐安生物科技（深圳）有限公司 · A Bloomage-incubated synbio company in Guangming building a world-leading non-animal heparin/glycan platform via full-enzymatic synthesis — strong glycan/biomaterials pedigree, but not an open pilot-fermentation CDMO. · Guangming District · Shenzhen",
+      "tags": [
+        "medium",
+        "biomanufacturing",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-bloomage-tangan",
+      "city": "Guangming District",
+      "priority": "medium"
+    },
+    {
+      "id": "target-sz-byd",
+      "type": "target",
+      "title": "BYD Company Limited",
+      "subtitle": "Medium · Corp",
+      "body": "比亚迪股份有限公司 · A vertically integrated Shenzhen manufacturing giant — the world's largest plug-in EV maker — that also runs one of the planet's biggest electronics contract-manufacturing (EMS) arms. · Pingshan District · Shenzhen",
+      "tags": [
+        "medium",
+        "corporate-visit",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-byd",
+      "city": "Pingshan District",
+      "priority": "medium"
+    },
+    {
+      "id": "target-sz-gsh-biotech",
+      "type": "target",
+      "title": "Shenzhen GSH Bio-Technology",
+      "subtitle": "Medium · Biomfg",
+      "body": "深圳市古特生物技术有限公司 · A Shenzhen-headquartered fermentation-ingredient company specialising in glutathione and NMN — a convenient Nanshan-based meeting on a relevant antioxidant active, though its actual fermentation plants sit outside the GBA. · Nanshan District (Shenzhen Bay tech park) · Shenzhen",
+      "tags": [
+        "medium",
+        "biomanufacturing",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-gsh-biotech",
+      "city": "Nanshan District (Shenzhen Bay tech park)",
+      "priority": "medium"
+    },
+    {
+      "id": "target-sz-guangxin",
+      "type": "target",
+      "title": "Guangxin Bio-manufacturing",
+      "subtitle": "Watchlist · Biomfg",
+      "body": "广新生物智造技术创新（深圳）有限公司 · A Guangming biomanufacturing-innovation platform tied to the Guangdong Guangxin / state-owned ecosystem and SIAT — strategically connected as a co-founder of the national center, but with no clear public BD channel or confirmed external-service offering. · Guangming District · Shenzhen",
+      "tags": [
+        "watchlist",
+        "biomanufacturing",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-guangxin",
+      "city": "Guangming District",
+      "priority": "watchlist"
+    },
+    {
+      "id": "target-sz-hetao",
+      "type": "target",
+      "title": "Hetao Shenzhen–Hong Kong Science & Technology Innovation Cooperation Zone",
+      "subtitle": "High · Ecosystem",
+      "body": "河套深港科技创新合作区 · A small cross-border innovation zone straddling the Shenzhen–Hong Kong boundary in Futian, purpose-built to let researchers, capital and materials move between the two systems — including a dedicated biopharma cluster. · Futian District (Hetao) · Shenzhen",
+      "tags": [
+        "high",
+        "ecosystem",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-hetao",
+      "city": "Futian District (Hetao)",
+      "priority": "high"
+    },
+    {
+      "id": "target-sz-icarbonx",
+      "type": "target",
+      "title": "iCarbonX",
+      "subtitle": "Watchlist · AI/Bio",
+      "body": "碳云智能 · Shenzhen 'digital life' company building an AI platform that fuses multi-omics (genome, metabolome, microbiome) with lifestyle data to model individual health — an early, ambitious AI-multi-omics play whose mid-2010s hype has cooled and whose current momentum is unclear. · Nanshan · Shenzhen",
+      "tags": [
+        "watchlist",
+        "ai-biotech",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-icarbonx",
+      "city": "Nanshan",
+      "priority": "watchlist"
+    },
+    {
+      "id": "target-sz-lenovo",
+      "type": "target",
+      "title": "Lenovo (Shenzhen — South Smart Campus)",
+      "subtitle": "Medium · Corp",
+      "body": "联想 · Lenovo's most critical global supply-chain and R&D hub sits in Shenzhen, anchored by its new 'mother factory' — a showcase of AI-accelerated smart manufacturing. · Lenovo South Smart Campus (LSSC) · Shenzhen",
+      "tags": [
+        "medium",
+        "corporate-visit",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-lenovo",
+      "city": "Lenovo South Smart Campus (LSSC)",
+      "priority": "medium"
+    },
+    {
+      "id": "target-sz-national-biomanufacturing-center",
+      "type": "target",
+      "title": "National Biomanufacturing Industry Innovation Center (+ Xinmei / Yinxing Synthetic Biology Industrial Park)",
+      "subtitle": "Must contact · Biomfg",
+      "body": "国家生物制造产业创新中心（及新湖/银星合成生物产业园） · China's first national-level biomanufacturing innovation platform, purpose-built to close the '1→10' lab-to-pilot scale-up gap — the single best ecosystem gateway to actual pilot-fermentation capacity and tenant companies in Guangming. · Guangming Science City, Yinxing Synthetic Biology Industrial Park · Shenzhen",
+      "tags": [
+        "must_contact",
+        "biomanufacturing",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-national-biomanufacturing-center",
+      "city": "Guangming Science City, Yinxing Synthetic Biology Industrial Park",
+      "priority": "must_contact"
+    },
+    {
+      "id": "target-sz-pam2l",
+      "type": "target",
+      "title": "PAM²L Biotechnologies",
+      "subtitle": "High · Biomfg",
+      "body": "柏垠生物（深圳柏垠生物科技有限公司） · The most Coolvex-specific biomaterial lead in the shortlist — a Shenzhen synthetic-biology company whose star molecule is a recombinant mussel adhesive protein with skin-repair, anti-inflammatory and wet-adhesion properties. · Shenzhen synthetic-biology cluster (SIAT-origin; district not verified) · Shenzhen",
+      "tags": [
+        "high",
+        "biomanufacturing",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-pam2l",
+      "city": "Shenzhen synthetic-biology cluster (SIAT-origin; district not verified)",
+      "priority": "high"
+    },
+    {
+      "id": "target-sz-readline",
+      "type": "target",
+      "title": "Readline Biotech (Ruidelin)",
+      "subtitle": "High · Biomfg",
+      "body": "深圳瑞德林生物技术股份有限公司 · Shenzhen synthetic-biology / enzyme-catalysis company with its own pilot lines in Shenzhen and ton-to-hundred-ton production lines in Zhuhai — a strong scale-up partner for peptides, sugars and specialty actives, and a credible candidate for external process development / custom manufacturing. · Nanshan District / Hi-Tech Park (HQ); Zhuhai and Gansu (Baiyin) production bases · Shenzhen",
+      "tags": [
+        "high",
+        "biomanufacturing",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-readline",
+      "city": "Nanshan District / Hi-Tech Park (HQ); Zhuhai and Gansu (Baiyin) production bases",
+      "priority": "high"
+    },
+    {
+      "id": "target-sz-shengbao",
+      "type": "target",
+      "title": "Synthetica Pioneering (Shengbao Bio)",
+      "subtitle": "Watchlist · Biomfg",
+      "body": "深圳市生葆生物科技有限公司 · A SIAT-incubated synthetic-biology startup developing engineered living bacterial therapeutics for solid tumours — strong investors and synbio pedigree, but far from pilot-fermentation manufacturing for a topical product. · SIAT-incubated (Shenzhen; precise district not verified) · Shenzhen",
+      "tags": [
+        "watchlist",
+        "biomanufacturing",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-shengbao",
+      "city": "SIAT-incubated (Shenzhen; precise district not verified)",
+      "priority": "watchlist"
+    },
+    {
+      "id": "target-sz-shenzhen-bay-lab",
+      "type": "target",
+      "title": "Shenzhen Bay Laboratory",
+      "subtitle": "Must contact · Ecosystem",
+      "body": "深圳湾实验室 · A flagship Guangdong/Shenzhen biomedical research institute in Guangming Science City, focused on the discovery, diagnosis and treatment of major diseases — the most on-brand stop on the program for Pure Advance. · Guangming Science City, Guangming District · Shenzhen",
+      "tags": [
+        "must_contact",
+        "ecosystem",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-shenzhen-bay-lab",
+      "city": "Guangming Science City, Guangming District",
+      "priority": "must_contact"
+    },
+    {
+      "id": "target-sz-siat-isynbio",
+      "type": "target",
+      "title": "SIAT / iSynBio — Shenzhen Institute of Synthetic Biology & Synthetic Biology Infrastructure",
+      "subtitle": "Must contact · Biomfg",
+      "body": "中科院深圳先进技术研究院 合成生物学研究所（深圳合成生物研究重大科技基础设施） · The academic and biofoundry backbone of the Guangming synbio cluster — China's first synthetic-biology institute, operating the world's largest synthetic-biology research infrastructure and the institutional lead behind the national biomanufacturing center. · Guangming Science City, Guangming District · Shenzhen",
+      "tags": [
+        "must_contact",
+        "biomanufacturing",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-siat-isynbio",
+      "city": "Guangming Science City, Guangming District",
+      "priority": "must_contact"
+    },
+    {
+      "id": "target-sz-siyobio",
+      "type": "target",
+      "title": "SiyoBio (Zhongke Xinyang)",
+      "subtitle": "Must contact · Biomfg",
+      "body": "深圳中科欣扬生物科技有限公司 · A Shenzhen synthetic-biology company that runs microbial cell factories at industrial fermentation scale and sells COSMOS-certified skin actives (ectoin, ergothioneine) — a credible local fermentation + ingredient partner. · Longgang District · Shenzhen",
+      "tags": [
+        "must_contact",
+        "biomanufacturing",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-siyobio",
+      "city": "Longgang District",
+      "priority": "must_contact"
+    },
+    {
+      "id": "target-sz-synceres",
+      "type": "target",
+      "title": "Synceres Biosciences",
+      "subtitle": "Must contact · Biomfg",
+      "body": "森瑞斯生物科技（深圳）有限公司 · The strongest direct fermentation-and-active-ingredient lead in Guangming: a synthetic-biology R&D-and-production company whose own catalogue already includes squalane, ectoine and ergothioneine. · Yinxing Synthetic Biology Industrial Park, Guangming District · Shenzhen",
+      "tags": [
+        "must_contact",
+        "biomanufacturing",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-synceres",
+      "city": "Yinxing Synthetic Biology Industrial Park, Guangming District",
+      "priority": "must_contact"
+    },
+    {
+      "id": "target-sz-xbiome",
+      "type": "target",
+      "title": "Xbiome",
+      "subtitle": "Medium · AI/Bio",
+      "body": "未知君 · Shenzhen clinical-stage, AI-driven microbiome drug developer that also does consumer-facing functional probiotics and strain licensing — the most credible China microbiome bridge to a consumer-health brand like Coolvex. · Tsinghua Information Port, Nanshan District · Shenzhen",
+      "tags": [
+        "medium",
+        "ai-biotech",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-xbiome",
+      "city": "Tsinghua Information Port, Nanshan District",
+      "priority": "medium"
+    },
+    {
+      "id": "target-sz-xtalpi",
+      "type": "target",
+      "title": "XtalPi",
+      "subtitle": "High · AI/Bio",
+      "body": "晶泰科技 · Shenzhen-founded, HK-listed quantum-physics-plus-AI drug discovery platform serving most of global big pharma — the Shenzhen counterpart to Insilico for AI-native discovery, and a strong platform-benchmarking peer. · International Biomedical Industrial Park, Futian District · Shenzhen",
+      "tags": [
+        "high",
+        "ai-biotech",
+        "Shenzhen"
+      ],
+      "href": "/business-targets/sz-xtalpi",
+      "city": "International Biomedical Industrial Park, Futian District",
+      "priority": "high"
+    },
+    {
+      "id": "target-zh-gene-biocon",
+      "type": "target",
+      "title": "Gene-Biocon",
+      "subtitle": "Must contact · Biomfg",
+      "body": "珠海冀百康生物科技有限公司 · A Zhuhai recombinant-protein house that makes recombinant humanized collagen, growth factors, peptides and ferment-lysate actives — and openly offers a CDMO service — making it a one-stop fit for Coolvex's skin-repair ingredient and contract-manufacturing needs. · Xinqing Sci-Tech Industrial Park · Zhuhai",
+      "tags": [
+        "must_contact",
+        "biomanufacturing",
+        "Zhuhai"
+      ],
+      "href": "/business-targets/zh-gene-biocon",
+      "city": "Xinqing Sci-Tech Industrial Park",
+      "priority": "must_contact"
+    },
+    {
+      "id": "target-zh-vtrbiotech",
+      "type": "target",
+      "title": "VTR Bio-Tech",
+      "subtitle": "High · Biomfg",
+      "body": "广东溢多利生物科技股份有限公司 · A 30+ year, publicly-listed Zhuhai industrial-fermentation company — one of China's largest enzyme-preparation makers — running large-scale microbial fermentation and downstream across multiple GBA and national bases. The strongest 'real industrial fermentation plant' lead near the trip. · Nanping Science & Technology Industrial Park · Zhuhai",
+      "tags": [
+        "high",
+        "biomanufacturing",
+        "Zhuhai"
+      ],
+      "href": "/business-targets/zh-vtrbiotech",
+      "city": "Nanping Science & Technology Industrial Park",
+      "priority": "high"
+    },
+    {
+      "id": "location-00000000-0000-4000-8000-000000000701",
+      "type": "location",
+      "title": "The Hari Hong Kong",
+      "subtitle": "hotel · Hong Kong",
+      "body": "Wan Chai, Hong Kong · Hong Kong · China · The Hari Hong Kong / Hong Kong, China",
+      "tags": [
+        "location",
+        "hotel",
+        "Hong Kong"
+      ],
+      "href": "/map",
+      "city": "Hong Kong"
+    },
+    {
+      "id": "location-00000000-0000-4000-8000-000000000702",
+      "type": "location",
+      "title": "Ascott Raffles City Shenzhen",
+      "subtitle": "hotel · Shenzhen",
+      "body": "Nanshan, Shenzhen · Shenzhen · China · Ascott Raffles City Shenzhen / Shenzhen, China",
+      "tags": [
+        "location",
+        "hotel",
+        "Shenzhen"
+      ],
+      "href": "/map",
+      "city": "Shenzhen"
+    },
+    {
+      "id": "location-00000000-0000-4000-8000-000000000703",
+      "type": "location",
+      "title": "HKCEC — LEAP East",
+      "subtitle": "venue · Hong Kong",
+      "body": "Wan Chai, Hong Kong · Hong Kong · China · HKCEC — LEAP East / Hong Kong, China",
+      "tags": [
+        "location",
+        "venue",
+        "Hong Kong"
+      ],
+      "href": "/map",
+      "city": "Hong Kong"
+    },
+    {
+      "id": "location-00000000-0000-4000-8000-000000000704",
+      "type": "location",
+      "title": "Hong Kong Science Park",
+      "subtitle": "venue · Hong Kong",
+      "body": "Pak Shek Kok, Hong Kong · Hong Kong · China · Hong Kong Science Park / Hong Kong, China",
+      "tags": [
+        "location",
+        "venue",
+        "Hong Kong"
+      ],
+      "href": "/map",
+      "city": "Hong Kong"
+    },
+    {
+      "id": "location-00000000-0000-4000-8000-000000000705",
+      "type": "location",
+      "title": "Hong Kong Polytechnic University",
+      "subtitle": "venue · Hong Kong",
+      "body": "Hung Hom, Hong Kong · Hong Kong · China · Hong Kong Polytechnic University / Hong Kong, China",
+      "tags": [
+        "location",
+        "venue",
+        "Hong Kong"
+      ],
+      "href": "/map",
+      "city": "Hong Kong"
+    },
+    {
+      "id": "location-00000000-0000-4000-8000-000000000706",
+      "type": "location",
+      "title": "InnoX · KAUST Shenzhen Hub",
+      "subtitle": "office · Shenzhen",
+      "body": "Nanshan, Shenzhen · Shenzhen · China · InnoX · KAUST Shenzhen Hub / Shenzhen, China",
+      "tags": [
+        "location",
+        "office",
+        "Shenzhen"
+      ],
+      "href": "/map",
+      "city": "Shenzhen"
+    },
+    {
+      "id": "briefing-trip-at-a-glance",
+      "type": "briefing",
+      "title": "Trip at a glance",
+      "body": "Hong Kong Week 1 (Go Global from GBA) with LEAP East at HKCEC Jul 8-10, then the Shenzhen Tech Founders program through Demo Day on Jul 31. · China 2026 · Tech Founders · Hong Kong / Shenzhen Greater Bay Area · JUL 4 – AUG 2 · Week 1 · HK — Go Global from GBA (JUL 6 – JUL 12) · Week 2 · SZ — Innovation Growth Engine (JUL 13 – JUL 17) · Week 3 · GBA — Supply Chain & Industrialization (JUL 20 – JUL 24) · Week 4 · SZ — Integration & Demo Day (JUL 27 – JUL 31)",
+      "tags": [
+        "briefing"
+      ],
+      "href": "/flight-pack"
+    },
+    {
+      "id": "briefing-next-72-hours",
+      "type": "briefing",
+      "title": "Next 72 hours after landing",
+      "body": "The first three mission days, JUL 5 onward — work them in order. · JUL 5 · 09:00–12:00 — Arrival & Hong Kong base setup (The Hari Hong Kong · Hong Kong) · JUL 6 · 10:00–12:00 — PolyU — tech-transfer & entrepreneurship sharing (Hong Kong Polytechnic University · Hong Kong) · JUL 6 · 13:00–16:00 — LEAP East prep · badge & exhibitor setup (HKCEC — LEAP East · Hong Kong) · JUL 6 · 16:00–18:00 — Networking mixer at Alibaba (Hong Kong) · JUL 7 · 10:30–18:00 — Hong Kong Science Park — visit & founder mixer (Hong Kong Science Park · Hong Kong)",
+      "tags": [
+        "briefing"
+      ],
+      "href": "/flight-pack"
+    },
+    {
+      "id": "briefing-leap-east-priorities",
+      "type": "briefing",
+      "title": "LEAP East priorities",
+      "body": "The HKCEC program block is the week-one anchor — badge first, then work the floor. · JUL 6 · LEAP East prep · badge & exhibitor setup — Badge & Customer Center registration; Exhibitor app access · lead capture ready · JUL 8 · LEAP East at HKCEC — Day 1 — Show open · booths & matchmaking; Ecosystem Xchange · First Money In · JUL 9 · LEAP East at HKCEC — Day 2 — Show open · investor matchmaking; Xchange · capital-efficient cross-border · JUL 10 · LEAP East — Day 3 & Rocket Fuel Grand Finale — Final day · close out matchmaking; Rocket Fuel Grand Finale · Main Stage",
+      "tags": [
+        "briefing"
+      ],
+      "href": "/flight-pack"
+    },
+    {
+      "id": "briefing-top-targets",
+      "type": "briefing",
+      "title": "Top business targets",
+      "body": "Highest-priority visit targets to rehearse before landing. · Synceres Biosciences — Must contact · Biomfg · Yinxing Synthetic Biology Industrial Park, Guangming District · From the Nanshan base · Jul 13–31 · National Biomanufacturing Industry Innovation Center (+ Xinmei / Yinxing Synthetic Biology Industrial Park) — Must contact · Biomfg · Guangming Science City, Yinxing Synthetic Biology Industrial Park · From the Nanshan base · Jul 13–31 · SIAT / iSynBio — Shenzhen Institute of Synthetic Biology & Synthetic Biology Infrastructure — Must contact · Biomfg · Guangming Science City, Guangming District · From the Nanshan base · Jul 13–31 · Gene-Biocon — Must contact · Biomfg · Xinqing Sci-Tech Industrial Park · GBA day-trip · Weeks 2–4 · Great Bay Bio — Must contact · AI/Bio · Hong Kong Science Park, Pak Shek Kok · Best Jul 6–7 or Jul 11 · avoid Jul 8–10 (LEAP East)",
+      "tags": [
+        "briefing"
+      ],
+      "href": "/flight-pack"
+    },
+    {
+      "id": "briefing-planning-gaps",
+      "type": "briefing",
+      "title": "Planning gaps to verify after landing",
+      "body": "Unconfirmed blocks and open questions — resolve these once online. · Confirm: LEAP East prep · badge & exhibitor setup (JUL 6 · proposed) · Confirm: Networking mixer at Alibaba (JUL 6 · proposed) · Confirm: Free day · Kowloon & Bruce Lee trail (JUL 11 · proposed) · Confirm: Hong Kong → Shenzhen · border crossing & base move (JUL 12 · proposed) · Confirm: Week 2 kickoff · InnoX mentors & KAUST Shenzhen Hub (JUL 13 · proposed) · Confirm: Week 3 · Enterprise & supply-chain visits (JUL 20 · proposed) · Synceres Biosciences: 5 open questions to resolve before outreach · National Biomanufacturing Industry Innovation Center (+ Xinmei / Yinxing Synthetic Biology Industrial Park): 4 open questions to resolve before outreach · SIAT / iSynBio — Shenzhen Institute of Synthetic Biology & Synthetic Biology Infrastructure: 4 open questions to resolve before outreach · Gene-Biocon: 5 open questions to resolve before outreach",
+      "tags": [
+        "briefing"
+      ],
+      "href": "/flight-pack"
+    },
+    {
+      "id": "briefing-landing-checklist",
+      "type": "briefing",
+      "title": "Landing checklist",
+      "body": "First moves on the ground, in order. · 09:00–12:00 — Arrival & Hong Kong base setup · Reconnect and refresh the app — this pack goes stale 72 hours after generation. · Re-check the next operating block on /today before acting on cached times.",
+      "tags": [
+        "briefing"
+      ],
+      "href": "/flight-pack"
+    }
+  ],
+  "exports": {
+    "markdown": "# China 2026 Flight Briefing\n\nClassification: App-safe operational export\nGenerated: 2026-07-03T22:33:49.460Z\nSource pack: china-2026 v1.0.0\nDo not forward outside the Pure Advance travel context.\nRefresh after landing before acting on time-sensitive details.\n\n## Trip at a glance\n\nHong Kong Week 1 (Go Global from GBA) with LEAP East at HKCEC Jul 8-10, then the Shenzhen Tech Founders program through Demo Day on Jul 31.\n\n- China 2026 · Tech Founders · Hong Kong / Shenzhen Greater Bay Area\n- JUL 4 – AUG 2\n- Week 1 · HK — Go Global from GBA (JUL 6 – JUL 12)\n- Week 2 · SZ — Innovation Growth Engine (JUL 13 – JUL 17)\n- Week 3 · GBA — Supply Chain & Industrialization (JUL 20 – JUL 24)\n- Week 4 · SZ — Integration & Demo Day (JUL 27 – JUL 31)\n\n## Next 72 hours after landing\n\nThe first three mission days, JUL 5 onward — work them in order.\n\n- JUL 5 · 09:00–12:00 — Arrival & Hong Kong base setup (The Hari Hong Kong · Hong Kong)\n- JUL 6 · 10:00–12:00 — PolyU — tech-transfer & entrepreneurship sharing (Hong Kong Polytechnic University · Hong Kong)\n- JUL 6 · 13:00–16:00 — LEAP East prep · badge & exhibitor setup (HKCEC — LEAP East · Hong Kong)\n- JUL 6 · 16:00–18:00 — Networking mixer at Alibaba (Hong Kong)\n- JUL 7 · 10:30–18:00 — Hong Kong Science Park — visit & founder mixer (Hong Kong Science Park · Hong Kong)\n\n## LEAP East priorities\n\nThe HKCEC program block is the week-one anchor — badge first, then work the floor.\n\n- JUL 6 · LEAP East prep · badge & exhibitor setup — Badge & Customer Center registration; Exhibitor app access · lead capture ready\n- JUL 8 · LEAP East at HKCEC — Day 1 — Show open · booths & matchmaking; Ecosystem Xchange · First Money In\n- JUL 9 · LEAP East at HKCEC — Day 2 — Show open · investor matchmaking; Xchange · capital-efficient cross-border\n- JUL 10 · LEAP East — Day 3 & Rocket Fuel Grand Finale — Final day · close out matchmaking; Rocket Fuel Grand Finale · Main Stage\n\n## Top business targets\n\nHighest-priority visit targets to rehearse before landing.\n\n- Synceres Biosciences — Must contact · Biomfg · Yinxing Synthetic Biology Industrial Park, Guangming District · From the Nanshan base · Jul 13–31\n- National Biomanufacturing Industry Innovation Center (+ Xinmei / Yinxing Synthetic Biology Industrial Park) — Must contact · Biomfg · Guangming Science City, Yinxing Synthetic Biology Industrial Park · From the Nanshan base · Jul 13–31\n- SIAT / iSynBio — Shenzhen Institute of Synthetic Biology & Synthetic Biology Infrastructure — Must contact · Biomfg · Guangming Science City, Guangming District · From the Nanshan base · Jul 13–31\n- Gene-Biocon — Must contact · Biomfg · Xinqing Sci-Tech Industrial Park · GBA day-trip · Weeks 2–4\n- Great Bay Bio — Must contact · AI/Bio · Hong Kong Science Park, Pak Shek Kok · Best Jul 6–7 or Jul 11 · avoid Jul 8–10 (LEAP East)\n\n## Planning gaps to verify after landing\n\nUnconfirmed blocks and open questions — resolve these once online.\n\n- Confirm: LEAP East prep · badge & exhibitor setup (JUL 6 · proposed)\n- Confirm: Networking mixer at Alibaba (JUL 6 · proposed)\n- Confirm: Free day · Kowloon & Bruce Lee trail (JUL 11 · proposed)\n- Confirm: Hong Kong → Shenzhen · border crossing & base move (JUL 12 · proposed)\n- Confirm: Week 2 kickoff · InnoX mentors & KAUST Shenzhen Hub (JUL 13 · proposed)\n- Confirm: Week 3 · Enterprise & supply-chain visits (JUL 20 · proposed)\n- Synceres Biosciences: 5 open questions to resolve before outreach\n- National Biomanufacturing Industry Innovation Center (+ Xinmei / Yinxing Synthetic Biology Industrial Park): 4 open questions to resolve before outreach\n- SIAT / iSynBio — Shenzhen Institute of Synthetic Biology & Synthetic Biology Infrastructure: 4 open questions to resolve before outreach\n- Gene-Biocon: 5 open questions to resolve before outreach\n\n## Landing checklist\n\nFirst moves on the ground, in order.\n\n- 09:00–12:00 — Arrival & Hong Kong base setup\n- Reconnect and refresh the app — this pack goes stale 72 hours after generation.\n- Re-check the next operating block on /today before acting on cached times.\n"
+  },
+  "privacy": {
+    "classification": "app-safe-operational-pack",
+    "excludedRoutes": [
+      "/admin",
+      "/private",
+      "/auth"
+    ],
+    "excludedFields": [
+      "passport",
+      "pnr",
+      "bookingRef",
+      "booking",
+      "ticketNumber",
+      "confirmation",
+      "barcode",
+      "qr",
+      "visa",
+      "payment",
+      "card",
+      "token",
+      "secret",
+      "service_role",
+      "privateEmail",
+      "phone",
+      "wechat"
+    ]
+  }
+}

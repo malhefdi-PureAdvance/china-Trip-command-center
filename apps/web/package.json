@@ -9,7 +9,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --max-warnings=0",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "generate:offline-pack": "tsx scripts/generate-offline-pack.ts"
   },
   "dependencies": {
     "@pure-advance/data-ingestion": "workspace:*",
@@ -29,6 +30,7 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "jsdom": "^29.1.1",
-    "tailwindcss": "^4.3.2"
+    "tailwindcss": "^4.3.2",
+    "tsx": "4.22.4"
   }
 }
