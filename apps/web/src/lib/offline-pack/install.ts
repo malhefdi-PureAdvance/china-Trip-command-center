@@ -85,23 +85,64 @@ export function warmableUrls(manifest: OfflinePackManifest): string[] {
   );
 }
 
-/** Best-effort: fetching each public route lets the active service worker
+function serviceWorkerControls(): boolean {
+  return typeof navigator !== "undefined" && Boolean(navigator.serviceWorker?.controller);
+}
+
+/** Fully load a route in a hidden same-origin iframe so the controlling
+ *  service worker runtime-caches the page AND its script/style subresources.
+ *  Caching only the HTML is not enough: offline hydration would crash on the
+ *  missing chunks and React would unmount the perfectly good SSR content. */
+function warmRouteViaIframe(route: string, timeoutMs = 15000): Promise<boolean> {
+  return new Promise((resolve) => {
+    const iframe = document.createElement("iframe");
+    let settled = false;
+    const finish = (ok: boolean) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timer);
+      // Give the frame a beat to fetch late chunks before tearing it down.
+      window.setTimeout(() => iframe.remove(), 1500);
+      resolve(ok);
+    };
+    const timer = window.setTimeout(() => finish(false), timeoutMs);
+    iframe.hidden = true;
+    iframe.setAttribute("aria-hidden", "true");
+    iframe.style.position = "absolute";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    iframe.addEventListener("load", () => finish(true));
+    iframe.addEventListener("error", () => finish(false));
+    iframe.src = route;
+    document.body.append(iframe);
+  });
+}
+
+/** Best-effort: loading each public route lets the active service worker
  *  runtime-cache it (network-first handler). Warming only makes sense when a
  *  worker actually controls the page — without one (dev, first visit before
- *  activation) the fetches cache nothing, so skip them entirely. */
+ *  activation) nothing caches, so skip entirely. */
 async function warmRouteCache(manifest: OfflinePackManifest): Promise<number> {
-  const workerActive =
-    typeof navigator !== "undefined" && Boolean(navigator.serviceWorker?.controller);
-  if (!workerActive) return 0;
+  if (!serviceWorkerControls()) return 0;
 
   let warmed = 0;
-  for (const route of warmableUrls(manifest)) {
-    try {
-      const response = await fetch(route, { method: "GET" });
-      if (response.ok) warmed += 1;
-    } catch {
-      // Offline or route missing — the readiness check will surface it.
+  for (const url of warmableUrls(manifest)) {
+    if (url.endsWith(".json")) {
+      // Data artifacts have no subresources — a drained fetch is enough.
+      try {
+        const response = await fetch(url, { method: "GET" });
+        if (response.ok) {
+          await response.arrayBuffer();
+          warmed += 1;
+        }
+      } catch {
+        // Offline or missing — the readiness check will surface it.
+      }
+      continue;
     }
+    if (typeof document === "undefined") continue;
+    if (await warmRouteViaIframe(url)) warmed += 1;
   }
   return warmed;
 }
