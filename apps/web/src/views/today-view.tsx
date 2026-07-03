@@ -177,11 +177,14 @@ export function TodayView({ now = getCurrentMissionNow() }: Readonly<{ now?: Dat
     .filter((entry) => entry.event.item.id !== ops.focusEntry?.event.item.id)
     .slice(0, 3);
 
-  // When the next prep action belongs to the block already on screen, render
-  // the prep card as a run-of-show continuation instead of repeating it.
+  // When the next prep action belongs to the block already on screen AND has
+  // a run of show to hand over, render the prep card as a continuation
+  // instead of repeating the block. Without sub-sessions there is nothing to
+  // continue with, so keep the full card (prep signal may come from notes).
   const prepContinuesFocus =
+    Boolean(ops.nextPrepEntry) &&
     ops.nextPrepEntry?.event.item.id === ops.focusEntry?.event.item.id &&
-    Boolean(ops.nextPrepEntry);
+    (ops.nextPrepEntry?.intel?.subSessions.length ?? 0) > 0;
 
   const [leadTarget, ...restTargets] = ops.relevantTargets.slice(0, 4);
 

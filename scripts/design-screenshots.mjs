@@ -8,7 +8,7 @@ import path from "node:path";
 const require = createRequire(import.meta.url);
 const { chromium } = require("@playwright/test");
 
-const outDir = process.argv[2] ?? "screenshots";
+const outDir = process.argv[2] ?? ".design-audit/local";
 const baseUrl = process.argv[3]?.startsWith("http") ? process.argv[3] : "http://127.0.0.1:3000";
 const light = process.argv.includes("--light");
 

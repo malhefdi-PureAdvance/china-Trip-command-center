@@ -19,7 +19,7 @@ export type ChipTone =
 const chipToneClass: Record<ChipTone, string> = {
   neutral: "border-[var(--cc-border-strong)] bg-transparent text-[var(--cc-text-3)]",
   soft: "border-[var(--cc-border)] bg-[var(--cc-surface-inset)] text-[var(--cc-text-2)]",
-  ghost: "border-transparent bg-transparent px-0 text-[var(--cc-text-faint)]",
+  ghost: "border-transparent bg-transparent px-0 text-[var(--cc-text-3)]",
   cyan: "border-[var(--cc-cyan)] bg-[var(--cc-cyan)] font-semibold text-[var(--cc-cyan-ink)]",
   cyanTint: "border-[var(--cc-cyan-line-soft)] bg-[var(--cc-cyan-tint-2)] text-[var(--cc-cyan)]",
   green: "border-transparent bg-[var(--cc-green-tint)] text-[var(--cc-green)]",

@@ -67,9 +67,13 @@ function EventCard({
         <span className="min-w-0 flex-1 truncate text-[12.5px] font-medium text-[var(--cc-text-2)]">
           {item.title}
         </span>
-        <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.08em] text-[var(--cc-text-faint)]">
-          {kind.label}
-        </span>
+        {item.status === "confirmed" ? (
+          <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.08em] text-[var(--cc-text-faint)]">
+            {kind.label}
+          </span>
+        ) : (
+          <StatusPill status={item.status} />
+        )}
       </article>
     );
   }

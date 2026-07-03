@@ -55,7 +55,21 @@ const priorityChipTone = {
  *  as a lede, so briefs scan instead of reading as a wall. Presentation only —
  *  the underlying dossier strings are untouched. */
 function Prose({ text }: Readonly<{ text: string }>) {
-  const sentences = text.split(/(?<=[.!?])\s+(?=[A-Z0-9"'(])/u);
+  // Conservative sentence detection: only a capital letter counts as a new
+  // sentence start, and candidates after short capitalized abbreviations
+  // ("Co.", "Ltd.", "e.g.") merge back — a missed split degrades to a longer
+  // paragraph, never to a paragraph starting mid-sentence.
+  const candidates = text.split(/(?<=[.!?])\s+(?=[A-Z])/u);
+  const abbreviation = /\b(?:[A-Z][a-z]{1,3}|e\.g|i\.e|etc|vs|No)\.$/u;
+  const sentences: string[] = [];
+  for (const candidate of candidates) {
+    const previous = sentences.at(-1);
+    if (previous && (abbreviation.test(previous) || candidate.length < 20)) {
+      sentences[sentences.length - 1] = `${previous} ${candidate}`;
+    } else {
+      sentences.push(candidate);
+    }
+  }
   const paragraphs: string[] = [];
   for (let i = 0; i < sentences.length; i += 2) {
     paragraphs.push(
