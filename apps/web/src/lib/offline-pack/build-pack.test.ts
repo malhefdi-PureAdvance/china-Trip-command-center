@@ -14,8 +14,13 @@ const forbiddenText =
 /** The manifest/privacy sections legitimately NAME excluded routes and field
  *  patterns for auditability — content scans cover everything else. */
 function scannableText(pack: ReturnType<typeof buildOfflineFlightPack>): string {
-  const { manifest: _manifest, privacy: _privacy, ...rest } = pack;
-  return JSON.stringify(rest);
+  return JSON.stringify({
+    trip: pack.trip,
+    readiness: pack.readiness,
+    briefing: pack.briefing,
+    searchDocuments: pack.searchDocuments,
+    exports: pack.exports
+  });
 }
 
 describe("buildOfflineFlightPack", () => {

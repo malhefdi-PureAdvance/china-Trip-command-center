@@ -6,14 +6,7 @@ import {
   type OfflineFlightPack,
   type OfflinePackManifest
 } from "./schema";
-import {
-  clearAllStores,
-  isIndexedDbSupported,
-  openPackDb,
-  readAll,
-  readKey,
-  replaceStores
-} from "./idb";
+import { clearAllStores, isIndexedDbSupported, openPackDb, readKey, replaceStores } from "./idb";
 
 /**
  * User-triggered install of the app-safe flight pack into IndexedDB, plus a
@@ -155,7 +148,7 @@ export async function installOfflinePack(
     try {
       await replaceStores(db, {
         meta: [meta],
-        documents: pack.briefing.map((section) => ({ id: `briefing-${section.id}`, ...section })),
+        documents: pack.briefing.map((section) => ({ ...section, id: `briefing-${section.id}` })),
         searchIndex: pack.searchDocuments,
         exports: [{ kind: "markdown", content: pack.exports.markdown }],
         readiness: pack.readiness
